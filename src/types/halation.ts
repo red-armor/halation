@@ -7,4 +7,6 @@ export interface HalationProps {
   blockRenderFn: Function;
 
   halationState: Array<any>;
+
+  registers: Array<Function>;
 }

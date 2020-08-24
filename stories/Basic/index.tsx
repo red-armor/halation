@@ -1,8 +1,16 @@
 import React from 'react';
-import { Halation, HalationProps } from '../../src'
+import { Halation } from '../../src'
+
+import PluginARegister from './plugin-a/register'
 
 export default () => {
+  const registers = [
+    PluginARegister,
+  ]
+
   return (
-    <Halation />
+    <Halation
+      registers={registers}
+    />
   )
 }
