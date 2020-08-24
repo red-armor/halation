@@ -3,7 +3,7 @@ export default function PluginComponent() {
     name: 'plugin-component',
     loadModel: () => {},
 
-    renderFn: ({ getState }) => {
+    getComponent: ({ getState }) => {
       const {};
     },
   };

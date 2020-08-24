@@ -4,6 +4,7 @@ export interface BlockNodeData {
 
 export interface BlockNodeProps {
   key: string;
+  type: string;
   prevSibling: string;
   nextSibling: string;
   data: BlockNodeData;
