@@ -12,7 +12,7 @@ import Module from './Module';
 import { log } from './logger';
 import BlockNode from './BlockNode';
 
-const DEBUG = true;
+const DEBUG = false;
 
 class Halation extends PureComponent<HalationProps> {
   public name: string;

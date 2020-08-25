@@ -6,6 +6,9 @@ import {
   useState,
 } from 'react';
 import { BlockNodeProps } from './types';
+import { log } from './logger';
+
+const DEBUG = false;
 
 const BlockWrapper: FC<BlockNodeProps> = props => {
   const { hooks, block, moduleMap } = props;
@@ -33,13 +36,17 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
 
   if (!wrapper.Component) return null;
 
-  return createElement(wrapper.Component);
+  return createElement(wrapper.Component, props);
 };
 
 const BlockNode: FC<BlockNodeProps> = props => {
   const { block, nodeMap, ...rest } = props;
   const children: Array<FunctionComponentElement<BlockNodeProps>> = [];
   const childKeys = block.getChildKeys();
+
+  if (DEBUG) {
+    log('render block ', block);
+  }
 
   childKeys.forEach(childKey => {
     const node = nodeMap.get(childKey);
