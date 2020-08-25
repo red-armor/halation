@@ -1,15 +1,28 @@
-import { ModuleProps } from './types';
+import { ModuleProps, GetComponent } from './types';
 
 class Module {
-  public name: string;
-  public getModel?: Function;
-  public getComponent: Function;
+  private _name: string;
+  private _getModel?: Function;
+  private _getComponent: GetComponent;
 
   constructor(props: ModuleProps) {
     const { name, getModel, getComponent } = props;
-    this.name = name;
-    this.getModel = getModel;
-    this.getComponent = getComponent;
+    this._name = name;
+    this._getModel = getModel;
+    console.log('get component ', getComponent);
+    this._getComponent = getComponent;
+  }
+
+  getName(): string {
+    return this._name;
+  }
+
+  getComponent(): GetComponent {
+    return this._getComponent;
+  }
+
+  getModel(): Function | undefined {
+    return this._getModel;
   }
 }
 

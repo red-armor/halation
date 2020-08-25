@@ -105,12 +105,14 @@ class Halation extends PureComponent<HalationProps> {
           BlockNode,
           {
             block,
+            key: block.getKey(),
             ...this.getPropsAPI(),
           },
           null
         )
       );
-      block = block.getNextSibling();
+      const blockKey = block.getNextSibling();
+      block = this.nodeMap.get(blockKey);
     }
 
     if (typeof this.rootRenderFn === 'function') {
