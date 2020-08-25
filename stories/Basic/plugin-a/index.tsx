@@ -1,7 +1,7 @@
 import React from 'react'
 
 const PluginComponent = () => {
-  return <div></div>
+  return <div>hello</div>
 }
 
 export default PluginComponent

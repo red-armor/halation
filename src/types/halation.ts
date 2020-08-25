@@ -1,3 +1,7 @@
+import { FC } from 'react';
+import { SyncHook } from 'tapable';
+import { Node, Module } from './';
+
 export interface HalationProps {
   name: string;
 
@@ -6,7 +10,19 @@ export interface HalationProps {
    */
   blockRenderFn: Function;
 
+  rootRenderFn?: FC;
+
   halationState: Array<any>;
 
   registers: Array<Function>;
+}
+
+export interface Hooks {
+  register: SyncHook;
+}
+
+export interface PropsAPI {
+  hooks: Hooks;
+  nodeMap: Map<string, Node>;
+  moduleMap: Map<string, Module>;
 }

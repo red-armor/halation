@@ -1,24 +1,53 @@
-import { PureComponent } from 'react';
-import { HalationProps } from './types';
-import BlockNode from './BlockNode';
+import React, {
+  PureComponent,
+  FunctionComponentElement,
+  FC,
+  Fragment,
+  createElement,
+} from 'react';
+import { SyncHook } from 'tapable';
+import { HalationProps, Hooks, PropsAPI, BlockNodeProps } from './types';
+import Node from './Node';
 import Module from './Module';
+import { warn } from './logger';
+import BlockNode from './BlockNode';
+
+const DEBUG = true;
 
 class Halation extends PureComponent<HalationProps> {
   public name: string;
-  public blockMap: Map<string, BlockNode>;
+  public nodeMap: Map<string, Node>;
   public blockRenderFn: Function;
   public halationState: Array<any>;
   public moduleMap: Map<string, Module>;
   public graph: Array<any>;
+  private rootRenderFn?: FC<PropsAPI>;
+  public hooks: Hooks;
+  public runtimeRegisterModule: Map<string, any>;
 
   constructor(props: HalationProps) {
     super(props);
-    const { name, blockRenderFn, halationState, registers } = props;
+    const {
+      name,
+      blockRenderFn,
+      halationState,
+      registers,
+      rootRenderFn,
+    } = props;
     this.halationState = halationState;
     this.blockRenderFn = blockRenderFn;
-    this.blockMap = new Map();
+    this.nodeMap = new Map();
     this.name = name;
     this.moduleMap = new Map();
+    this.rootRenderFn = rootRenderFn;
+    this.hooks = {
+      register: new SyncHook(['block']),
+    };
+
+    this.runtimeRegisterModule = new Map();
+
+    this.createBlockNode(this.halationState);
+    this.startListen();
 
     registers.forEach(register => {
       const moduleProps = register.call(null);
@@ -28,8 +57,22 @@ class Halation extends PureComponent<HalationProps> {
     });
 
     this.graph = [];
+  }
 
-    console.log('this module ', this.moduleMap);
+  startListen() {
+    for (let key in this.hooks) {
+      const hook = this.hooks[key as keyof Hooks];
+      hook.tap(key, function() {});
+
+      if (DEBUG) {
+        hook.intercept({
+          register: tabInfo => {
+            warn(tabInfo);
+            return tabInfo;
+          },
+        });
+      }
+    }
   }
 
   getName() {
@@ -39,12 +82,48 @@ class Halation extends PureComponent<HalationProps> {
   createBlockNode(list: Array<any>) {
     list.forEach(item => {
       const { key } = item;
-      this.blockMap.set(key, new BlockNode(item));
+      this.nodeMap.set(key, new Node(item));
     });
   }
 
+  public getPropsAPI(): PropsAPI {
+    return {
+      hooks: this.hooks,
+      nodeMap: this.nodeMap,
+      moduleMap: this.moduleMap,
+    };
+  }
+
   render() {
-    return null;
+    const blocks = this.nodeMap.values();
+    let block = blocks.next().value;
+    const children: Array<FunctionComponentElement<BlockNodeProps>> = [];
+
+    while (block) {
+      children.push(
+        createElement<BlockNodeProps>(
+          BlockNode,
+          {
+            block,
+            ...this.getPropsAPI(),
+          },
+          null
+        )
+      );
+      block = block.getNextSibling();
+    }
+
+    if (typeof this.rootRenderFn === 'function') {
+      return React.createElement(
+        this.rootRenderFn,
+        {
+          ...this.getPropsAPI(),
+        },
+        children
+      );
+    }
+
+    return React.createElement(Fragment, {}, children);
   }
 }
 
