@@ -9,7 +9,7 @@ import { SyncHook } from 'tapable';
 import { HalationProps, Hooks, PropsAPI, BlockNodeProps } from './types';
 import Node from './Node';
 import Module from './Module';
-import { warn } from './logger';
+import { log } from './logger';
 import BlockNode from './BlockNode';
 
 const DEBUG = true;
@@ -53,6 +53,7 @@ class Halation extends PureComponent<HalationProps> {
       const moduleProps = register.call(null);
       const module = new Module(moduleProps);
       const { name } = moduleProps;
+
       this.moduleMap.set(name, module);
     });
 
@@ -67,7 +68,7 @@ class Halation extends PureComponent<HalationProps> {
       if (DEBUG) {
         hook.intercept({
           register: tabInfo => {
-            warn(tabInfo);
+            log(tabInfo);
             return tabInfo;
           },
         });
@@ -84,6 +85,10 @@ class Halation extends PureComponent<HalationProps> {
       const { key } = item;
       this.nodeMap.set(key, new Node(item));
     });
+
+    if (DEBUG) {
+      log('halation state node map: ', this.nodeMap);
+    }
   }
 
   public getPropsAPI(): PropsAPI {

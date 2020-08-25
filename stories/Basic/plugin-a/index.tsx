@@ -1,7 +1,7 @@
 import React from 'react'
 
-const PluginComponent = () => {
-  return <div>hello</div>
+const PluginA = () => {
+  return <div>plugin a</div>
 }
 
-export default PluginComponent
+export default PluginA

@@ -9,7 +9,6 @@ class Module {
     const { name, getModel, getComponent } = props;
     this._name = name;
     this._getModel = getModel;
-    console.log('get component ', getComponent);
     this._getComponent = getComponent;
   }
 

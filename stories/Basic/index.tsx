@@ -2,6 +2,7 @@ import React from 'react';
 import { Halation } from '../../src'
 
 import PluginARegister from './plugin-a/register'
+import PluginBRegister from './plugin-b/register'
 
 const halationState = [{
   name: 'plugin-a',
@@ -11,7 +12,7 @@ const halationState = [{
   children: [],
   type: 'block',
 }, {
-  name: 'plugin-a',
+  name: 'plugin-b',
   key: 'plugin-a-2',
   prevSibling: 'plugin-a-1',
   nextSibling: 'plugin-a-3',
@@ -29,6 +30,7 @@ const halationState = [{
 export default () => {
   const registers = [
     PluginARegister,
+    PluginBRegister,
   ]
 
   return (

@@ -29,7 +29,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key]);
+  }, []);
 
   if (!wrapper.Component) return null;
 
