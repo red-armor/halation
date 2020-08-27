@@ -1,10 +1,9 @@
 import React from 'react';
-import { Thing, Props } from '../src';
+import BasicExample from './Basic'
 
 export default {
-  title: 'Welcome',
-};
-
+  title: 'halation'
+}
 // By passing optional props to this story, you can control the props of the component when
 // you consume the story in a test.
-export const Default = (props?: Partial<Props>) => <Thing {...props} />;
+export const Basic = () => <BasicExample />;

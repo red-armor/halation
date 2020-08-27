@@ -10,3 +10,12 @@ _Halation is integrated with caching, lazy load component features and aims to b
 4. Caching and Retry for Http request
 5. Optional for state management
 6. friendly to SPA
+
+## How to design lifecycle/hooks
+
+- onApplicationMounted
+- onRouteForward
+- onRouteBack
+- onPageLeave
+
+## How to add customized hooks
