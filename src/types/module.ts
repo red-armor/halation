@@ -1,14 +1,20 @@
-import { FC } from 'react';
 import Module from '../Module';
 
 export { Module };
 
 export interface GetComponent {
-  (): FC<any>;
+  (): PromiseLike<Function>;
 }
 
 export interface ModuleProps {
   name: string;
   getModel?: Function;
   getComponent: GetComponent;
+}
+
+export enum ModuleStatus {
+  Waiting,
+  Pending,
+  Loaded,
+  Error,
 }
