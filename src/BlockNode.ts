@@ -24,10 +24,9 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     const module = moduleMap.get(name);
     if (module) {
       hooks.register.call(key, block);
-      const getComponent = module.getComponent();
-      Promise.resolve(getComponent()).then(wrapper => {
+      module.loadComponent().then(wrapper => {
         setWrapper({
-          Component: wrapper,
+          Component: wrapper as FC<any>,
         });
       });
     }

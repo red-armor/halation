@@ -18,3 +18,8 @@ export enum ModuleStatus {
   Loaded,
   Error,
 }
+
+export interface RawModule {
+  ['__esModule']?: boolean;
+  default?: Function;
+}

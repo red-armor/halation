@@ -1,13 +1,13 @@
-import { ModuleProps, GetComponent, ModuleStatus } from './types';
-import { isFunction } from './commons';
+import { ModuleProps, GetComponent, ModuleStatus, RawModule } from './types';
 import { error } from './logger';
+import { noop } from './commons';
 
 class Module {
   private _name: string;
   private _getModel?: Function;
   private _getComponent: GetComponent;
   private _status: ModuleStatus;
-  private _module: null | object;
+  private _module: Function;
   private resolvers: Array<Function>;
 
   constructor(props: ModuleProps) {
@@ -16,7 +16,7 @@ class Module {
     this._getModel = getModel;
     this._getComponent = getComponent;
     this._status = ModuleStatus.Waiting;
-    this._module = null;
+    this._module = noop;
 
     this.resolvers = [];
   }
@@ -25,7 +25,7 @@ class Module {
     return this._name;
   }
 
-  getModule(): null | object {
+  getModule(): Function {
     return this._module;
   }
 
@@ -41,7 +41,11 @@ class Module {
     return this._status;
   }
 
-  loadComponent(): Promise<any> {
+  resolveModule(module: RawModule) {
+    return module && module.__esModule ? module.default : module;
+  }
+
+  loadComponent(): Promise<Function> {
     return new Promise(resolve => {
       const currentStatus = this.getStatus();
 
@@ -54,26 +58,22 @@ class Module {
           this.resolvers.push(resolve);
           break;
       }
-      if (isFunction(this.getComponent())) {
-        const _load = this.getComponent().call(this) as PromiseLike<Function>;
-        if (typeof _load === 'object' && typeof _load.then === 'function') {
-          _load.then(
-            module => {
-              this.resolvers.forEach(resolver => resolver(module));
-            },
-            () => {
-              error({
-                type: 'module',
-                message: `'loadComponent' ${this.getName} fails`,
-              });
-            }
-          );
-          return;
-        }
-        error({
-          type: 'module',
-          message: `'getComponent' function is required to output PromiseLike object`,
-        });
+
+      if (this.getComponent()) {
+        // __webpack_require__ will not return a Promise, so it need to wrapped
+        // with Promise.resolve.
+        Promise.resolve(this.getComponent().call(this)).then(
+          rawModule => {
+            const module = this.resolveModule(rawModule as RawModule);
+            this.resolvers.forEach(resolver => resolver(module));
+          },
+          () => {
+            error({
+              type: 'module',
+              message: `'loadComponent' ${this.getName} fails`,
+            });
+          }
+        );
       }
     });
   }
