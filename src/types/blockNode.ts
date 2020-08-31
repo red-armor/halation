@@ -9,3 +9,5 @@ export type BlockNodeProps = PropsAPI & {
 };
 
 export interface BlockWrapperProps {}
+
+export interface PluginAPI {}

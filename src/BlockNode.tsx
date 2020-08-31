@@ -1,14 +1,13 @@
-import {
+import React, {
   FC,
   useEffect,
   createElement,
   FunctionComponentElement,
   useState,
+  Fragment,
 } from 'react';
 import { BlockNodeProps } from './types';
-import { log } from './logger';
-
-const DEBUG = false;
+import { logActivity } from './logger';
 
 const BlockWrapper: FC<BlockNodeProps> = props => {
   const { hooks, block, moduleMap } = props;
@@ -33,9 +32,18 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const Helper = () => {
+    return null;
+  };
+
   if (!wrapper.Component) return null;
 
-  return createElement(wrapper.Component, props);
+  return (
+    <Fragment>
+      {createElement(wrapper.Component, props)}
+      <Helper />
+    </Fragment>
+  );
 };
 
 const BlockNode: FC<BlockNodeProps> = props => {
@@ -43,9 +51,10 @@ const BlockNode: FC<BlockNodeProps> = props => {
   const children: Array<FunctionComponentElement<BlockNodeProps>> = [];
   const childKeys = block.getChildKeys();
 
-  if (DEBUG) {
-    log('render block ', block);
-  }
+  logActivity('BlockNode', {
+    message: 'render block node',
+    value: block,
+  });
 
   childKeys.forEach(childKey => {
     const node = nodeMap.get(childKey);

@@ -47,10 +47,19 @@ export default () => {
     PluginBRegister,
   ]
 
+  // const renderEvent = [{
+  //   eventName: 'firstImageLoaded',
+  // }, {
+  //   eventName: 'retailLoaded',
+  // }, {
+
+  // }]
+
   return (
     <Halation
       halationState={halationState}
       registers={registers}
+      // renderEvent={renderEvent}
     />
   )
 }
