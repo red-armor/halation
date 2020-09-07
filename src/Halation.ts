@@ -49,10 +49,11 @@ class Halation extends PureComponent<HalationProps> {
 
     registers.forEach(register => {
       const moduleProps = register.call(null);
-      const module = new Module(moduleProps);
       const { name } = moduleProps;
-
-      this.moduleMap.set(name, module);
+      if (!this.moduleMap.get(name)) {
+        const module = new Module(moduleProps);
+        this.moduleMap.set(name, module);
+      }
     });
 
     this.graph = [];

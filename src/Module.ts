@@ -13,7 +13,6 @@ class Module {
   private _name: string;
   private _getModel?: Function;
   private _getComponent: GetComponent;
-  private _status: ModuleStatus;
   private statusMap: Map<ModuleName, ModuleStatus>;
   private resolversMap: Map<ModuleName, Array<Function>>;
   private resolvedModulesMap: Map<ModuleName, Function | null>;
@@ -23,10 +22,9 @@ class Module {
     this._name = name;
     this._getModel = getModel;
     this._getComponent = getComponent;
-    this._status = ModuleStatus.Waiting;
     this.statusMap = new Map<ModuleName, ModuleStatus>([
-      [ModuleName.Model, ModuleStatus.Waiting],
-      [ModuleName.Component, ModuleStatus.Waiting],
+      [ModuleName.Model, ModuleStatus.Idle],
+      [ModuleName.Component, ModuleStatus.Idle],
     ]);
     this.resolversMap = new Map<ModuleName, Array<Function>>([
       [ModuleName.Model, [] as Array<Function>],
@@ -36,6 +34,10 @@ class Module {
       [ModuleName.Model, null],
       [ModuleName.Component, null],
     ]);
+
+    logActivity('Module', {
+      message: `create ${name} Module`,
+    });
   }
 
   getName(): string {
@@ -50,10 +52,6 @@ class Module {
     return this._getModel;
   }
 
-  getStatus(): ModuleStatus {
-    return this._status;
-  }
-
   resolveModule<T extends RawModule>(module: T): Function {
     return module && (module as ESModule).__esModule
       ? (module as ESModule).default
@@ -65,21 +63,22 @@ class Module {
       const currentStatus = this.statusMap.get(moduleName);
 
       switch (currentStatus) {
+        case ModuleStatus.Idle:
+          this.resolversMap.get(moduleName)?.push(resolve);
+          logActivity('Module', {
+            message: `start load module ${this._name} ${moduleName}`,
+          });
+          this.statusMap.set(moduleName, ModuleStatus.Pending);
+          break;
+        case ModuleStatus.Pending:
+          this.resolversMap.get(moduleName)?.push(resolve);
+          return;
         case ModuleStatus.Loaded:
           logActivity('Module', {
             message: `load module ${this._name} ${moduleName} from cache`,
           });
           resolve(this.resolvedModulesMap.get(moduleName) as Function);
           return;
-        case ModuleStatus.Waiting:
-          this.resolversMap.get(moduleName)?.push(resolve);
-          break;
-        case ModuleStatus.Pending:
-          this.resolversMap.get(moduleName)?.push(resolve);
-          logActivity('Module', {
-            message: `start load module ${this._name} ${moduleName}`,
-          });
-          break;
       }
 
       const fn = getter.call(this);
@@ -96,6 +95,8 @@ class Module {
             logActivity('Module', {
               message: `finish load module ${this._name} ${moduleName}`,
             });
+            this.resolversMap.set(moduleName, []);
+            this.statusMap.set(moduleName, ModuleStatus.Loaded);
           },
           () => {
             error({

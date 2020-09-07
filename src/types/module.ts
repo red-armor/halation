@@ -20,7 +20,7 @@ export interface ModuleProps {
 }
 
 export enum ModuleStatus {
-  Waiting,
+  Idle,
   Pending,
   Loaded,
   Error,
