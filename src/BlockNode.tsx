@@ -10,7 +10,7 @@ import { BlockNodeProps } from './types';
 import { logActivity } from './logger';
 
 const BlockWrapper: FC<BlockNodeProps> = props => {
-  const { hooks, block, moduleMap } = props;
+  const { hooks, block, moduleMap, blockRenderFn } = props;
   const [wrapper, setWrapper] = useState<{
     Component: null | FC<any>;
   }>({
@@ -38,6 +38,25 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
 
   if (!wrapper.Component) return null;
 
+  let blockRenderer = null;
+
+  if (typeof blockRenderFn === 'function') {
+    blockRenderer = blockRenderFn(block.getBlockProps());
+  }
+
+  if (blockRenderer) {
+    return (
+      <Fragment>
+        {createElement(
+          blockRenderer,
+          props,
+          createElement(wrapper.Component, props)
+        )}
+        <Helper />
+      </Fragment>
+    );
+  }
+
   return (
     <Fragment>
       {createElement(wrapper.Component, props)}
@@ -47,7 +66,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
 };
 
 const BlockNode: FC<BlockNodeProps> = props => {
-  const { block, nodeMap, ...rest } = props;
+  const { block, nodeMap, blockRenderFn, ...rest } = props;
   const children: Array<FunctionComponentElement<BlockNodeProps>> = [];
   const childKeys = block.getChildKeys();
 
@@ -66,6 +85,7 @@ const BlockNode: FC<BlockNodeProps> = props => {
             key: childKey,
             block: node,
             nodeMap,
+            blockRenderFn,
             ...rest,
           },
           null

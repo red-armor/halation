@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { SyncHook } from 'tapable';
-import { Node, Module } from './';
+import Module from '../Module';
+import Node from '../Node';
+import { BlockProps } from './node';
 
 export interface HalationProps {
   name: string;
@@ -8,7 +10,7 @@ export interface HalationProps {
   /**
    * According to block type to render component with wrapper
    */
-  blockRenderFn: Function;
+  blockRenderFn?: BlockRenderFn;
 
   rootRenderFn?: FC;
 
@@ -16,6 +18,8 @@ export interface HalationProps {
 
   registers: Array<Function>;
 }
+
+export type BlockRenderFn = (props: BlockProps) => null | undefined | FC<any>;
 
 export interface Hooks {
   register: SyncHook;

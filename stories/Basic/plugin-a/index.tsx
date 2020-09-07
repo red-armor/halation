@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 
 const PluginA: FC<any> = (props) => {
   const { children } = props
+
   const hasChildren = !!children.length
   const count = children.length
   const text = hasChildren ? `(with ${count} ${count > 1 ? 'children' : 'child'})` : ''

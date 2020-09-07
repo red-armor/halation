@@ -6,7 +6,13 @@ import React, {
   createElement,
 } from 'react';
 import { SyncHook } from 'tapable';
-import { HalationProps, Hooks, PropsAPI, BlockNodeProps } from './types';
+import {
+  HalationProps,
+  Hooks,
+  PropsAPI,
+  BlockNodeProps,
+  BlockRenderFn,
+} from './types';
 import Node from './Node';
 import Module from './Module';
 import { logActivity } from './logger';
@@ -15,7 +21,7 @@ import BlockNode from './BlockNode';
 class Halation extends PureComponent<HalationProps> {
   public name: string;
   public nodeMap: Map<string, Node>;
-  public blockRenderFn: Function;
+  public blockRenderFn?: BlockRenderFn;
   public halationState: Array<any>;
   public moduleMap: Map<string, Module>;
   public graph: Array<any>;
@@ -112,6 +118,7 @@ class Halation extends PureComponent<HalationProps> {
           {
             block,
             key: block.getKey(),
+            blockRenderFn: this.blockRenderFn,
             ...this.getPropsAPI(),
           },
           null

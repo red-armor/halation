@@ -1,7 +1,3 @@
-import Module from '../Module';
-
-export { Module };
-
 export enum ModuleName {
   Model = 'model',
   Component = 'component',

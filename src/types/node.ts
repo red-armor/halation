@@ -11,3 +11,9 @@ export interface NodeProps {
   data: Node;
   children: Array<string>;
 }
+
+export interface BlockProps {
+  key: string;
+  name: string;
+  type: string;
+}
