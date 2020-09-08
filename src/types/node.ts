@@ -1,4 +1,5 @@
 import Node from '../Node';
+import { Refs } from './halation';
 
 export { Node };
 
@@ -12,8 +13,12 @@ export interface NodeProps {
   children: Array<string>;
 }
 
-export interface BlockProps {
+export interface NodeRenderProps {
   key: string;
   name: string;
   type: string;
+}
+
+export interface BlockProps {
+  getRefs: () => Refs;
 }

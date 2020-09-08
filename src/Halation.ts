@@ -12,6 +12,7 @@ import {
   PropsAPI,
   BlockNodeProps,
   BlockRenderFn,
+  Refs,
 } from './types';
 import Node from './Node';
 import Module from './Module';
@@ -28,6 +29,7 @@ class Halation extends PureComponent<HalationProps> {
   private rootRenderFn?: FC<PropsAPI>;
   public hooks: Hooks;
   public runtimeRegisterModule: Map<string, any>;
+  private _refs: Refs;
 
   constructor(props: HalationProps) {
     super(props);
@@ -47,6 +49,7 @@ class Halation extends PureComponent<HalationProps> {
     this.hooks = {
       register: new SyncHook(['block']),
     };
+    this._refs = {};
 
     this.runtimeRegisterModule = new Map();
 
@@ -96,6 +99,10 @@ class Halation extends PureComponent<HalationProps> {
       message: 'finish to create nodes ',
       value: this.nodeMap,
     });
+  }
+
+  public getRefs(): Refs {
+    return this._refs;
   }
 
   public getPropsAPI(): PropsAPI {

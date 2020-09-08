@@ -5,8 +5,10 @@ import React, {
   FunctionComponentElement,
   useState,
   Fragment,
+  useRef,
+  forwardRef,
 } from 'react';
-import { BlockNodeProps } from './types';
+import { BlockNodeProps, BlockWrapperProps } from './types';
 import { logActivity } from './logger';
 
 const BlockWrapper: FC<BlockNodeProps> = props => {
@@ -18,6 +20,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
   });
   const key = block.getKey();
   const name = block.getName();
+  const blockRef = useRef();
 
   useEffect(() => {
     const module = moduleMap.get(name);
@@ -44,13 +47,22 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     blockRenderer = blockRenderFn(block.getBlockProps());
   }
 
+  const RefForwardingWrapper = forwardRef<any, BlockWrapperProps>(
+    (props, ref) => {
+      return createElement(wrapper.Component as FC<any>, {
+        ...props,
+        forwardRef: ref,
+      });
+    }
+  );
+
   if (blockRenderer) {
     return (
       <Fragment>
         {createElement(
           blockRenderer,
           props,
-          createElement(wrapper.Component, props)
+          <RefForwardingWrapper {...props} ref={blockRef} />
         )}
         <Helper />
       </Fragment>
@@ -59,7 +71,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
 
   return (
     <Fragment>
-      {createElement(wrapper.Component, props)}
+      <RefForwardingWrapper {...props} ref={blockRef} />
       <Helper />
     </Fragment>
   );

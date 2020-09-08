@@ -1,4 +1,4 @@
-import { NodeProps, BlockProps } from './types';
+import { NodeProps, NodeRenderProps } from './types';
 
 class Node {
   private name: string;
@@ -42,7 +42,7 @@ class Node {
     return this.type;
   }
 
-  getBlockProps(): BlockProps {
+  getBlockProps(): NodeRenderProps {
     return {
       key: this.key,
       name: this.name,
