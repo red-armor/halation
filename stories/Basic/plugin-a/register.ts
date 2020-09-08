@@ -4,50 +4,25 @@ export default function PluginComponent() {
     getModel: () => require('./model'),
     getComponent: () => require('./index'),
 
-    // loader: {
-    //   strategy: [{
-    //     type: 'ban',
-    //     resolver: () => {}
-    //   },{
-    //     type: 'flags',
-    //     resolver: () => {}
-    //   }, {
-    //     type: 'event',
-    //     resolver: () => {}
-    //   }, {
-    //     type: 'runtime',
-    //     resolver: () => {}
-    //   }],
-    //   module: {
-    //     getComponent: () => require('./index'),
-    //     getModel: () => require('./model')
-    //   },
-    // },
-
-    // event: [
-    //   'main-image',
-    //   'content-loaded',
-
-    // ],
-
-    // // state is observable, 'first' is a reactive variable
-    // resolveRender: (state) => {
-    //   if (!state['first']) return false
-    //   return true
-    // },
-
-    // loadStrategy: {
-    //   // flags...
-    //   // runtime value...
-    //   // renderState
-    // },
-
-    // // if return true, continue to get
-
-
-    // subscribe() {
-
-    // },
+    loadStrategy: [{
+      type: 'flags',
+      resolver: flags => {
+        const { a } = flags
+        if (a === 1) return true
+      },
+    }, {
+      type: 'event',
+      resolver: event => {
+        const { imageLoaded } = event
+        if (imageLoaded) return true
+      }
+    }, {
+      type: 'runtime',
+      resolver: (props) => {
+        const { shouldDisplay } = props
+        return !shouldDisplay
+      }
+    }]
   };
 }
 

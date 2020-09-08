@@ -110,6 +110,7 @@ class Halation extends PureComponent<HalationProps> {
       hooks: this.hooks,
       nodeMap: this.nodeMap,
       moduleMap: this.moduleMap,
+      refs: this.getRefs(),
     };
   }
 

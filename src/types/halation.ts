@@ -1,4 +1,4 @@
-import { FC, MutableRefObject } from 'react';
+import { FC, MutableRefObject, Ref } from 'react';
 import { SyncHook } from 'tapable';
 import Module from '../Module';
 import Node from '../Node';
@@ -31,6 +31,7 @@ export interface PropsAPI {
   hooks: Hooks;
   nodeMap: Map<string, Node>;
   moduleMap: Map<string, Module>;
+  refs: Refs;
 }
 
 export interface Refs {
