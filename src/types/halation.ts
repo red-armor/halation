@@ -1,4 +1,4 @@
-import { FC, MutableRefObject, Ref } from 'react';
+import { FC, MutableRefObject } from 'react';
 import { SyncHook } from 'tapable';
 import Module from '../Module';
 import Node from '../Node';

@@ -1,6 +1,7 @@
 import React, {
   FC,
   useEffect,
+  useCallback,
   createElement,
   FunctionComponentElement,
   useState,
@@ -10,27 +11,49 @@ import React, {
 } from 'react';
 import { BlockNodeProps, BlockWrapperProps } from './types';
 import { logActivity } from './logger';
+import { settledPromise } from './commons';
 
 const BlockWrapper: FC<BlockNodeProps> = props => {
   const { hooks, block, moduleMap, blockRenderFn } = props;
   const [wrapper, setWrapper] = useState<{
-    Component: null | FC<any>;
-  }>({
-    Component: null,
-  });
+    model?: null | Function;
+    Component?: null | FC<any>;
+  }>({});
   const key = block.getKey();
   const name = block.getName();
   const blockRef = useRef();
+  const isLoadingRef = useRef(false);
+
+  const loadAndForceUpdate = useCallback(() => {
+    if (isLoadingRef.current) return;
+    const module = moduleMap.get(name);
+    if (module) {
+      hooks.register.call(key, block);
+      const loadModelTask = module.loadModel();
+      const loadComponentTask = module.loadComponent();
+      settledPromise([loadModelTask, loadComponentTask]).then(result => {
+        const [modelResult, componentResult] = result;
+        const state: {
+          model?: any;
+          Component?: FC<any>;
+        } = {};
+        if (modelResult.success) {
+          state.model = modelResult.value;
+        }
+
+        if (componentResult.success) {
+          state.Component = componentResult.value;
+        }
+        setWrapper(state);
+      });
+    }
+  }, []); // eslint-disable-line
 
   useEffect(() => {
     const module = moduleMap.get(name);
     if (module) {
       hooks.register.call(key, block);
-      module.loadComponent().then(wrapper => {
-        setWrapper({
-          Component: wrapper as FC<any>,
-        });
-      });
+      loadAndForceUpdate();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
