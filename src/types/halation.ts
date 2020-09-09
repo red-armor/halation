@@ -36,8 +36,21 @@ export interface PropsAPI {
   moduleMap: Map<string, Module>;
   loadManagerMap: Map<string, LoadManager>;
   refs: Refs;
-  addBlockLoadManager: (key: string, strategies: Array<Strategy>) => boolean;
+  addBlockLoadManager: AddBlockLoadManager;
 }
+
+export type ModuleMap = Map<string, Module>;
+export type LoadManagerMap = Map<string, LoadManager>;
+
+export type AddBlockLoadManager = ({
+  blockKey,
+  strategies,
+  moduleName,
+}: {
+  blockKey: string;
+  moduleName: string;
+  strategies: Array<Strategy>;
+}) => boolean;
 
 export interface Refs {
   [key: string]: MutableRefObject<FC>;

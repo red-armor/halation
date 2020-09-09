@@ -10,11 +10,13 @@ import {
   Refs,
   Hooks,
   PropsAPI,
+  Strategy,
+  ModuleMap,
   HalationProps,
   BlockRenderFn,
   BlockNodeProps,
   RegisterResult,
-  Strategy,
+  LoadManagerMap,
 } from './types';
 import Node from './Node';
 import Module from './Module';
@@ -27,8 +29,8 @@ class Halation extends PureComponent<HalationProps> {
   public nodeMap: Map<string, Node>;
   public blockRenderFn?: BlockRenderFn;
   public halationState: Array<any>;
-  public moduleMap: Map<string, Module>;
-  public loadManagerMap: Map<string, LoadManager>;
+  public moduleMap: ModuleMap;
+  public loadManagerMap: LoadManagerMap;
   public graph: Array<any>;
   private rootRenderFn?: FC<PropsAPI>;
   public hooks: Hooks;
@@ -125,18 +127,33 @@ class Halation extends PureComponent<HalationProps> {
     };
   }
 
-  public addBlockLoadManager(
-    key: string,
-    strategies: Array<Strategy>
-  ): boolean {
-    if (this.loadManagerMap.get(key)) {
+  public addBlockLoadManager({
+    blockKey,
+    moduleName,
+    strategies,
+  }: {
+    blockKey: string;
+    moduleName: string;
+    strategies: Array<Strategy>;
+  }): boolean {
+    if (this.loadManagerMap.get(blockKey)) {
       logActivity('Halation', {
-        message: `Duplicated module key ${key} is registered in halation application`,
+        message: `Duplicated module key ${blockKey} is registered in halation application`,
       });
       return false;
     }
 
-    this.loadManagerMap.set(key, new LoadManager(key, strategies));
+    this.loadManagerMap.set(
+      blockKey,
+      new LoadManager({
+        blockKey,
+        strategies,
+        moduleName,
+        moduleMap: this.moduleMap,
+      })
+    );
+
+    console.log('this load ', this.loadManagerMap);
 
     return true;
   }

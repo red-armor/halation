@@ -17,14 +17,14 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
   const { hooks, block, moduleMap, loadManagerMap, blockRenderFn } = props;
   const [wrapper, setWrapper] = useState<BlockNodeState>({});
   const blockKey = block.getKey();
-  const blockName = block.getName();
+  const moduleName = block.getName();
   const blockRef = useRef();
   const isLoadingRef = useRef(false);
   const isMountedRef = useRef(false);
 
   const loadAndForceUpdate = useCallback(() => {
     if (isLoadingRef.current) return;
-    const module = moduleMap.get(blockName);
+    const module = moduleMap.get(moduleName);
     if (module) {
       hooks.register.call(blockKey, block);
       const loadModelTask = module.loadModel();
@@ -49,7 +49,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     const loadManager = loadManagerMap.get(blockKey);
     const shouldLoadModule = loadManager?.shouldModuleLoad();
     if (shouldLoadModule) {
-      const module = moduleMap.get(blockName);
+      const module = moduleMap.get(moduleName);
       if (module) {
         hooks.register.call(blockKey, block);
         loadAndForceUpdate();
@@ -109,11 +109,15 @@ const BlockNode: FC<BlockNodeProps> = props => {
   const childKeys = block.getChildKeys();
 
   const blockKey = block.getKey();
-  const blockName = block.getName();
+  const moduleName = block.getName();
   const moduleMap = props.moduleMap;
-  const module = moduleMap.get(blockName);
+  const module = moduleMap.get(moduleName);
   const strategies = module?.getStrategies() || [];
-  addBlockLoadManager(blockKey, strategies);
+  addBlockLoadManager({
+    blockKey,
+    moduleName,
+    strategies,
+  });
 
   logActivity('BlockNode', {
     message: 'render block node',
