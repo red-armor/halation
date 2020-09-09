@@ -1,14 +1,14 @@
 export enum StrategyType {
-  flags,
-  event,
-  runtime,
+  flags = 'flags',
+  event = 'event',
+  runtime = 'runtime',
 }
 
 export interface Strategy {
   type: StrategyType;
-  resolver: (value: any) => boolean;
+  resolver: (value?: any) => boolean;
 }
 
 export interface LoadStrategyProps {
-  strategies: Array<Strategy>;
+  strategy: Strategy;
 }

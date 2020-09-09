@@ -1,31 +1,32 @@
 import React, {
   FC,
+  useRef,
+  useState,
+  Fragment,
   useEffect,
+  forwardRef,
   useCallback,
   createElement,
   FunctionComponentElement,
-  useState,
-  Fragment,
-  useRef,
-  forwardRef,
 } from 'react';
 import { BlockNodeProps, BlockWrapperProps, BlockNodeState } from './types';
 import { logActivity } from './logger';
 import { settledPromise } from './commons';
 
 const BlockWrapper: FC<BlockNodeProps> = props => {
-  const { hooks, block, moduleMap, blockRenderFn } = props;
+  const { hooks, block, moduleMap, loadManagerMap, blockRenderFn } = props;
   const [wrapper, setWrapper] = useState<BlockNodeState>({});
-  const key = block.getKey();
-  const name = block.getName();
+  const blockKey = block.getKey();
+  const blockName = block.getName();
   const blockRef = useRef();
   const isLoadingRef = useRef(false);
+  const isMountedRef = useRef(false);
 
   const loadAndForceUpdate = useCallback(() => {
     if (isLoadingRef.current) return;
-    const module = moduleMap.get(name);
+    const module = moduleMap.get(blockName);
     if (module) {
-      hooks.register.call(key, block);
+      hooks.register.call(blockKey, block);
       const loadModelTask = module.loadModel();
       const loadComponentTask = module.loadComponent();
       settledPromise([loadModelTask, loadComponentTask]).then(result => {
@@ -43,12 +44,21 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     }
   }, []); // eslint-disable-line
 
-  useEffect(() => {
-    const module = moduleMap.get(name);
-    if (module) {
-      hooks.register.call(key, block);
-      loadAndForceUpdate();
+  // 在最开始的时候，判断一下是否进行module的加载；
+  if (!isMountedRef.current) {
+    const loadManager = loadManagerMap.get(blockKey);
+    const shouldLoadModule = loadManager?.shouldModuleLoad();
+    if (shouldLoadModule) {
+      const module = moduleMap.get(blockName);
+      if (module) {
+        hooks.register.call(blockKey, block);
+        loadAndForceUpdate();
+      }
     }
+  }
+
+  useEffect(() => {
+    isMountedRef.current = true;
   }, []); // eslint-disable-line
 
   const Helper = () => {

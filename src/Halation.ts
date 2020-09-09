@@ -28,7 +28,7 @@ class Halation extends PureComponent<HalationProps> {
   public blockRenderFn?: BlockRenderFn;
   public halationState: Array<any>;
   public moduleMap: Map<string, Module>;
-  public loadStrategiesMap: Map<string, LoadManager>;
+  public loadManagerMap: Map<string, LoadManager>;
   public graph: Array<any>;
   private rootRenderFn?: FC<PropsAPI>;
   public hooks: Hooks;
@@ -49,7 +49,7 @@ class Halation extends PureComponent<HalationProps> {
     this.nodeMap = new Map();
     this.name = name;
     this.moduleMap = new Map();
-    this.loadStrategiesMap = new Map();
+    this.loadManagerMap = new Map();
     this.rootRenderFn = rootRenderFn;
     this.hooks = {
       register: new SyncHook(['block']),
@@ -119,6 +119,7 @@ class Halation extends PureComponent<HalationProps> {
       hooks: this.hooks,
       nodeMap: this.nodeMap,
       moduleMap: this.moduleMap,
+      loadManagerMap: this.loadManagerMap,
       refs: this.getRefs(),
       addBlockLoadManager: this.addBlockLoadManager.bind(this),
     };
@@ -128,14 +129,14 @@ class Halation extends PureComponent<HalationProps> {
     key: string,
     strategies: Array<Strategy>
   ): boolean {
-    if (this.loadStrategiesMap.get(key)) {
+    if (this.loadManagerMap.get(key)) {
       logActivity('Halation', {
         message: `Duplicated module key ${key} is registered in halation application`,
       });
       return false;
     }
 
-    this.loadStrategiesMap.set(key, new LoadManager(key, strategies));
+    this.loadManagerMap.set(key, new LoadManager(key, strategies));
 
     return true;
   }

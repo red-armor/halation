@@ -5,6 +5,7 @@ import Node from '../Node';
 import { NodeRenderProps } from './node';
 import { Strategy } from './loadStrategy';
 import { GetComponent } from './module';
+import LoadManager from 'LoadManager';
 
 export interface HalationProps {
   name: string;
@@ -33,6 +34,7 @@ export interface PropsAPI {
   hooks: Hooks;
   nodeMap: Map<string, Node>;
   moduleMap: Map<string, Module>;
+  loadManagerMap: Map<string, LoadManager>;
   refs: Refs;
   addBlockLoadManager: (key: string, strategies: Array<Strategy>) => boolean;
 }

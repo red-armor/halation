@@ -1,9 +1,10 @@
 import { LoadStrategyProps, Strategy } from './types';
 
 class LoadStrategy {
-  readonly strategies: Array<Strategy>;
+  readonly _strategy: Strategy;
   constructor(props: LoadStrategyProps) {
-    this.strategies = props.strategies;
+    const { strategy } = props;
+    this._strategy = strategy;
   }
 
   autoRun() {}
