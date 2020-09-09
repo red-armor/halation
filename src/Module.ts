@@ -6,6 +6,7 @@ import {
   ModuleName,
   ModuleGetter,
   ESModule,
+  Strategy,
 } from './types';
 import { error, logActivity } from './logger';
 
@@ -16,9 +17,10 @@ class Module {
   private statusMap: Map<ModuleName, ModuleStatus>;
   private resolversMap: Map<ModuleName, Array<Function>>;
   private resolvedModulesMap: Map<ModuleName, Function | null>;
+  private _strategies: Array<Strategy>;
 
   constructor(props: ModuleProps) {
-    const { name, getModel, getComponent } = props;
+    const { name, getModel, getComponent, strategies } = props;
     this._name = name;
     this._getModel = getModel;
     this._getComponent = getComponent;
@@ -34,6 +36,7 @@ class Module {
       [ModuleName.Model, null],
       [ModuleName.Component, null],
     ]);
+    this._strategies = strategies || [];
 
     logActivity('Module', {
       message: `create ${name} Module`,
@@ -46,6 +49,10 @@ class Module {
 
   getComponent(): GetComponent {
     return this._getComponent;
+  }
+
+  getStrategies(): Array<Strategy> {
+    return this._strategies;
   }
 
   getModel(): Function | undefined {

@@ -7,17 +7,20 @@ import React, {
 } from 'react';
 import { SyncHook } from 'tapable';
 import {
-  HalationProps,
+  Refs,
   Hooks,
   PropsAPI,
-  BlockNodeProps,
+  HalationProps,
   BlockRenderFn,
-  Refs,
+  BlockNodeProps,
+  RegisterResult,
+  Strategy,
 } from './types';
 import Node from './Node';
 import Module from './Module';
 import { logActivity } from './logger';
 import BlockNode from './BlockNode';
+import LoadManager from './LoadManager';
 
 class Halation extends PureComponent<HalationProps> {
   public name: string;
@@ -25,6 +28,7 @@ class Halation extends PureComponent<HalationProps> {
   public blockRenderFn?: BlockRenderFn;
   public halationState: Array<any>;
   public moduleMap: Map<string, Module>;
+  public loadStrategiesMap: Map<string, LoadManager>;
   public graph: Array<any>;
   private rootRenderFn?: FC<PropsAPI>;
   public hooks: Hooks;
@@ -45,6 +49,7 @@ class Halation extends PureComponent<HalationProps> {
     this.nodeMap = new Map();
     this.name = name;
     this.moduleMap = new Map();
+    this.loadStrategiesMap = new Map();
     this.rootRenderFn = rootRenderFn;
     this.hooks = {
       register: new SyncHook(['block']),
@@ -57,14 +62,18 @@ class Halation extends PureComponent<HalationProps> {
     this.startListen();
 
     registers.forEach(register => {
-      const moduleProps = register.call(null);
-      const { name } = moduleProps;
+      const moduleProps: RegisterResult = register.call(null);
+      const { name, getModel, getComponent, strategies } = moduleProps;
       if (!this.moduleMap.get(name)) {
-        const module = new Module(moduleProps);
+        const module = new Module({
+          name,
+          getComponent,
+          getModel,
+          strategies: strategies || [],
+        });
         this.moduleMap.set(name, module);
       }
     });
-
     this.graph = [];
   }
 
@@ -111,7 +120,24 @@ class Halation extends PureComponent<HalationProps> {
       nodeMap: this.nodeMap,
       moduleMap: this.moduleMap,
       refs: this.getRefs(),
+      addBlockLoadManager: this.addBlockLoadManager.bind(this),
     };
+  }
+
+  public addBlockLoadManager(
+    key: string,
+    strategies: Array<Strategy>
+  ): boolean {
+    if (this.loadStrategiesMap.get(key)) {
+      logActivity('Halation', {
+        message: `Duplicated module key ${key} is registered in halation application`,
+      });
+      return false;
+    }
+
+    this.loadStrategiesMap.set(key, new LoadManager(key, strategies));
+
+    return true;
   }
 
   render() {

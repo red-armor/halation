@@ -9,16 +9,13 @@ import React, {
   useRef,
   forwardRef,
 } from 'react';
-import { BlockNodeProps, BlockWrapperProps } from './types';
+import { BlockNodeProps, BlockWrapperProps, BlockNodeState } from './types';
 import { logActivity } from './logger';
 import { settledPromise } from './commons';
 
 const BlockWrapper: FC<BlockNodeProps> = props => {
   const { hooks, block, moduleMap, blockRenderFn } = props;
-  const [wrapper, setWrapper] = useState<{
-    model?: null | Function;
-    Component?: null | FC<any>;
-  }>({});
+  const [wrapper, setWrapper] = useState<BlockNodeState>({});
   const key = block.getKey();
   const name = block.getName();
   const blockRef = useRef();
@@ -33,10 +30,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
       const loadComponentTask = module.loadComponent();
       settledPromise([loadModelTask, loadComponentTask]).then(result => {
         const [modelResult, componentResult] = result;
-        const state: {
-          model?: any;
-          Component?: FC<any>;
-        } = {};
+        const state: BlockNodeState = {};
         if (modelResult.success) {
           state.model = modelResult.value;
         }
@@ -55,8 +49,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
       hooks.register.call(key, block);
       loadAndForceUpdate();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // eslint-disable-line
 
   const Helper = () => {
     return null;
@@ -67,7 +60,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
   let blockRenderer = null;
 
   if (typeof blockRenderFn === 'function') {
-    blockRenderer = blockRenderFn(block.getBlockProps());
+    blockRenderer = blockRenderFn(block.getRenderProps());
   }
 
   const RefForwardingWrapper = forwardRef<any, BlockWrapperProps>(
@@ -101,9 +94,16 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
 };
 
 const BlockNode: FC<BlockNodeProps> = props => {
-  const { block, nodeMap, blockRenderFn, ...rest } = props;
+  const { block, nodeMap, blockRenderFn, addBlockLoadManager, ...rest } = props;
   const children: Array<FunctionComponentElement<BlockNodeProps>> = [];
   const childKeys = block.getChildKeys();
+
+  const blockKey = block.getKey();
+  const blockName = block.getName();
+  const moduleMap = props.moduleMap;
+  const module = moduleMap.get(blockName);
+  const strategies = module?.getStrategies() || [];
+  addBlockLoadManager(blockKey, strategies);
 
   logActivity('BlockNode', {
     message: 'render block node',
@@ -121,6 +121,7 @@ const BlockNode: FC<BlockNodeProps> = props => {
             block: node,
             nodeMap,
             blockRenderFn,
+            addBlockLoadManager,
             ...rest,
           },
           null

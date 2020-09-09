@@ -42,7 +42,7 @@ class Node {
     return this.type;
   }
 
-  getBlockProps(): NodeRenderProps {
+  getRenderProps(): NodeRenderProps {
     return {
       key: this.key,
       name: this.name,

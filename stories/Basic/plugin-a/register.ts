@@ -4,7 +4,7 @@ export default function PluginComponent() {
     getModel: () => require('./model'),
     getComponent: () => require('./index'),
 
-    loadStrategy: [{
+    strategies: [{
       type: 'flags',
       resolver: flags => {
         const { a } = flags
@@ -25,12 +25,3 @@ export default function PluginComponent() {
     }]
   };
 }
-
-// 1. register.name should not duplicate
-// 2. model support name property to override outside name
-
-// 约束总共有多少类型的唤起事件
-
-// Hydrate renderEvents to component...
-// How to make it clear, what current phrase is.
-

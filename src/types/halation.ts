@@ -3,6 +3,8 @@ import { SyncHook } from 'tapable';
 import Module from '../Module';
 import Node from '../Node';
 import { NodeRenderProps } from './node';
+import { Strategy } from './loadStrategy';
+import { GetComponent } from './module';
 
 export interface HalationProps {
   name: string;
@@ -32,8 +34,17 @@ export interface PropsAPI {
   nodeMap: Map<string, Node>;
   moduleMap: Map<string, Module>;
   refs: Refs;
+  addBlockLoadManager: (key: string, strategies: Array<Strategy>) => boolean;
 }
 
 export interface Refs {
   [key: string]: MutableRefObject<FC>;
+}
+
+export interface RegisterResult {
+  name: string;
+  key: string;
+  strategies?: Array<Strategy>;
+  getComponent: GetComponent;
+  getModel: Function;
 }
