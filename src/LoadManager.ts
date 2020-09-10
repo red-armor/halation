@@ -1,4 +1,11 @@
-import { Strategy, StrategyType, ModuleMap } from './types';
+import {
+  Strategy,
+  StrategyType,
+  ModuleMap,
+  LockCurrentLoadManager,
+  ReleaseCurrentLoadManager,
+  ProxyEvent,
+} from './types';
 
 /**
  * loadManager需要在进行渲染之前就要处理一直，这样在`BlockNode`渲染的时候，可以直接对那些不需要判断的
@@ -9,19 +16,36 @@ class LoadManager {
   readonly strategies: Array<Strategy>;
   readonly _moduleName: string;
   readonly _moduleMap: ModuleMap;
+  readonly _lockCurrentLoadManager: LockCurrentLoadManager;
+  readonly _releaseCurrentLoadManager: ReleaseCurrentLoadManager;
+  readonly _proxyEvent: ProxyEvent;
 
   constructor(props: {
     blockKey: string;
     moduleName: string;
     strategies: Array<Strategy>;
     moduleMap: ModuleMap;
+    proxyEvent: ProxyEvent;
+    lockCurrentLoadManager: LockCurrentLoadManager;
+    releaseCurrentLoadManager: ReleaseCurrentLoadManager;
   }) {
-    const { blockKey, moduleName, strategies, moduleMap } = props;
+    const {
+      blockKey,
+      moduleName,
+      strategies,
+      moduleMap,
+      proxyEvent,
+      lockCurrentLoadManager,
+      releaseCurrentLoadManager,
+    } = props;
 
     this.key = blockKey;
     this.strategies = this.sort(strategies);
     this._moduleName = moduleName;
     this._moduleMap = moduleMap;
+    this._lockCurrentLoadManager = lockCurrentLoadManager;
+    this._releaseCurrentLoadManager = releaseCurrentLoadManager;
+    this._proxyEvent = proxyEvent;
   }
 
   /**
@@ -43,11 +67,16 @@ class LoadManager {
     });
   }
 
+  /**
+   * 整个strategy的处理需要是一个同步的
+   */
   shouldModuleLoad(): boolean {
     const len = this.strategies.length;
     const flags = {};
     const event = {};
     const state = {};
+
+    this._lockCurrentLoadManager(this);
 
     for (let i = 0; i < len; i++) {
       const strategy = this.strategies[i];
@@ -71,9 +100,16 @@ class LoadManager {
       // TODO: 临时注释掉
       // if (!value) return false;
     }
+    this._releaseCurrentLoadManager();
 
     return true;
   }
+
+  observeFlags() {}
+
+  startVerifyFlags() {}
+
+  startVerifyEvent() {}
 
   startVerifyRuntime() {
     const module = this._moduleMap.get(this._moduleName);
