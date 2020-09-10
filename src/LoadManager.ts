@@ -72,8 +72,6 @@ class LoadManager {
    */
   shouldModuleLoad(): boolean {
     const len = this.strategies.length;
-    const flags = {};
-    const event = {};
     const state = {};
 
     this._lockCurrentLoadManager(this);
@@ -84,11 +82,8 @@ class LoadManager {
       let value: boolean = false;
 
       switch (type) {
-        case StrategyType.flags:
-          value = !!resolver(flags);
-          break;
         case StrategyType.event:
-          value = !!resolver(event);
+          value = !!resolver(this._proxyEvent);
           break;
         // 如果说是runtime的话，首先需要先加载model；运行一次resolver将需要
         // 监听的属性进行绑定。
@@ -97,6 +92,7 @@ class LoadManager {
           value = !!resolver(state);
           break;
       }
+      console.log('value ', value);
       // TODO: 临时注释掉
       // if (!value) return false;
     }

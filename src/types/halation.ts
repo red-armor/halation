@@ -7,7 +7,9 @@ import { Strategy } from './loadStrategy';
 import { GetComponent } from './module';
 import LoadManager from 'LoadManager';
 
-export interface HalationProps<T> {
+export type HalationEvents = Array<string>;
+
+export interface HalationProps {
   name: string;
 
   /**
@@ -20,7 +22,7 @@ export interface HalationProps<T> {
   halationState: Array<any>;
 
   registers: Array<Function>;
-  events?: T;
+  events?: HalationEvents;
 }
 
 export type BlockRenderFn = (
@@ -67,3 +69,7 @@ export interface RegisterResult {
 
 export type LockCurrentLoadManager = (loadManager: LoadManager) => void;
 export type ReleaseCurrentLoadManager = () => void;
+
+export type ProxyEvent = {
+  [key: string]: any;
+};

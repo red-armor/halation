@@ -11,12 +11,6 @@ export default function PluginComponent() {
         return !shouldDisplay
       }
     }, {
-      type: 'flags',
-      resolver: flags => {
-        const { a } = flags
-        if (a === 1) return true
-      },
-    }, {
       type: 'event',
       resolver: event => {
         const { imageLoaded } = event

@@ -1,9 +1,9 @@
 import React, {
-  PureComponent,
-  FunctionComponentElement,
   FC,
   Fragment,
   createElement,
+  PureComponent,
+  FunctionComponentElement,
 } from 'react';
 import { SyncHook } from 'tapable';
 import {
@@ -23,10 +23,9 @@ import Module from './Module';
 import { logActivity } from './logger';
 import BlockNode from './BlockNode';
 import LoadManager from './LoadManager';
+import EventTracker from './EventTracker';
 
-class Halation<T extends Array<string>> extends PureComponent<
-  HalationProps<T>
-> {
+class Halation extends PureComponent<HalationProps> {
   public name: string;
   public nodeMap: Map<string, Node>;
   public blockRenderFn?: BlockRenderFn;
@@ -38,16 +37,9 @@ class Halation<T extends Array<string>> extends PureComponent<
   public hooks: Hooks;
   public runtimeRegisterModule: Map<string, any>;
   private _refs: Refs;
-  public events: T;
-  public eventObject: {
-    [key: string]: any;
-  };
-  public proxyEvent: {
-    [key: string]: any;
-  };
-  private currentLoadManager: LoadManager | null;
+  public eventTracker: EventTracker;
 
-  constructor(props: HalationProps<T>) {
+  constructor(props: HalationProps) {
     super(props);
     const {
       name,
@@ -71,18 +63,9 @@ class Halation<T extends Array<string>> extends PureComponent<
 
     this.runtimeRegisterModule = new Map();
 
-    this.events = events || (([] as unknown) as T);
-    this.eventObject = this.initEventObject();
-    this.proxyEvent = new Proxy(this.eventObject, {
-      get: (target, prop) => {
-        console.log('current ', this.currentLoadManager);
-        return Reflect.get(target, prop);
-      },
-      set: (target, prop, newValue, receiver) => {
-        return Reflect.set(target, prop, newValue, receiver);
-      },
+    this.eventTracker = new EventTracker({
+      events: events || [],
     });
-
     this.createBlockNode(this.halationState);
     this.startListen();
 
@@ -100,7 +83,6 @@ class Halation<T extends Array<string>> extends PureComponent<
       }
     });
     this.graph = [];
-    this.currentLoadManager = null;
   }
 
   startListen() {
@@ -118,12 +100,6 @@ class Halation<T extends Array<string>> extends PureComponent<
         },
       });
     }
-  }
-
-  initEventObject(): {} {
-    return this.events.reduce((acc, cur) => {
-      return { ...acc, [cur]: false };
-    }, {});
   }
 
   getName() {
@@ -179,6 +155,7 @@ class Halation<T extends Array<string>> extends PureComponent<
         blockKey,
         strategies,
         moduleName,
+        proxyEvent: this.eventTracker.getProxyEvent(),
         moduleMap: this.moduleMap,
         lockCurrentLoadManager: this.lockCurrentLoadManager.bind(this),
         releaseCurrentLoadManager: this.releaseCurrentLoadManager.bind(this),
@@ -189,11 +166,11 @@ class Halation<T extends Array<string>> extends PureComponent<
   }
 
   lockCurrentLoadManager(loadManager: LoadManager) {
-    this.currentLoadManager = loadManager;
+    this.eventTracker.setLoadManager(loadManager);
   }
 
   releaseCurrentLoadManager() {
-    this.currentLoadManager = null;
+    this.eventTracker.releaseLoadManager();
   }
 
   render() {
@@ -233,15 +210,3 @@ class Halation<T extends Array<string>> extends PureComponent<
 }
 
 export default Halation;
-
-// function test<T>(value: Array<keyof T>): T {
-//   return value.reduce((acc, cur) => {
-//     return acc[cur] = false
-//   }, {} as any)
-// }
-
-// type y = {
-//   first: number,
-// }
-
-// const x = test<y>(['first'])
