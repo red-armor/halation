@@ -68,6 +68,7 @@ export default () => {
       halationState={halationState}
       registers={registers}
       blockRenderFn={blockRenderFn}
+
       events={[
         'flags',
         'first_image_loaded'

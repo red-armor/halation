@@ -14,7 +14,6 @@ class EventTracker {
 
     this._proxyEvent = new Proxy(this.eventObject, {
       get: (target, prop) => {
-        console.log('listen ', prop, this.currentLoadManager?.key);
         return Reflect.get(target, prop);
       },
       set: (target, prop, newValue, receiver) => {
@@ -42,6 +41,8 @@ class EventTracker {
   releaseLoadManager() {
     this.currentLoadManager = null;
   }
+
+  addEffect() {}
 }
 
 export default EventTracker;
