@@ -1,5 +1,6 @@
 import { HalationEvents, ProxyEvent } from './types';
 import LoadManager from './LoadManager';
+import Tracker from './Tracker';
 
 class EventTracker {
   public events: HalationEvents;
@@ -11,14 +12,8 @@ class EventTracker {
     const { events } = props;
     this.events = events;
     this.eventObject = this.initEventObject();
-
-    this._proxyEvent = new Proxy(this.eventObject, {
-      get: (target, prop) => {
-        return Reflect.get(target, prop);
-      },
-      set: (target, prop, newValue, receiver) => {
-        return Reflect.set(target, prop, newValue, receiver);
-      },
+    this._proxyEvent = new Tracker({
+      base: this.eventObject,
     });
 
     this.currentLoadManager = null;
@@ -30,7 +25,7 @@ class EventTracker {
 
   initEventObject(): {} {
     return this.events.reduce((acc, cur) => {
-      return { ...acc, [cur]: false };
+      return { ...acc, [cur]: {} };
     }, {});
   }
 

@@ -13,7 +13,7 @@ export default function PluginComponent() {
     }, {
       type: 'event',
       resolver: event => {
-        const { contentLoaded } = event
+        const { contentLoaded, flags: { ab }} = event
         if (contentLoaded) return true
       }
     }]

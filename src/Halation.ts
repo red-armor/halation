@@ -66,6 +66,9 @@ class Halation extends PureComponent<HalationProps> {
     this.eventTracker = new EventTracker({
       events: events || [],
     });
+
+    console.log('hello');
+
     this.createBlockNode(this.halationState);
     this.startListen();
 
