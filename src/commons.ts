@@ -1,5 +1,7 @@
+const toString = Function.call.bind<Function>(Object.prototype.toString);
 export const isFunction = (fn: any): boolean => typeof fn === 'function';
-export const noop = () => {};
+export const isString = (o: any) => toString(o) === '[object String]';
+export const isPlainObject = (o: any) => toString(o) === '[object Object]';
 
 export const reflect = (p: Promise<any>) =>
   p.then(
@@ -35,8 +37,6 @@ export const createHiddenProperty = (
     writable: true,
   });
 };
-
-const toString = Function.call.bind<Function>(Object.prototype.toString);
 
 export const hasSymbol = typeof Symbol !== 'undefined';
 export const TRACKER: unique symbol = hasSymbol

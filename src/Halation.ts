@@ -67,8 +67,6 @@ class Halation extends PureComponent<HalationProps> {
       events: events || [],
     });
 
-    console.log('hello');
-
     this.createBlockNode(this.halationState);
     this.startListen();
 
@@ -175,6 +173,10 @@ class Halation extends PureComponent<HalationProps> {
   releaseCurrentLoadManager() {
     this.eventTracker.releaseLoadManager();
   }
+
+  // dispatchEvent(event: string | object) {
+
+  // }
 
   render() {
     const blocks = this.nodeMap.values();

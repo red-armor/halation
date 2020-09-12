@@ -12,7 +12,10 @@ export default function PluginComponent() {
       }
     }, {
       type: 'event',
-      resolver: event => {
+      resolver: ({
+        event,
+        dispatchNode
+      }) => {
         const { contentLoaded, flags: { ab }} = event
         if (contentLoaded) return true
       }

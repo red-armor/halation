@@ -12,13 +12,14 @@ import {
  * 组件直接进行加载；
  */
 class LoadManager {
-  readonly key: string;
+  private _key: string;
   readonly strategies: Array<Strategy>;
   readonly _moduleName: string;
   readonly _moduleMap: ModuleMap;
   readonly _lockCurrentLoadManager: LockCurrentLoadManager;
   readonly _releaseCurrentLoadManager: ReleaseCurrentLoadManager;
   readonly _proxyEvent: ProxyEvent;
+  private teardownEffects: Array<Function>;
 
   constructor(props: {
     blockKey: string;
@@ -39,13 +40,26 @@ class LoadManager {
       releaseCurrentLoadManager,
     } = props;
 
-    this.key = blockKey;
+    this._key = blockKey;
     this.strategies = this.sort(strategies);
     this._moduleName = moduleName;
     this._moduleMap = moduleMap;
     this._lockCurrentLoadManager = lockCurrentLoadManager;
     this._releaseCurrentLoadManager = releaseCurrentLoadManager;
     this._proxyEvent = proxyEvent;
+    this.teardownEffects = [];
+  }
+
+  getKey() {
+    return this._key;
+  }
+
+  addTeardown(fn: Function) {
+    this.teardownEffects.push(fn);
+  }
+
+  teardown() {
+    this.teardownEffects.forEach(fn => fn());
   }
 
   /**
@@ -83,7 +97,9 @@ class LoadManager {
 
       switch (type) {
         case StrategyType.event:
-          value = !!resolver(this._proxyEvent);
+          value = !!resolver({
+            event: this._proxyEvent,
+          });
           break;
         // 如果说是runtime的话，首先需要先加载model；运行一次resolver将需要
         // 监听的属性进行绑定。
@@ -108,9 +124,8 @@ class LoadManager {
   startVerifyEvent() {}
 
   startVerifyRuntime() {
-    const module = this._moduleMap.get(this._moduleName);
-    const model = module?.getModel();
-    console.log('model ', model);
+    // const module = this._moduleMap.get(this._moduleName);
+    // const model = module?.getModel();
   }
 
   subscribe() {}

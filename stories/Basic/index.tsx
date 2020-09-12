@@ -73,6 +73,8 @@ export default () => {
         'flags',
         'first_image_loaded'
       ]}
+
+      getInitialValues={}
     />
   )
 }

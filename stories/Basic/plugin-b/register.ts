@@ -12,7 +12,7 @@ export default function PluginComponent() {
       }
     }, {
       type: 'event',
-      resolver: event => {
+      resolver: ({ event }) => {
         const { imageLoaded } = event
         if (imageLoaded) return true
       }

@@ -1,11 +1,15 @@
 import { createHiddenProperty, isTrackable, TRACKER } from './commons';
-import { ProxyEvent, TrackerConstructor } from './types';
+import { TrackerConstructor, TrackerConstructorProps } from './types';
 
-const Tracker = (function({ base }: { base: ProxyEvent }) {
+const Tracker = (function({
+  base,
+  path = [],
+  reportAccessPaths,
+}: TrackerConstructorProps) {
   let tracker = base;
 
   if (isTrackable(base)) {
-    // base should be destructed, or
+    // base should be destructed, or will be the same object.
     tracker = new Proxy(
       { ...base },
       {
@@ -14,11 +18,23 @@ const Tracker = (function({ base }: { base: ProxyEvent }) {
           const tracker = Reflect.get(target, TRACKER, receiver);
           const value = tracker.base[prop];
           const childrenProxies = tracker['childrenProxies'];
+          const nextPath = path.concat(prop as string);
+
+          reportAccessPaths(nextPath);
+
           if (isTrackable(value)) {
             if (!childrenProxies[prop]) {
-              childrenProxies[prop] = new Tracker({ base: value });
+              childrenProxies[prop] = new Tracker({
+                base: value,
+                path: nextPath,
+                reportAccessPaths,
+              });
             } else if (childrenProxies[prop].base !== value) {
-              childrenProxies[prop] = new Tracker({ base: value });
+              childrenProxies[prop] = new Tracker({
+                base: value,
+                path: nextPath,
+                reportAccessPaths,
+              });
             }
             return childrenProxies[prop];
           } else if (childrenProxies[prop]) {
