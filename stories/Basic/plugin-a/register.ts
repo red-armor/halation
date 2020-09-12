@@ -14,10 +14,12 @@ export default function PluginComponent() {
       type: 'event',
       resolver: ({
         event,
-        dispatchNode
+        dispatchEvent
       }) => {
         const { contentLoaded, flags: { ab }} = event
         if (contentLoaded) return true
+        // dispatchEvent('imageLoaded')
+        return true
       }
     }]
   };

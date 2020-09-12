@@ -71,10 +71,9 @@ export default () => {
 
       events={[
         'flags',
-        'first_image_loaded'
+        // // 'first_image_loaded'
+        // 'imageLoaded',
       ]}
-
-      getInitialValues={}
     />
   )
 }

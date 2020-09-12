@@ -17,6 +17,7 @@ import {
   BlockNodeProps,
   RegisterResult,
   LoadManagerMap,
+  EventValue,
 } from './types';
 import Node from './Node';
 import Module from './Module';
@@ -24,6 +25,7 @@ import { logActivity } from './logger';
 import BlockNode from './BlockNode';
 import LoadManager from './LoadManager';
 import EventTracker from './EventTracker';
+import { isPlainObject, isString } from './commons';
 
 class Halation extends PureComponent<HalationProps> {
   public name: string;
@@ -156,8 +158,9 @@ class Halation extends PureComponent<HalationProps> {
         blockKey,
         strategies,
         moduleName,
-        proxyEvent: this.eventTracker.getProxyEvent(),
         moduleMap: this.moduleMap,
+        dispatchEvent: this.dispatchEvent.bind(this),
+        proxyEvent: this.eventTracker.getProxyEvent(),
         lockCurrentLoadManager: this.lockCurrentLoadManager.bind(this),
         releaseCurrentLoadManager: this.releaseCurrentLoadManager.bind(this),
       })
@@ -172,11 +175,23 @@ class Halation extends PureComponent<HalationProps> {
 
   releaseCurrentLoadManager() {
     this.eventTracker.releaseLoadManager();
+    console.log('event tracker ', this.eventTracker);
   }
 
-  // dispatchEvent(event: string | object) {
+  dispatchEvent(event: string | object) {
+    let nextValue = event;
 
-  // }
+    if (isString(event)) {
+      nextValue = {
+        event,
+        value: true,
+      };
+    }
+
+    if (isPlainObject(nextValue)) {
+      this.eventTracker.updateEventValue(nextValue as EventValue);
+    }
+  }
 
   render() {
     const blocks = this.nodeMap.values();

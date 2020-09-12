@@ -15,8 +15,12 @@ const Tracker = (function({
       {
         get: (target, prop, receiver) => {
           if (prop === TRACKER) return Reflect.get(target, prop, receiver);
+          // Take note: Reflect.get will not trigger `get` handler
           const tracker = Reflect.get(target, TRACKER, receiver);
-          const value = tracker.base[prop];
+          const base = tracker.base;
+          // if key is 'base', should not report and return directly.
+          if (prop === 'base') return base;
+          const value = base[prop];
           const childrenProxies = tracker['childrenProxies'];
           const nextPath = path.concat(prop as string);
 

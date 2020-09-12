@@ -14,7 +14,9 @@ export default function PluginComponent() {
       type: 'event',
       resolver: ({ event }) => {
         const { imageLoaded } = event
+        console.log('event ', event)
         if (imageLoaded) return true
+        // return true
       }
     }]
   };

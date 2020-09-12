@@ -1,4 +1,4 @@
-import { HalationEvents, ProxyEvent } from './types';
+import { EventValue, HalationEvents, ProxyEvent } from './types';
 import LoadManager from './LoadManager';
 import Tracker from './Tracker';
 import { generateRemarkablePaths } from './path';
@@ -29,6 +29,20 @@ class EventTracker {
     });
 
     this.currentLoadManager = null;
+  }
+
+  /**
+   *
+   * @param eventValue
+   * 目前先做到第一层的比较
+   */
+  updateEventValue(eventValue: EventValue) {
+    const { event, value } = eventValue;
+    const baseEventValue = this._proxyEvent[event];
+    if (baseEventValue !== value) {
+      this._proxyEvent[event] = value;
+      this.effectNodeTree.triggerEffect([event]);
+    }
   }
 
   getProxyEvent() {

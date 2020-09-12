@@ -23,20 +23,15 @@ class EffectNode {
   }
 
   addChild(path: Array<string>, loadManager: LoadManager) {
-    let childMap = this.childMap;
-
-    const len = path.length;
-
-    path.forEach((point, index) => {
-      if (!childMap[point])
-        childMap[point] = new EffectNode({
+    const node = path.reduce<EffectNode>((node, point) => {
+      if (!node.childMap[point])
+        node.childMap[point] = new EffectNode({
           key: point,
         });
+      return node.childMap[point];
+    }, this);
 
-      if (index === len - 1) {
-        childMap[point].addEffect(loadManager);
-      }
-    });
+    node.addEffect(loadManager);
   }
 
   addEffect(loadManager: LoadManager) {
@@ -51,6 +46,22 @@ class EffectNode {
     paths.forEach(path => {
       this.addChild(path, loadManager);
     });
+  }
+
+  triggerEffect(path: Array<string>) {
+    const node = path.reduce<EffectNode>((node, cur) => {
+      if (node && node.childMap && node.childMap[cur]) {
+        return node.childMap[cur];
+      }
+      return node;
+    }, this);
+
+    console.log('node ', node);
+
+    for (let key in node.effectMap) {
+      const { loadManager } = node.effectMap[key];
+      loadManager.update();
+    }
   }
 }
 

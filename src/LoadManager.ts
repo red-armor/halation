@@ -1,3 +1,4 @@
+import { LoadManagerConstructorProps } from 'types/loadManager';
 import {
   Strategy,
   StrategyType,
@@ -5,6 +6,7 @@ import {
   LockCurrentLoadManager,
   ReleaseCurrentLoadManager,
   ProxyEvent,
+  DispatchEvent,
 } from './types';
 
 /**
@@ -19,23 +21,17 @@ class LoadManager {
   readonly _lockCurrentLoadManager: LockCurrentLoadManager;
   readonly _releaseCurrentLoadManager: ReleaseCurrentLoadManager;
   readonly _proxyEvent: ProxyEvent;
+  private _dispatchEvent: DispatchEvent;
   private teardownEffects: Array<Function>;
 
-  constructor(props: {
-    blockKey: string;
-    moduleName: string;
-    strategies: Array<Strategy>;
-    moduleMap: ModuleMap;
-    proxyEvent: ProxyEvent;
-    lockCurrentLoadManager: LockCurrentLoadManager;
-    releaseCurrentLoadManager: ReleaseCurrentLoadManager;
-  }) {
+  constructor(props: LoadManagerConstructorProps) {
     const {
       blockKey,
       moduleName,
       strategies,
       moduleMap,
       proxyEvent,
+      dispatchEvent,
       lockCurrentLoadManager,
       releaseCurrentLoadManager,
     } = props;
@@ -47,6 +43,7 @@ class LoadManager {
     this._lockCurrentLoadManager = lockCurrentLoadManager;
     this._releaseCurrentLoadManager = releaseCurrentLoadManager;
     this._proxyEvent = proxyEvent;
+    this._dispatchEvent = dispatchEvent;
     this.teardownEffects = [];
   }
 
@@ -81,13 +78,17 @@ class LoadManager {
     });
   }
 
+  update() {
+    this.teardown();
+    this.shouldModuleLoad();
+  }
+
   /**
    * 整个strategy的处理需要是一个同步的
    */
   shouldModuleLoad(): boolean {
     const len = this.strategies.length;
     const state = {};
-
     this._lockCurrentLoadManager(this);
 
     for (let i = 0; i < len; i++) {
@@ -99,6 +100,7 @@ class LoadManager {
         case StrategyType.event:
           value = !!resolver({
             event: this._proxyEvent,
+            dispatchEvent: this._dispatchEvent,
           });
           break;
         // 如果说是runtime的话，首先需要先加载model；运行一次resolver将需要
@@ -108,9 +110,12 @@ class LoadManager {
           value = !!resolver(state);
           break;
       }
-      console.log('value ', value);
       // TODO: 临时注释掉
-      // if (!value) return false;
+      if (!value) {
+        // should release current load manager before return
+        this._releaseCurrentLoadManager();
+        return false;
+      }
     }
     this._releaseCurrentLoadManager();
 

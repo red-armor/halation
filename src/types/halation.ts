@@ -6,6 +6,7 @@ import { NodeRenderProps } from './node';
 import { Strategy } from './loadStrategy';
 import { GetComponent } from './module';
 import LoadManager from 'LoadManager';
+import { EventValue } from './eventTracker';
 
 export type HalationEvents = Array<string>;
 
@@ -73,3 +74,5 @@ export type ReleaseCurrentLoadManager = () => void;
 export type ProxyEvent = {
   [key: string]: any;
 };
+
+export type DispatchEvent = (eventValue: string | EventValue) => void;
