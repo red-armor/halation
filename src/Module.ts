@@ -65,10 +65,20 @@ class Module {
       : (module as Function);
   }
 
-  load(moduleName: ModuleName, getter: ModuleGetter): Promise<Function> {
-    return new Promise(resolve => {
-      const currentStatus = this.statusMap.get(moduleName);
+  load(
+    moduleName: ModuleName,
+    getter: ModuleGetter
+  ): Promise<Function> | Function {
+    const currentStatus = this.statusMap.get(moduleName);
+    // If module has been loaded already, then return directly.
+    if (currentStatus === ModuleStatus.Loaded) {
+      logActivity('Module', {
+        message: `load module ${this._name} ${moduleName} from cache`,
+      });
+      return this.resolvedModulesMap.get(moduleName) as Function;
+    }
 
+    return new Promise(resolve => {
       switch (currentStatus) {
         case ModuleStatus.Idle:
           this.resolversMap.get(moduleName)?.push(resolve);
@@ -79,12 +89,6 @@ class Module {
           break;
         case ModuleStatus.Pending:
           this.resolversMap.get(moduleName)?.push(resolve);
-          return;
-        case ModuleStatus.Loaded:
-          logActivity('Module', {
-            message: `load module ${this._name} ${moduleName} from cache`,
-          });
-          resolve(this.resolvedModulesMap.get(moduleName) as Function);
           return;
       }
 
@@ -116,11 +120,11 @@ class Module {
     });
   }
 
-  loadModel(): Promise<Function> {
+  loadModel(): Promise<Function> | Function {
     return this.load(ModuleName.Model, this.getModel);
   }
 
-  loadComponent(): Promise<Function> {
+  loadComponent(): Promise<Function> | Function {
     return this.load(ModuleName.Component, this.getComponent);
   }
 }

@@ -1,4 +1,3 @@
-import { LoadManagerConstructorProps } from 'types/loadManager';
 import {
   Strategy,
   StrategyType,
@@ -7,7 +6,9 @@ import {
   ReleaseCurrentLoadManager,
   ProxyEvent,
   DispatchEvent,
+  LoadManagerConstructorProps,
 } from './types';
+import { isFunction, isPromise } from './commons';
 
 /**
  * loadManager需要在进行渲染之前就要处理一直，这样在`BlockNode`渲染的时候，可以直接对那些不需要判断的
@@ -106,6 +107,18 @@ class LoadManager {
         // 如果说是runtime的话，首先需要先加载model；运行一次resolver将需要
         // 监听的属性进行绑定。
         case StrategyType.runtime:
+          console.log('module map ', this._moduleMap, this._moduleName);
+          const modelCreator = this._moduleMap
+            .get(this._moduleName)
+            ?.loadModel();
+          let modelInstance = null;
+          if (isPromise(modelCreator)) {
+            (modelCreator as PromiseLike<Function>).then(m => {
+              const modelInstance = m.call(null);
+            });
+          } else if (isFunction(modelCreator)) {
+            modelInstance = (modelCreator as Function).call(null);
+          }
           this.startVerifyRuntime();
           value = !!resolver(state);
           break;
@@ -121,12 +134,6 @@ class LoadManager {
 
     return true;
   }
-
-  observeFlags() {}
-
-  startVerifyFlags() {}
-
-  startVerifyEvent() {}
 
   startVerifyRuntime() {
     // const module = this._moduleMap.get(this._moduleName);

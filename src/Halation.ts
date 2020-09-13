@@ -175,7 +175,6 @@ class Halation extends PureComponent<HalationProps> {
 
   releaseCurrentLoadManager() {
     this.eventTracker.releaseLoadManager();
-    console.log('event tracker ', this.eventTracker);
   }
 
   dispatchEvent(event: string | object) {

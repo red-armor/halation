@@ -56,8 +56,6 @@ class EffectNode {
       return node;
     }, this);
 
-    console.log('node ', node);
-
     for (let key in node.effectMap) {
       const { loadManager } = node.effectMap[key];
       loadManager.update();
