@@ -41,6 +41,21 @@ const halationState = [{
   type: 'block',
 }]
 
+const blockRenderFn = blockProps => {
+  const { type } = blockProps
+
+  if (type === 'block') {
+    return props => {
+      const { children, ...rest } = props
+      return (
+        <div className="block-render-fn">
+          {React.cloneElement(children, {...rest, location: 'shanghai'})}
+        </div>
+      )
+    }
+  }
+}
+
 export default () => {
   const registers = [
     PluginARegister,
@@ -49,8 +64,16 @@ export default () => {
 
   return (
     <Halation
+      name='super'
       halationState={halationState}
       registers={registers}
+      blockRenderFn={blockRenderFn}
+
+      events={[
+        'flags',
+        // // 'first_image_loaded'
+        // 'imageLoaded',
+      ]}
     />
   )
 }
