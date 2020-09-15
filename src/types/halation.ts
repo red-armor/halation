@@ -24,6 +24,7 @@ export interface HalationProps {
 
   registers: Array<Function>;
   events?: HalationEvents;
+  store: Store;
 }
 
 export type BlockRenderFn = (
@@ -76,3 +77,10 @@ export type ProxyEvent = {
 };
 
 export type DispatchEvent = (eventValue: string | EventValue) => void;
+export type Store = {
+  subscribe: (subscription: Function) => Function;
+  injectModel: (key: string, model: any, initialValue: any) => void;
+  getState: () => {
+    [key: string]: any;
+  };
+};

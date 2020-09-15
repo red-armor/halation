@@ -9,6 +9,7 @@ import { SyncHook } from 'tapable';
 import {
   Refs,
   Hooks,
+  Store,
   PropsAPI,
   Strategy,
   ModuleMap,
@@ -34,17 +35,18 @@ class Halation extends PureComponent<HalationProps> {
   public halationState: Array<any>;
   public moduleMap: ModuleMap;
   public loadManagerMap: LoadManagerMap;
-  public graph: Array<any>;
   private rootRenderFn?: FC<PropsAPI>;
   public hooks: Hooks;
   public runtimeRegisterModule: Map<string, any>;
   private _refs: Refs;
   public eventTracker: EventTracker;
+  public store: Store;
 
   constructor(props: HalationProps) {
     super(props);
     const {
       name,
+      store,
       events,
       registers,
       blockRenderFn,
@@ -71,6 +73,7 @@ class Halation extends PureComponent<HalationProps> {
 
     this.createBlockNode(this.halationState);
     this.startListen();
+    this.store = store;
 
     registers.forEach(register => {
       const moduleProps: RegisterResult = register.call(null);
@@ -85,7 +88,6 @@ class Halation extends PureComponent<HalationProps> {
         this.moduleMap.set(name, module);
       }
     });
-    this.graph = [];
   }
 
   startListen() {
@@ -155,6 +157,7 @@ class Halation extends PureComponent<HalationProps> {
     this.loadManagerMap.set(
       blockKey,
       new LoadManager({
+        store: this.store,
         blockKey,
         strategies,
         moduleName,

@@ -11,7 +11,7 @@ import React, {
 } from 'react';
 import { BlockNodeProps, BlockWrapperProps, BlockNodeState } from './types';
 import { logActivity } from './logger';
-import { settledPromise } from './commons';
+import { isPromise, settledPromise } from './commons';
 
 const BlockWrapper: FC<BlockNodeProps> = props => {
   const { hooks, block, moduleMap, loadManagerMap, blockRenderFn } = props;
@@ -21,14 +21,31 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
   const blockRef = useRef();
   const isLoadingRef = useRef(false);
   const isMountedRef = useRef(false);
+  const loadManager = loadManagerMap.get(blockKey)!;
+
+  const unsubscribeLoadRoutine = useRef<Function | null>(null);
+
+  const loadRoutine = useCallback(() => {
+    const shouldLoadModule = loadManager?.shouldModuleLoad();
+    if (isPromise(shouldLoadModule)) {
+      (shouldLoadModule as Promise<boolean>).then(falsy => {
+        if (falsy) loadAndForceUpdate();
+      });
+    } else if (shouldLoadModule) {
+      loadAndForceUpdate();
+    }
+  }, []); // eslint-disable-line
 
   const loadAndForceUpdate = useCallback(() => {
+    if (unsubscribeLoadRoutine.current)
+      unsubscribeLoadRoutine.current?.call(null);
     if (isLoadingRef.current) return;
     const module = moduleMap.get(moduleName);
     if (module) {
       hooks.register.call(blockKey, block);
-      const loadModelTask = module.loadModel();
-      const loadComponentTask = module.loadComponent();
+      // TODO: temp to wrapper with Promise
+      const loadModelTask = Promise.resolve(module.loadModel());
+      const loadComponentTask = Promise.resolve(module.loadComponent());
       settledPromise([loadModelTask, loadComponentTask]).then(result => {
         const [modelResult, componentResult] = result;
         const state: BlockNodeState = {};
@@ -46,15 +63,9 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
 
   // 在最开始的时候，判断一下是否进行module的加载；
   if (!isMountedRef.current) {
-    const loadManager = loadManagerMap.get(blockKey);
-    const shouldLoadModule = loadManager?.shouldModuleLoad();
-    if (shouldLoadModule) {
-      const module = moduleMap.get(moduleName);
-      if (module) {
-        hooks.register.call(blockKey, block);
-        loadAndForceUpdate();
-      }
-    }
+    unsubscribeLoadRoutine.current = loadManager.bindLoadRoutine(loadRoutine);
+
+    loadRoutine();
   }
 
   useEffect(() => {
