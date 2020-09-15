@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { applyMiddleware, createStore, thunk, Provider, useDispatch, observe } from '@xhs/relinx'
 import { Halation } from '../../src'
 
 import PluginARegister from './plugin-a/register'
@@ -56,6 +57,32 @@ const blockRenderFn = blockProps => {
   }
 }
 
+const store = createStore({
+  models: {},
+}, applyMiddleware(thunk))
+
+const Helper = () => {
+  const [dispatch] = useDispatch()
+
+  useEffect(() => {
+    dispatch([{
+      type: 'plugin-b-2/setProps',
+      payload: {
+        count: 2,
+      }
+    }, {
+      type: 'plugin-b-4/setProps',
+      payload: {
+        count: 2,
+      }
+    }])
+  }, [])
+
+  return null
+}
+
+const ObservedHelper = observe(Helper)
+
 export default () => {
   const registers = [
     PluginARegister,
@@ -63,17 +90,23 @@ export default () => {
   ]
 
   return (
-    <Halation
-      name='super'
-      halationState={halationState}
-      registers={registers}
-      blockRenderFn={blockRenderFn}
+    <Provider
+      store={store}
+    >
+      <ObservedHelper />
+      <Halation
+        name='super'
+        halationState={halationState}
+        registers={registers}
+        blockRenderFn={blockRenderFn}
+        store={store}
 
-      events={[
-        'flags',
-        // // 'first_image_loaded'
-        // 'imageLoaded',
-      ]}
-    />
+        events={[
+          'flags',
+          // // 'first_image_loaded'
+          // 'imageLoaded',
+        ]}
+      />
+    </Provider>
   )
 }

@@ -7,16 +7,15 @@ export default function PluginComponent() {
     strategies: [{
       type: 'runtime',
       resolver: (props) => {
-        const { shouldDisplay } = props
-        return !shouldDisplay
+        const { count } = props
+        return count === 2
       }
     }, {
       type: 'event',
       resolver: ({ event }) => {
         const { imageLoaded } = event
-        console.log('event ', event)
         if (imageLoaded) return true
-        // return true
+        return false
       }
     }]
   };

@@ -17,8 +17,8 @@ export default function PluginComponent() {
         dispatchEvent
       }) => {
         const { contentLoaded, flags: { ab }} = event
+        setTimeout(() => dispatchEvent('imageLoaded'), 1000)
         if (contentLoaded) return true
-        // dispatchEvent('imageLoaded')
         return true
       }
     }]

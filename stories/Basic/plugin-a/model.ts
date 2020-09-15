@@ -1,5 +1,5 @@
 export default () => ({
   state: {
-    count: 1,
+    name: 'a',
   }
 })

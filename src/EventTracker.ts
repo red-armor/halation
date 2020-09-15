@@ -39,8 +39,11 @@ class EventTracker {
   updateEventValue(eventValue: EventValue) {
     const { event, value } = eventValue;
     const baseEventValue = this._proxyEvent[event];
+
     if (baseEventValue !== value) {
       this._proxyEvent[event] = value;
+      // base value should be loaded as well
+      this._proxyEvent.base[event] = value;
       this.effectNodeTree.triggerEffect([event]);
     }
   }

@@ -90,7 +90,6 @@ class LoadManager {
 
   update() {
     this.teardown();
-    this.shouldModuleLoad();
     if (this._loadRoutine) this._loadRoutine();
   }
 
@@ -131,7 +130,7 @@ class LoadManager {
         })
         .catch(err => {
           logActivity('LoadManager', {
-            message: `Has error on verify runtime..${err.message}`,
+            message: `Has error on verify runtime..${err}`,
           });
           return false;
         });
@@ -149,6 +148,7 @@ class LoadManager {
   shouldModuleLoad(): boolean | Promise<boolean> {
     const len = this.strategies.length;
     this._lockCurrentLoadManager(this);
+    // debugger
 
     for (let i = 0; i < len; i++) {
       const strategy = this.strategies[i];
