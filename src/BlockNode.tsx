@@ -36,35 +36,61 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     }
   }, []); // eslint-disable-line
 
+  const forceUpdate = useCallback(result => {
+    const [modelResult, componentResult] = result;
+    const state: BlockNodeState = {};
+    if (modelResult.success) {
+      state.model = modelResult.value;
+    }
+
+    if (componentResult.success) {
+      state.Component = componentResult.value;
+    }
+    setWrapper(state);
+  }, []) // eslint-disable-line
+
   const loadAndForceUpdate = useCallback(() => {
+    logActivity('BlockNode', {
+      message: `Trigger 'loadAndForceUpdate'`,
+    });
     if (unsubscribeLoadRoutine.current)
       unsubscribeLoadRoutine.current?.call(null);
     if (isLoadingRef.current) return;
     const module = moduleMap.get(moduleName);
     if (module) {
       hooks.register.call(blockKey, block);
-      // TODO: temp to wrapper with Promise
-      const loadModelTask = Promise.resolve(module.loadModel());
-      const loadComponentTask = Promise.resolve(module.loadComponent());
-      settledPromise([loadModelTask, loadComponentTask]).then(result => {
-        const [modelResult, componentResult] = result;
-        const state: BlockNodeState = {};
-        if (modelResult.success) {
-          state.model = modelResult.value;
-        }
+      const model = module.loadModel();
+      const component = module.loadComponent();
 
-        if (componentResult.success) {
-          state.Component = componentResult.value;
-        }
-        setWrapper(state);
-      });
+      if (isPromise(model) || isPromise(component)) {
+        const loadModelTask = Promise.resolve(module.loadModel());
+        const loadComponentTask = Promise.resolve(module.loadComponent());
+        settledPromise([loadModelTask, loadComponentTask]).then(result => {
+          forceUpdate(result);
+        });
+      } else {
+        logActivity('BlockNode', {
+          message: `load component & model directly..`,
+        });
+        forceUpdate([
+          {
+            success: true,
+            value: model,
+          },
+          {
+            success: true,
+            value: component,
+          },
+        ]);
+      }
+
+      // TODO: temp to wrapper with Promise
     }
   }, []); // eslint-disable-line
 
   // 在最开始的时候，判断一下是否进行module的加载；
   if (!isMountedRef.current) {
     unsubscribeLoadRoutine.current = loadManager.bindLoadRoutine(loadRoutine);
-
     loadRoutine();
   }
 
@@ -118,12 +144,13 @@ const BlockNode: FC<BlockNodeProps> = props => {
   const { block, nodeMap, blockRenderFn, addBlockLoadManager, ...rest } = props;
   const children: Array<FunctionComponentElement<BlockNodeProps>> = [];
   const childKeys = block.getChildKeys();
-
   const blockKey = block.getKey();
   const moduleName = block.getName();
   const moduleMap = props.moduleMap;
-  const module = moduleMap.get(moduleName);
-  const strategies = module?.getStrategies() || [];
+  const module = moduleMap.get(moduleName)!;
+
+  // block strategy comes first, then from module...
+  const strategies = block.getStrategies() || module.getStrategies() || [];
   addBlockLoadManager({
     blockKey,
     moduleName,

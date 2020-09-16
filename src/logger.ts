@@ -23,5 +23,6 @@ export const logActivity = (
     titleStyle,
     messageStyle,
     value ? value : '',
+    Date.now(),
   ]);
 };

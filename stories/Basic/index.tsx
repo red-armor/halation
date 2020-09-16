@@ -12,6 +12,24 @@ const halationState = [{
   nextSibling: 'plugin-b-2',
   children: [],
   type: 'block',
+  strategies: [{
+    type: 'runtime',
+    resolver: (props) => {
+      const { shouldDisplay } = props
+      return !shouldDisplay
+    }
+  }, {
+    type: 'event',
+    resolver: ({
+      event,
+      dispatchEvent
+    }) => {
+      const { contentLoaded, flags: { ab }} = event
+      setTimeout(() => dispatchEvent('imageLoaded'), 1500)
+      if (contentLoaded) return true
+      return true
+    }
+  }]
 }, {
   name: 'plugin-b',
   key: 'plugin-b-2',
@@ -19,6 +37,20 @@ const halationState = [{
   nextSibling: 'plugin-a-3',
   children: [],
   type: 'block',
+  strategies: [{
+    type: 'runtime',
+    resolver: (props) => {
+      const { count } = props
+      return count === 2
+    }
+  }, {
+    type: 'event',
+    resolver: ({ event }) => {
+      const { imageLoaded } = event
+      if (imageLoaded) return true
+      return false
+    }
+  }]
 }, {
   name: 'plugin-a',
   key: 'plugin-a-3',

@@ -120,6 +120,10 @@ class LoadManager {
       this._runtimeVerifyEffect = null;
     }
 
+    logActivity('LoadManager', {
+      message: 'start verify runtime strategy',
+    });
+
     const modelCreator = this._moduleMap.get(this._moduleName)?.loadModel();
     let modelInstance = null;
     if (isPromise(modelCreator)) {
