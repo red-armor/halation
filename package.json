@@ -33,7 +33,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "halation",
+  "name": "@xhs/halation",
   "author": "youchaoliu",
   "module": "dist/halation.esm.js",
   "devDependencies": {
