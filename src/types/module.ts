@@ -8,7 +8,7 @@ export enum ModuleName {
 export type ModuleGetter = () => Function | undefined;
 
 export interface GetComponent {
-  (): PromiseLike<Function>;
+  (): Promise<Function>;
 }
 
 export interface ModuleProps {

@@ -1,4 +1,4 @@
-import { NodeProps, NodeRenderProps } from './types';
+import { NodeProps, NodeRenderProps, Strategy } from './types';
 
 class Node {
   private name: string;
@@ -7,15 +7,25 @@ class Node {
   private nextSibling: string;
   private type: string;
   private children: Array<string>;
+  private strategies?: Array<Strategy>;
 
   constructor(props: NodeProps) {
-    const { key, type, prevSibling, nextSibling, children, name } = props;
+    const {
+      key,
+      type,
+      prevSibling,
+      nextSibling,
+      children,
+      name,
+      strategies,
+    } = props;
     this.key = key;
     this.name = name;
     this.prevSibling = prevSibling;
     this.nextSibling = nextSibling;
     this.type = type || 'block';
     this.children = children;
+    this.strategies = strategies;
   }
 
   getChildKeys(): Array<string> {
@@ -40,6 +50,10 @@ class Node {
 
   getType(): string {
     return this.type;
+  }
+
+  getStrategies(): Array<Strategy> | undefined {
+    return this.strategies;
   }
 
   getRenderProps(): NodeRenderProps {

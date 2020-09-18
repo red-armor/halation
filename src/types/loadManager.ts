@@ -1,6 +1,7 @@
 import { Strategy } from './loadStrategy';
 import LoadManager from '../LoadManager';
 import {
+  Store,
   ModuleMap,
   ProxyEvent,
   DispatchEvent,
@@ -13,6 +14,7 @@ export interface LoadManagerConstructor {
 }
 
 export interface LoadManagerConstructorProps {
+  store: Store;
   blockKey: string;
   moduleName: string;
   strategies: Array<Strategy>;

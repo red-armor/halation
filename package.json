@@ -58,6 +58,7 @@
     "typescript": "^3.9.3"
   },
   "dependencies": {
+    "@xhs/relinx": "^2.3.2",
     "invariant": "^2.2.4",
     "tapable": "^1.1.3"
   }

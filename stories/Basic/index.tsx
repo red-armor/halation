@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { applyMiddleware, createStore, thunk, Provider, useDispatch, observe } from '@xhs/relinx'
 import { Halation } from '../../src'
 
 import PluginARegister from './plugin-a/register'
@@ -11,6 +12,24 @@ const halationState = [{
   nextSibling: 'plugin-b-2',
   children: [],
   type: 'block',
+  strategies: [{
+    type: 'runtime',
+    resolver: (props) => {
+      const { shouldDisplay } = props
+      return !shouldDisplay
+    }
+  }, {
+    type: 'event',
+    resolver: ({
+      event,
+      dispatchEvent
+    }) => {
+      const { contentLoaded, flags: { ab }} = event
+      setTimeout(() => dispatchEvent('imageLoaded'), 1500)
+      if (contentLoaded) return true
+      return true
+    }
+  }]
 }, {
   name: 'plugin-b',
   key: 'plugin-b-2',
@@ -18,6 +37,20 @@ const halationState = [{
   nextSibling: 'plugin-a-3',
   children: [],
   type: 'block',
+  strategies: [{
+    type: 'runtime',
+    resolver: (props) => {
+      const { count } = props
+      return count === 2
+    }
+  }, {
+    type: 'event',
+    resolver: ({ event }) => {
+      const { imageLoaded } = event
+      if (imageLoaded) return true
+      return false
+    }
+  }]
 }, {
   name: 'plugin-a',
   key: 'plugin-a-3',
@@ -56,6 +89,32 @@ const blockRenderFn = blockProps => {
   }
 }
 
+const store = createStore({
+  models: {},
+}, applyMiddleware(thunk))
+
+const Helper = () => {
+  const [dispatch] = useDispatch()
+
+  useEffect(() => {
+    dispatch([{
+      type: 'plugin-b-2/setProps',
+      payload: {
+        count: 2,
+      }
+    }, {
+      type: 'plugin-b-4/setProps',
+      payload: {
+        count: 2,
+      }
+    }])
+  }, [])
+
+  return null
+}
+
+const ObservedHelper = observe(Helper)
+
 export default () => {
   const registers = [
     PluginARegister,
@@ -63,17 +122,23 @@ export default () => {
   ]
 
   return (
-    <Halation
-      name='super'
-      halationState={halationState}
-      registers={registers}
-      blockRenderFn={blockRenderFn}
+    <Provider
+      store={store}
+    >
+      <ObservedHelper />
+      <Halation
+        name='super'
+        halationState={halationState}
+        registers={registers}
+        blockRenderFn={blockRenderFn}
+        store={store}
 
-      events={[
-        'flags',
-        // // 'first_image_loaded'
-        // 'imageLoaded',
-      ]}
-    />
+        events={[
+          'flags',
+          // // 'first_image_loaded'
+          // 'imageLoaded',
+        ]}
+      />
+    </Provider>
   )
 }

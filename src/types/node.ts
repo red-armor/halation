@@ -1,4 +1,5 @@
 import Node from '../Node';
+import { Strategy } from './loadStrategy';
 import { Refs } from './halation';
 
 export { Node };
@@ -11,6 +12,7 @@ export interface NodeProps {
   nextSibling: string;
   data: Node;
   children: Array<string>;
+  strategies?: Array<Strategy>;
 }
 
 export interface NodeRenderProps {

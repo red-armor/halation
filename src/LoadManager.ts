@@ -1,14 +1,16 @@
 import {
+  Store,
   Strategy,
-  StrategyType,
   ModuleMap,
-  LockCurrentLoadManager,
-  ReleaseCurrentLoadManager,
+  StrategyType,
   ProxyEvent,
   DispatchEvent,
+  LockCurrentLoadManager,
+  ReleaseCurrentLoadManager,
   LoadManagerConstructorProps,
 } from './types';
 import { isFunction, isPromise } from './commons';
+import { logActivity } from './logger';
 
 /**
  * loadManager需要在进行渲染之前就要处理一直，这样在`BlockNode`渲染的时候，可以直接对那些不需要判断的
@@ -16,6 +18,7 @@ import { isFunction, isPromise } from './commons';
  */
 class LoadManager {
   private _key: string;
+  readonly _store: Store;
   readonly strategies: Array<Strategy>;
   readonly _moduleName: string;
   readonly _moduleMap: ModuleMap;
@@ -24,9 +27,12 @@ class LoadManager {
   readonly _proxyEvent: ProxyEvent;
   private _dispatchEvent: DispatchEvent;
   private teardownEffects: Array<Function>;
+  private _runtimeVerifyEffect: null | Function;
+  private _loadRoutine: Function | null;
 
   constructor(props: LoadManagerConstructorProps) {
     const {
+      store,
       blockKey,
       moduleName,
       strategies,
@@ -38,6 +44,7 @@ class LoadManager {
     } = props;
 
     this._key = blockKey;
+    this._store = store;
     this.strategies = this.sort(strategies);
     this._moduleName = moduleName;
     this._moduleMap = moduleMap;
@@ -46,6 +53,8 @@ class LoadManager {
     this._proxyEvent = proxyEvent;
     this._dispatchEvent = dispatchEvent;
     this.teardownEffects = [];
+    this._runtimeVerifyEffect = null;
+    this._loadRoutine = null;
   }
 
   getKey() {
@@ -81,16 +90,69 @@ class LoadManager {
 
   update() {
     this.teardown();
-    this.shouldModuleLoad();
+    if (this._loadRoutine) this._loadRoutine();
+  }
+
+  mountModel(
+    resolver: Function,
+    modelInstance: any,
+    initialValue: any = {}
+  ): boolean {
+    const modelKey = this._key;
+    this._store.injectModel(modelKey, modelInstance, initialValue);
+    const base = this._store.getState();
+
+    // TODO: If injected model is pending with effects. base[modelKey]
+    // may get old value...
+    const currentModelState = base[modelKey];
+    const falsy = resolver(currentModelState);
+
+    if (!falsy) {
+      this._store.subscribe(this.update.bind(this));
+    }
+
+    return !!falsy;
+  }
+
+  startVerifyRuntime(resolver: Function): Promise<boolean> | boolean {
+    if (typeof this._runtimeVerifyEffect === 'function') {
+      this._runtimeVerifyEffect();
+      this._runtimeVerifyEffect = null;
+    }
+
+    logActivity('LoadManager', {
+      message: 'start verify runtime strategy',
+    });
+
+    const modelCreator = this._moduleMap.get(this._moduleName)?.loadModel();
+    let modelInstance = null;
+    if (isPromise(modelCreator)) {
+      return (modelCreator as Promise<Function>)
+        .then(m => {
+          const modelInstance = m.call(null);
+          return this.mountModel(resolver, modelInstance, {});
+        })
+        .catch(err => {
+          logActivity('LoadManager', {
+            message: `Has error on verify runtime..${err}`,
+          });
+          return false;
+        });
+    } else if (isFunction(modelCreator)) {
+      modelInstance = (modelCreator as Function).call(null);
+      return this.mountModel(resolver, modelInstance, {});
+    }
+
+    return false;
   }
 
   /**
    * 整个strategy的处理需要是一个同步的
    */
-  shouldModuleLoad(): boolean {
+  shouldModuleLoad(): boolean | Promise<boolean> {
     const len = this.strategies.length;
-    const state = {};
     this._lockCurrentLoadManager(this);
+    // debugger
 
     for (let i = 0; i < len; i++) {
       const strategy = this.strategies[i];
@@ -107,21 +169,7 @@ class LoadManager {
         // 如果说是runtime的话，首先需要先加载model；运行一次resolver将需要
         // 监听的属性进行绑定。
         case StrategyType.runtime:
-          console.log('module map ', this._moduleMap, this._moduleName);
-          const modelCreator = this._moduleMap
-            .get(this._moduleName)
-            ?.loadModel();
-          let modelInstance = null;
-          if (isPromise(modelCreator)) {
-            (modelCreator as PromiseLike<Function>).then(m => {
-              const modelInstance = m.call(null);
-            });
-          } else if (isFunction(modelCreator)) {
-            modelInstance = (modelCreator as Function).call(null);
-          }
-          this.startVerifyRuntime();
-          value = !!resolver(state);
-          break;
+          return this.startVerifyRuntime(resolver);
       }
       // TODO: 临时注释掉
       if (!value) {
@@ -135,12 +183,10 @@ class LoadManager {
     return true;
   }
 
-  startVerifyRuntime() {
-    // const module = this._moduleMap.get(this._moduleName);
-    // const model = module?.getModel();
+  bindLoadRoutine(loadRoutine: Function): Function {
+    this._loadRoutine = loadRoutine;
+    return () => (this._loadRoutine = null);
   }
-
-  subscribe() {}
 }
 
 export default LoadManager;
