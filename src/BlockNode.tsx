@@ -9,6 +9,7 @@ import React, {
   createElement,
   FunctionComponentElement,
 } from 'react';
+import invariant from 'invariant';
 import { BlockNodeProps, BlockWrapperProps, BlockNodeState } from './types';
 import { logActivity } from './logger';
 import { isPromise, settledPromise } from './commons';
@@ -148,6 +149,12 @@ const BlockNode: FC<BlockNodeProps> = props => {
   const moduleName = block.getName();
   const moduleMap = props.moduleMap;
   const module = moduleMap.get(moduleName)!;
+
+  invariant(
+    module,
+    `module ${moduleName} is required to register first. Please check whether ` +
+      `module ${moduleName} is defined in 'registers' props`
+  );
 
   // block strategy comes first, then from module...
   const strategies = block.getStrategies() || module.getStrategies() || [];
