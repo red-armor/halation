@@ -3,7 +3,6 @@ import React, {
   useRef,
   useState,
   Fragment,
-  useEffect,
   forwardRef,
   useCallback,
   createElement,
@@ -91,13 +90,14 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
 
   // 在最开始的时候，判断一下是否进行module的加载；
   if (!isMountedRef.current) {
+    // In a condition, when invoke loadRoutine, model and module have already loaded.
+    // it will trigger forceUpdate directly. Because there is no limit on trigger forceUpdate.
+    // if `isMountedRef` is putted in `useEffect`, it will never be called and lost into
+    // render loop!!!
+    isMountedRef.current = true;
     unsubscribeLoadRoutine.current = loadManager.bindLoadRoutine(loadRoutine);
     loadRoutine();
   }
-
-  useEffect(() => {
-    isMountedRef.current = true;
-  }, []); // eslint-disable-line
 
   const Helper = () => {
     return null;
@@ -115,6 +115,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     (props, ref) => {
       return createElement(wrapper.Component as FC<any>, {
         ...props,
+        $_modelKey: loadManager.getKey(),
         forwardRef: ref,
       });
     }
