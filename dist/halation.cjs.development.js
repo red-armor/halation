@@ -7,6 +7,7 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var React = require('react');
 var React__default = _interopDefault(React);
 var tapable = require('tapable');
+var invariant = _interopDefault(require('invariant'));
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -135,7 +136,10 @@ var logActivity = function logActivity(moduleName, _ref) {
   var title = "[" + moduleName + "]";
   var titleStyle = 'color: #7cb305; font-weight: bold';
   var messageStyle = 'color: #ff4d4f; font-weight: bold';
-  console.log.apply(null, ['%c' + title + ' %c' + message, titleStyle, messageStyle, value ? value : '', Date.now()]);
+
+  if (process && "development" !== 'production') {
+    console.log.apply(null, ['%c' + title + ' %c' + message, titleStyle, messageStyle, value ? value : '', Date.now()]);
+  }
 };
 
 var Module = /*#__PURE__*/function () {
@@ -381,13 +385,14 @@ var BlockWrapper = function BlockWrapper(props) {
   // 在最开始的时候，判断一下是否进行module的加载；
 
   if (!isMountedRef.current) {
+    // In a condition, when invoke loadRoutine, model and module have already loaded.
+    // it will trigger forceUpdate directly. Because there is no limit on trigger forceUpdate.
+    // if `isMountedRef` is putted in `useEffect`, it will never be called and lost into
+    // render loop!!!
+    isMountedRef.current = true;
     unsubscribeLoadRoutine.current = loadManager.bindLoadRoutine(loadRoutine);
     loadRoutine();
   }
-
-  React.useEffect(function () {
-    isMountedRef.current = true;
-  }, []); // eslint-disable-line
 
   var Helper = function Helper() {
     return null;
@@ -402,6 +407,7 @@ var BlockWrapper = function BlockWrapper(props) {
 
   var RefForwardingWrapper = React.forwardRef(function (props, ref) {
     return React.createElement(wrapper.Component, _extends({}, props, {
+      $_modelKey: loadManager.getKey(),
       forwardRef: ref
     }));
   });
@@ -429,7 +435,8 @@ var BlockNode = function BlockNode(props) {
   var blockKey = block.getKey();
   var moduleName = block.getName();
   var moduleMap = props.moduleMap;
-  var module = moduleMap.get(moduleName); // block strategy comes first, then from module...
+  var module = moduleMap.get(moduleName);
+  !module ?  invariant(false, "module " + moduleName + " is required to register first. Please check whether " + ("module " + moduleName + " is defined in 'registers' props"))  : void 0; // block strategy comes first, then from module...
 
   var strategies = block.getStrategies() || module.getStrategies() || [];
   addBlockLoadManager({
