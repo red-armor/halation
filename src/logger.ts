@@ -18,11 +18,14 @@ export const logActivity = (
   const title: string = `[${moduleName}]`;
   const titleStyle = 'color: #7cb305; font-weight: bold';
   const messageStyle = 'color: #ff4d4f; font-weight: bold';
-  console.log.apply(null, [
-    '%c' + title + ' %c' + message,
-    titleStyle,
-    messageStyle,
-    value ? value : '',
-    Date.now(),
-  ]);
+
+  if (process && process.env.NODE_ENV !== 'production') {
+    console.log.apply(null, [
+      '%c' + title + ' %c' + message,
+      titleStyle,
+      messageStyle,
+      value ? value : '',
+      Date.now(),
+    ]);
+  }
 };
