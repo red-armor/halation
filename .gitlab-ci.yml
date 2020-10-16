@@ -5,35 +5,35 @@ before_script:
   - formula -V
   - npm i
 
-  stages:
-    - test
-    - deploy
+stages:
+  - test
+  - deploy
 
-  test:
-    stage: test
-    script:
-      # - formula lint
-      - formula test
+test:
+  stage: test
+  script:
+    # - formula lint
+    - formula test
 
-  deploy:production:
-    stage: deploy
-    script:
-      - npm run build
-      - npm publish
-    only:
-      - /^v\d+\.\d+\.\d+$/
+deploy:production:
+  stage: deploy
+  script:
+    - npm run build
+    - npm publish
+  only:
+    - /^v\d+\.\d+\.\d+$/
 
-  deploy:prerelease:
-    stage: deploy
-    script:
-      - npm publish --tag=prerelease
-    only:
-      - /^v\d+\.\d+\.\d+-\d+$/
+deploy:prerelease:
+  stage: deploy
+  script:
+    - npm publish --tag=prerelease
+  only:
+    - /^v\d+\.\d+\.\d+-\d+$/
 
-  deploy:alpha:
-    stage: deploy
-    script:
-      - npm run build
-      - npm publish
-    only:
-      - /^v\d+\.\d+\.\d+-alpha\./
+deploy:alpha:
+  stage: deploy
+  script:
+    - npm run build
+    - npm publish
+  only:
+    - /^v\d+\.\d+\.\d+-alpha\./
