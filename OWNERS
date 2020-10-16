@@ -1,0 +1,3 @@
+# Owner的名称是邮箱的前缀。例如，你想指定两个人(kuaiyin@xiaohongshu.com, qwu4@xiaohongshu.com)来进行Code Review，可以像下面这么写(Owner添加完成后，请删除这行注释)
+kuaiyin
+qwu4
