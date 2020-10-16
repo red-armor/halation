@@ -27,6 +27,11 @@ export interface HalationProps {
   store: Store;
 }
 
+export interface HalationState {
+  nodeMap: Map<string, Node>;
+  halationState: Array<any>;
+}
+
 export type BlockRenderFn = (
   props: NodeRenderProps
 ) => null | undefined | FC<any>;

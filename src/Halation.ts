@@ -14,6 +14,7 @@ import {
   Strategy,
   ModuleMap,
   HalationProps,
+  HalationState,
   BlockRenderFn,
   BlockNodeProps,
   RegisterResult,
@@ -28,11 +29,9 @@ import LoadManager from './LoadManager';
 import EventTracker from './EventTracker';
 import { isPlainObject, isString } from './commons';
 
-class Halation extends PureComponent<HalationProps> {
+class Halation extends PureComponent<HalationProps, HalationState> {
   public name: string;
-  public nodeMap: Map<string, Node>;
   public blockRenderFn?: BlockRenderFn;
-  public halationState: Array<any>;
   public moduleMap: ModuleMap;
   public loadManagerMap: LoadManagerMap;
   private rootRenderFn?: FC<PropsAPI>;
@@ -53,9 +52,11 @@ class Halation extends PureComponent<HalationProps> {
       halationState,
       rootRenderFn,
     } = props;
-    this.halationState = halationState;
+    this.state = {
+      nodeMap: Halation.createBlockNode(halationState),
+      halationState: halationState,
+    };
     this.blockRenderFn = blockRenderFn;
-    this.nodeMap = new Map();
     this.name = name;
     this.moduleMap = new Map();
     this.loadManagerMap = new Map();
@@ -71,7 +72,6 @@ class Halation extends PureComponent<HalationProps> {
       events: events || [],
     });
 
-    this.createBlockNode(this.halationState);
     this.startListen();
     this.store = store;
 
@@ -88,6 +88,18 @@ class Halation extends PureComponent<HalationProps> {
         this.moduleMap.set(name, module);
       }
     });
+  }
+
+  static getDerivedStateFromProps(props: HalationProps, state: HalationState) {
+    const { halationState } = props;
+    if (halationState !== state.halationState) {
+      return {
+        nodeMap: Halation.createBlockNode(halationState),
+        halationState: halationState,
+      };
+    }
+    // 默认不改动 state
+    return null;
   }
 
   startListen() {
@@ -111,16 +123,19 @@ class Halation extends PureComponent<HalationProps> {
     return this.name;
   }
 
-  createBlockNode(list: Array<any>) {
+  static createBlockNode(list: Array<any>): Map<string, Node> {
+    const nodeMap = new Map();
     list.forEach(item => {
       const { key } = item;
-      this.nodeMap.set(key, new Node(item));
+      nodeMap.set(key, new Node(item));
     });
 
     logActivity('Halation', {
       message: 'finish to create nodes ',
-      value: this.nodeMap,
+      value: nodeMap,
     });
+
+    return nodeMap;
   }
 
   public getRefs(): Refs {
@@ -130,7 +145,7 @@ class Halation extends PureComponent<HalationProps> {
   public getPropsAPI(): PropsAPI {
     return {
       hooks: this.hooks,
-      nodeMap: this.nodeMap,
+      nodeMap: this.state.nodeMap,
       moduleMap: this.moduleMap,
       loadManagerMap: this.loadManagerMap,
       refs: this.getRefs(),
@@ -196,7 +211,7 @@ class Halation extends PureComponent<HalationProps> {
   }
 
   render() {
-    const blocks = this.nodeMap.values();
+    const blocks = this.state.nodeMap.values();
     let block = blocks.next().value;
     const children: Array<FunctionComponentElement<BlockNodeProps>> = [];
 
@@ -214,7 +229,7 @@ class Halation extends PureComponent<HalationProps> {
         )
       );
       const blockKey = block.getNextSibling();
-      block = this.nodeMap.get(blockKey);
+      block = this.state.nodeMap.get(blockKey);
     }
 
     if (typeof this.rootRenderFn === 'function') {
