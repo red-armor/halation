@@ -1,5 +1,4 @@
 export enum StrategyType {
-  flags = 'flags',
   event = 'event',
   runtime = 'runtime',
 }

@@ -161,10 +161,13 @@ class LoadManager {
 
       switch (type) {
         case StrategyType.event:
+          this._proxyEvent.strictEnter('event');
           value = !!resolver({
             event: this._proxyEvent,
             dispatchEvent: this._dispatchEvent,
           });
+          this._releaseCurrentLoadManager();
+          this._proxyEvent.leave();
           break;
         // 如果说是runtime的话，首先需要先加载model；运行一次resolver将需要
         // 监听的属性进行绑定。
@@ -173,12 +176,9 @@ class LoadManager {
       }
       // TODO: 临时注释掉
       if (!value) {
-        // should release current load manager before return
-        this._releaseCurrentLoadManager();
         return false;
       }
     }
-    this._releaseCurrentLoadManager();
 
     return true;
   }

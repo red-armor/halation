@@ -1,7 +1,6 @@
+import produce from 'state-tracker';
 import { EventValue, HalationEvents, ProxyEvent } from './types';
 import LoadManager from './LoadManager';
-import Tracker from './Tracker';
-import { generateRemarkablePaths } from './path';
 import EffectNode from './EffectNode';
 import { logActivity } from './logger';
 
@@ -10,20 +9,14 @@ class EventTracker {
   private eventObject: ProxyEvent;
   private _proxyEvent: ProxyEvent;
   private currentLoadManager: LoadManager | null;
-  private accessPaths: Array<Array<string>>;
   private effectNodeTree: EffectNode;
 
   constructor(props: { events: HalationEvents }) {
     const { events } = props;
     this.events = events;
     this.eventObject = this.initEventObject();
-    this._proxyEvent = new Tracker({
-      path: [],
-      base: this.eventObject,
-      reportAccessPaths: this.reportAccessPaths.bind(this),
-    });
+    this._proxyEvent = produce(this.eventObject);
 
-    this.accessPaths = [];
     this.effectNodeTree = new EffectNode({
       key: 'root',
     });
@@ -42,18 +35,12 @@ class EventTracker {
 
     if (baseEventValue !== value) {
       this._proxyEvent[event] = value;
-      // base value should be loaded as well
-      this._proxyEvent.base[event] = value;
       this.effectNodeTree.triggerEffect([event]);
     }
   }
 
   getProxyEvent() {
     return this._proxyEvent;
-  }
-
-  reportAccessPaths(paths: Array<string>) {
-    this.accessPaths.push(paths);
   }
 
   initEventObject(): {} {
@@ -63,12 +50,12 @@ class EventTracker {
   }
 
   setLoadManager(loadManager: LoadManager) {
-    this.accessPaths = [];
     this.currentLoadManager = loadManager;
   }
 
   releaseLoadManager() {
-    const tipPoints = generateRemarkablePaths(this.accessPaths);
+    const tracker = this._proxyEvent.getContext().getCurrent();
+    const tipPoints = tracker.getRemarkable();
     if (this.currentLoadManager) {
       this.effectNodeTree.addChildren({
         paths: tipPoints,
