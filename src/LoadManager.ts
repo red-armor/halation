@@ -11,6 +11,7 @@ import {
 } from './types';
 import { isFunction, isPromise } from './commons';
 import { logActivity } from './logger';
+import invariant from 'invariant';
 
 /**
  * loadManager需要在进行渲染之前就要处理一直，这样在`BlockNode`渲染的时候，可以直接对那些不需要判断的
@@ -27,8 +28,8 @@ class LoadManager {
   readonly _proxyEvent: ProxyEvent;
   private _dispatchEvent: DispatchEvent;
   private teardownEffects: Array<Function>;
-  private _runtimeVerifyEffect: null | Function;
   private _loadRoutine: Function | null;
+  private _isModelInjected: boolean;
 
   constructor(props: LoadManagerConstructorProps) {
     const {
@@ -53,8 +54,8 @@ class LoadManager {
     this._proxyEvent = proxyEvent;
     this._dispatchEvent = dispatchEvent;
     this.teardownEffects = [];
-    this._runtimeVerifyEffect = null;
     this._loadRoutine = null;
+    this._isModelInjected = false;
   }
 
   getKey() {
@@ -93,13 +94,24 @@ class LoadManager {
     if (this._loadRoutine) this._loadRoutine();
   }
 
+  injectModelIntoStore(modelInstance: any, initialValue: any = {}): boolean {
+    const modelKey = this._key;
+    this._store.injectModel(modelKey, modelInstance, initialValue);
+
+    logActivity('LoadManager', {
+      message: `inject model ${modelKey} into store`,
+    });
+    return true;
+  }
+
   mountModel(
     resolver: Function,
     modelInstance: any,
     initialValue: any = {}
   ): boolean {
     const modelKey = this._key;
-    this._store.injectModel(modelKey, modelInstance, initialValue);
+    this.injectModelIntoStore(modelInstance, initialValue);
+
     const base = this._store.getState();
 
     // TODO: If injected model is pending with effects. base[modelKey]
@@ -114,22 +126,27 @@ class LoadManager {
     return !!falsy;
   }
 
-  startVerifyRuntime(resolver: Function): Promise<boolean> | boolean {
-    if (typeof this._runtimeVerifyEffect === 'function') {
-      this._runtimeVerifyEffect();
-      this._runtimeVerifyEffect = null;
-    }
+  getModelCreator() {
+    const modelCreator = this._moduleMap.get(this._moduleName)?.loadModel();
 
+    invariant(
+      modelCreator,
+      `${this._moduleName} model is required to defined if attempt to use runtime load strategy`
+    );
+    return modelCreator;
+  }
+
+  startVerifyRuntime(resolver: Function): Promise<boolean> | boolean {
     logActivity('LoadManager', {
       message: 'start verify runtime strategy',
     });
+    const modelCreator = this.getModelCreator();
 
-    const modelCreator = this._moduleMap.get(this._moduleName)?.loadModel();
     let modelInstance = null;
     if (isPromise(modelCreator)) {
       return (modelCreator as Promise<Function>)
         .then(m => {
-          const modelInstance = m.call(null);
+          modelInstance = m.call(null);
           return this.mountModel(resolver, modelInstance, {});
         })
         .catch(err => {
@@ -146,13 +163,35 @@ class LoadManager {
     return false;
   }
 
+  injectModelIfNeeded() {
+    if (this._isModelInjected) return true;
+    let modelInstance = null;
+    const modelCreator = this.getModelCreator();
+    if (isPromise(modelCreator)) {
+      return (modelCreator as Promise<Function>)
+        .then(m => {
+          modelInstance = m.call(null);
+          return this.injectModelIntoStore(modelInstance, {});
+        })
+        .catch(err => {
+          logActivity('LoadManager', {
+            message: `Directly inject model ${this._moduleName} failed with ${err}`,
+          });
+          return false;
+        });
+    } else if (isFunction(modelCreator)) {
+      modelInstance = (modelCreator as Function).call(null);
+      return this.injectModelIntoStore(modelInstance, {});
+    }
+    return false;
+  }
+
   /**
    * 整个strategy的处理需要是一个同步的
    */
   shouldModuleLoad(): boolean | Promise<boolean> {
     const len = this.strategies.length;
     this._lockCurrentLoadManager(this);
-    // debugger
 
     for (let i = 0; i < len; i++) {
       const strategy = this.strategies[i];
@@ -174,11 +213,12 @@ class LoadManager {
         case StrategyType.runtime:
           return this.startVerifyRuntime(resolver);
       }
-      // TODO: 临时注释掉
-      if (!value) {
-        return false;
-      }
+
+      // The previous strategy will block next if it is false..
+      if (!value) return false;
     }
+
+    if (!this._isModelInjected) return this.injectModelIfNeeded();
 
     return true;
   }
