@@ -9,13 +9,11 @@ class EffectNode {
   public childMap: EffectNodeChildMap;
   public effectMap: EffectNodeEffectMap;
   private _key: string;
-  readonly _slugKey: string;
 
   constructor({ key }: { key: string }) {
     this.childMap = {};
     this.effectMap = {};
     this._key = key;
-    this._slugKey = '';
   }
 
   getKey() {
