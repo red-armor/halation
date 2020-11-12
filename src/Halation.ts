@@ -88,6 +88,8 @@ class Halation extends PureComponent<HalationProps, HalationState> {
         this.moduleMap.set(name, module);
       }
     });
+    this.dispatchEvent = this.dispatchEvent.bind(this);
+    this.addBlockLoadManager = this.addBlockLoadManager.bind(this);
   }
 
   static getDerivedStateFromProps(props: HalationProps, state: HalationState) {
@@ -149,7 +151,8 @@ class Halation extends PureComponent<HalationProps, HalationState> {
       moduleMap: this.moduleMap,
       loadManagerMap: this.loadManagerMap,
       refs: this.getRefs(),
-      addBlockLoadManager: this.addBlockLoadManager.bind(this),
+      addBlockLoadManager: this.addBlockLoadManager,
+      dispatchEvent: this.dispatchEvent,
     };
   }
 
