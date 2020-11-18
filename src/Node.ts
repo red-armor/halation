@@ -8,6 +8,7 @@ class Node {
   private type: string;
   private children: Array<string>;
   private strategies?: Array<Strategy>;
+  private props?: object;
 
   constructor(props: NodeProps) {
     const {
@@ -18,6 +19,7 @@ class Node {
       children,
       name,
       strategies,
+      props: blockProps,
     } = props;
     this.key = key;
     this.name = name;
@@ -26,6 +28,7 @@ class Node {
     this.type = type || 'block';
     this.children = children;
     this.strategies = strategies;
+    this.props = blockProps;
   }
 
   getChildKeys(): Array<string> {
@@ -61,6 +64,7 @@ class Node {
       key: this.key,
       name: this.name,
       type: this.type,
+      props: this.props,
     };
   }
 }

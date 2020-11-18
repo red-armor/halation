@@ -13,12 +13,14 @@ export interface NodeProps {
   data: Node;
   children: Array<string>;
   strategies?: Array<Strategy>;
+  props?: object;
 }
 
 export interface NodeRenderProps {
   key: string;
   name: string;
   type: string;
+  props?: object;
 }
 
 export interface BlockProps {
