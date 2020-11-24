@@ -1,22 +1,22 @@
-import Node from '../Node';
+import Block from '../Block';
 import { Strategy } from './loadStrategy';
 import { Refs } from './halation';
 
-export { Node };
+export { Block };
 
-export interface NodeProps {
+export interface BlockProps {
   key: string;
   name: string;
   type: string;
   prevSibling: string;
   nextSibling: string;
-  data: Node;
+  data: Block;
   children: Array<string>;
   strategies?: Array<Strategy>;
   props?: object;
 }
 
-export interface NodeRenderProps {
+export interface BlockRenderProps {
   key: string;
   name: string;
   type: string;

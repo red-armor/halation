@@ -1,13 +1,13 @@
 import { FC } from 'react';
 import { PropsAPI, BlockRenderFn } from './halation';
-import Node from '../Node';
+import Block from '../Block';
 
 export interface BlockNodeData {
   [key: string]: any;
 }
 
 export type BlockNodeProps = PropsAPI & {
-  block: Node;
+  block: Block;
   blockRenderFn?: BlockRenderFn;
 };
 

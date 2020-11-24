@@ -1,6 +1,6 @@
-import { NodeProps, NodeRenderProps, Strategy } from './types';
+import { BlockProps, BlockRenderProps, Strategy } from './types';
 
-class Node {
+class Block {
   private name: string;
   private key: string;
   private prevSibling: string;
@@ -10,7 +10,7 @@ class Node {
   private strategies?: Array<Strategy>;
   private props?: object;
 
-  constructor(props: NodeProps) {
+  constructor(props: BlockProps) {
     const {
       key,
       type,
@@ -59,7 +59,7 @@ class Node {
     return this.strategies;
   }
 
-  getRenderProps(): NodeRenderProps {
+  getRenderProps(): BlockRenderProps {
     return {
       key: this.key,
       name: this.name,
@@ -69,4 +69,4 @@ class Node {
   }
 }
 
-export default Node;
+export default Block;

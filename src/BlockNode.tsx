@@ -2,7 +2,6 @@ import React, {
   FC,
   useRef,
   useState,
-  Fragment,
   forwardRef,
   useCallback,
   createElement,
@@ -99,10 +98,6 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     loadRoutine();
   }
 
-  const Helper = () => {
-    return null;
-  };
-
   if (!wrapper.Component) return null;
 
   let blockRenderer = null;
@@ -122,24 +117,14 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
   );
 
   if (blockRenderer) {
-    return (
-      <Fragment>
-        {createElement(
-          blockRenderer,
-          props,
-          <RefForwardingWrapper {...props} ref={blockRef} />
-        )}
-        <Helper />
-      </Fragment>
+    return createElement(
+      blockRenderer,
+      props,
+      <RefForwardingWrapper {...props} ref={blockRef} />
     );
   }
 
-  return (
-    <Fragment>
-      <RefForwardingWrapper {...props} ref={blockRef} />
-      <Helper />
-    </Fragment>
-  );
+  return <RefForwardingWrapper {...props} ref={blockRef} />;
 };
 
 const BlockNode: FC<BlockNodeProps> = props => {
