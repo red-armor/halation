@@ -8,7 +8,12 @@ import React, {
   FunctionComponentElement,
 } from 'react';
 import invariant from 'invariant';
-import { BlockNodeProps, BlockWrapperProps, BlockNodeState } from './types';
+import {
+  BlockNodeProps,
+  BlockWrapperProps,
+  BlockNodeState,
+  SlotProps,
+} from './types';
 import { logActivity } from './logger';
 import { isPromise, settledPromise } from './commons';
 
@@ -133,6 +138,7 @@ const BlockNode: FC<BlockNodeProps> = props => {
   const childKeys = block.getChildKeys();
   const blockKey = block.getKey();
   const moduleName = block.getName();
+  const slot = block.getSlot();
   const moduleMap = props.moduleMap;
   const module = moduleMap.get(moduleName)!;
 
@@ -155,6 +161,31 @@ const BlockNode: FC<BlockNodeProps> = props => {
     value: block,
   });
 
+  const slotKeys = Object.keys(slot);
+  const slotComponents = slotKeys.reduce((acc, cur) => {
+    const group = ([] as Array<string>).concat(slot[cur]);
+    acc[cur] = group.map(childKey => {
+      const node = nodeMap.get(childKey);
+      if (node) {
+        return createElement(
+          BlockNode,
+          {
+            key: childKey,
+            block: node,
+            nodeMap,
+            blockRenderFn,
+            addBlockLoadManager,
+            ...rest,
+          },
+          null
+        );
+      }
+      return null;
+    });
+
+    return acc;
+  }, {} as SlotProps);
+
   childKeys.forEach(childKey => {
     const node = nodeMap.get(childKey);
     if (node) {
@@ -175,7 +206,14 @@ const BlockNode: FC<BlockNodeProps> = props => {
     }
   });
 
-  return createElement(BlockWrapper, props, children);
+  return createElement(
+    BlockWrapper,
+    {
+      ...props,
+      slot: slotComponents,
+    },
+    children
+  );
 };
 
 export default BlockNode;

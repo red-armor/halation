@@ -3,6 +3,9 @@ import { Strategy } from './loadStrategy';
 import { Refs } from './halation';
 
 export { Block };
+export type Slot = {
+  [key: string]: Array<string>;
+};
 
 export interface BlockProps {
   key: string;
@@ -14,6 +17,7 @@ export interface BlockProps {
   children: Array<string>;
   strategies?: Array<Strategy>;
   props?: object;
+  slot?: Slot;
 }
 
 export interface BlockRenderProps {
