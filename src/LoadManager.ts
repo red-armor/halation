@@ -73,14 +73,13 @@ class LoadManager {
   /**
    *
    * @param strategies
-   * 按照'flags', 'event', 'runtime'的顺序进行排序；因为只有在'flags'和'event'
-   * 层级都加载完毕其实'runtime'层面才需要开始加载（这个时候其实单独触发的model的加载）；
+   * 按照event', 'runtime'的顺序进行排序；因为只有在'event'层级都加载完毕
+   * 其实'runtime'层面才需要开始加载（这个时候其实单独触发的model的加载）；
    * 之所以，将flags单独放出来，因为假如说flags都没有过的话，其实runtime的model都
    * 不需要进行加载的；
    */
   sort(strategies: Array<Strategy>): Array<Strategy> {
     const typeMap = {
-      flags: 0,
       event: 1,
       runtime: 2,
     };

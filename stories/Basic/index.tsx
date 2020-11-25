@@ -133,11 +133,9 @@ export default () => {
         blockRenderFn={blockRenderFn}
         store={store}
 
-        events={[
-          'flags',
-          // // 'first_image_loaded'
-          // 'imageLoaded',
-        ]}
+        events={{
+          flags: {},
+        }}
       />
     </Provider>
   )
