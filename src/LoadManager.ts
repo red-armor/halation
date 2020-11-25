@@ -126,11 +126,11 @@ class LoadManager {
     return !!falsy;
   }
 
-  getModelCreator() {
+  getModelCreator(strict: boolean = false) {
     const modelCreator = this._moduleMap.get(this._moduleName)?.loadModel();
 
     invariant(
-      modelCreator,
+      strict ? modelCreator : true,
       `${this._moduleName} model is required to defined if attempt to use runtime load strategy`
     );
     return modelCreator;
@@ -140,7 +140,7 @@ class LoadManager {
     logActivity('LoadManager', {
       message: 'start verify runtime strategy',
     });
-    const modelCreator = this.getModelCreator();
+    const modelCreator = this.getModelCreator(true);
 
     let modelInstance = null;
     if (isPromise(modelCreator)) {
@@ -167,6 +167,8 @@ class LoadManager {
     if (this._isModelInjected) return true;
     let modelInstance = null;
     const modelCreator = this.getModelCreator();
+    if (!modelCreator) return true;
+
     if (isPromise(modelCreator)) {
       return (modelCreator as Promise<Function>)
         .then(m => {
@@ -219,6 +221,7 @@ class LoadManager {
       if (!value) return false;
     }
 
+    // runtime strategy is not defined..
     if (!this._isModelInjected) return this.injectModelIfNeeded();
 
     return true;

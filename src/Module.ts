@@ -120,8 +120,11 @@ class Module {
     });
   }
 
-  loadModel(): Promise<Function> | Function {
-    return this.load(ModuleName.Model, this.getModel);
+  loadModel(): Promise<Function> | Function | null {
+    if (this.getModel()) {
+      return this.load(ModuleName.Model, this.getModel);
+    }
+    return null;
   }
 
   loadComponent(): Promise<Function> | Function {

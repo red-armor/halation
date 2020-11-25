@@ -10,12 +10,13 @@ import React, {
 import invariant from 'invariant';
 import {
   BlockNodeProps,
+  BlockNodePreProps,
   BlockWrapperProps,
   BlockNodeState,
   SlotProps,
 } from './types';
 import { logActivity } from './logger';
-import { isPromise, settledPromise } from './commons';
+import { isPromise, reflect } from './commons';
 
 const BlockWrapper: FC<BlockNodeProps> = props => {
   const { hooks, block, moduleMap, loadManagerMap, blockRenderFn } = props;
@@ -40,12 +41,8 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     }
   }, []); // eslint-disable-line
 
-  const forceUpdate = useCallback(result => {
-    const [modelResult, componentResult] = result;
+  const forceUpdate = useCallback(componentResult => {
     const state: BlockNodeState = {};
-    if (modelResult.success) {
-      state.model = modelResult.value;
-    }
 
     if (componentResult.success) {
       state.Component = componentResult.value;
@@ -63,29 +60,22 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     const module = moduleMap.get(moduleName);
     if (module) {
       hooks.register.call(blockKey, block);
-      const model = module.loadModel();
       const component = module.loadComponent();
 
-      if (isPromise(model) || isPromise(component)) {
-        const loadModelTask = Promise.resolve(module.loadModel());
-        const loadComponentTask = Promise.resolve(module.loadComponent());
-        settledPromise([loadModelTask, loadComponentTask]).then(result => {
+      if (isPromise(component)) {
+        const loadComponentTask = Promise.resolve(component);
+        reflect(loadComponentTask).then(result => {
           forceUpdate(result);
         });
       } else {
         logActivity('BlockNode', {
           message: `load component & model directly..`,
         });
-        forceUpdate([
-          {
-            success: true,
-            value: model,
-          },
-          {
-            success: true,
-            value: component,
-          },
-        ]);
+
+        forceUpdate({
+          success: true,
+          value: component,
+        });
       }
 
       // TODO: temp to wrapper with Promise
@@ -132,9 +122,9 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
   return <RefForwardingWrapper {...props} ref={blockRef} />;
 };
 
-const BlockNode: FC<BlockNodeProps> = props => {
+const BlockNode: FC<BlockNodePreProps> = props => {
   const { block, nodeMap, blockRenderFn, addBlockLoadManager, ...rest } = props;
-  const children: Array<FunctionComponentElement<BlockNodeProps>> = [];
+  const children: Array<FunctionComponentElement<BlockNodePreProps>> = [];
   const childKeys = block.getChildKeys();
   const blockKey = block.getKey();
   const moduleName = block.getName();

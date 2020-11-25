@@ -16,7 +16,7 @@ import {
   HalationProps,
   HalationState,
   BlockRenderFn,
-  BlockNodeProps,
+  BlockNodePreProps,
   RegisterResult,
   LoadManagerMap,
   EventValue,
@@ -216,11 +216,11 @@ class Halation extends PureComponent<HalationProps, HalationState> {
   render() {
     const blocks = this.state.nodeMap.values();
     let block = blocks.next().value;
-    const children: Array<FunctionComponentElement<BlockNodeProps>> = [];
+    const children: Array<FunctionComponentElement<BlockNodePreProps>> = [];
 
     while (block) {
       children.push(
-        createElement<BlockNodeProps>(
+        createElement<BlockNodePreProps>(
           BlockNode,
           {
             block,

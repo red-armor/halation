@@ -3,7 +3,7 @@ import { SyncHook } from 'tapable';
 import Module from '../Module';
 import Block from '../Block';
 import { BlockRenderProps } from './block';
-import { Strategy } from './loadStrategy';
+import { Strategy } from './loadManager';
 import { GetComponent } from './module';
 import LoadManager from 'LoadManager';
 import { EventValue } from './eventTracker';
