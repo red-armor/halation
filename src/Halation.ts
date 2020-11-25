@@ -21,7 +21,7 @@ import {
   LoadManagerMap,
   EventValue,
 } from './types';
-import Node from './Node';
+import Block from './Block';
 import Module from './Module';
 import { logActivity } from './logger';
 import BlockNode from './BlockNode';
@@ -125,11 +125,11 @@ class Halation extends PureComponent<HalationProps, HalationState> {
     return this.name;
   }
 
-  static createBlockNode(list: Array<any>): Map<string, Node> {
+  static createBlockNode(list: Array<any>): Map<string, Block> {
     const nodeMap = new Map();
     list.forEach(item => {
       const { key } = item;
-      nodeMap.set(key, new Node(item));
+      nodeMap.set(key, new Block(item));
     });
 
     logActivity('Halation', {

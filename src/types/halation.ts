@@ -1,8 +1,8 @@
 import { FC, MutableRefObject } from 'react';
 import { SyncHook } from 'tapable';
 import Module from '../Module';
-import Node from '../Node';
-import { NodeRenderProps } from './node';
+import Block from '../Block';
+import { BlockRenderProps } from './block';
 import { Strategy } from './loadStrategy';
 import { GetComponent } from './module';
 import LoadManager from 'LoadManager';
@@ -28,12 +28,12 @@ export interface HalationProps {
 }
 
 export interface HalationState {
-  nodeMap: Map<string, Node>;
+  nodeMap: Map<string, Block>;
   halationState: Array<any>;
 }
 
 export type BlockRenderFn = (
-  props: NodeRenderProps
+  props: BlockRenderProps
 ) => null | undefined | FC<any>;
 
 export interface Hooks {
@@ -42,7 +42,7 @@ export interface Hooks {
 
 export interface PropsAPI {
   hooks: Hooks;
-  nodeMap: Map<string, Node>;
+  nodeMap: Map<string, Block>;
   moduleMap: Map<string, Module>;
   loadManagerMap: Map<string, LoadManager>;
   refs: Refs;

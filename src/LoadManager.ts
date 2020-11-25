@@ -196,6 +196,7 @@ class LoadManager {
     for (let i = 0; i < len; i++) {
       const strategy = this.strategies[i];
       const { type, resolver } = strategy;
+
       let value: boolean = false;
 
       switch (type) {

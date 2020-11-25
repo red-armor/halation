@@ -1,14 +1,19 @@
-import { FC } from 'react';
+import { FC, FunctionComponentElement } from 'react';
 import { PropsAPI, BlockRenderFn } from './halation';
-import Node from '../Node';
+import Block from '../Block';
 
 export interface BlockNodeData {
   [key: string]: any;
 }
 
+export interface SlotProps {
+  [key: string]: Array<FunctionComponentElement<BlockNodeProps> | null>;
+}
+
 export type BlockNodeProps = PropsAPI & {
-  block: Node;
+  block: Block;
   blockRenderFn?: BlockRenderFn;
+  slot: SlotProps;
 };
 
 export interface BlockWrapperProps {}
