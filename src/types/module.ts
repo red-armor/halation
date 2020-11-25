@@ -1,4 +1,4 @@
-import { Strategy } from './loadStrategy';
+import { Strategy } from './loadManager';
 
 export enum ModuleName {
   Model = 'model',

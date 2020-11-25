@@ -1,5 +1,5 @@
 import Block from '../Block';
-import { Strategy } from './loadStrategy';
+import { Strategy } from './loadManager';
 import { Refs } from './halation';
 
 export { Block };

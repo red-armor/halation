@@ -2,6 +2,7 @@ import React from 'react';
 import BasicExample from './Basic'
 import SlotExample from './Slot'
 import RawDataExample from './RawData'
+import ModalExample from './ModalRuntime'
 
 export default {
   title: 'halation'
@@ -11,4 +12,4 @@ export default {
 export const Basic = () => <BasicExample />;
 export const Slot = () => <SlotExample />
 export const RawData = () => <RawDataExample />
-
+export const Modal = () => <ModalExample />

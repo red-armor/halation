@@ -1,4 +1,3 @@
-import { Strategy } from './loadStrategy';
 import LoadManager from '../LoadManager';
 import {
   Store,
@@ -23,4 +22,14 @@ export interface LoadManagerConstructorProps {
   dispatchEvent: DispatchEvent;
   lockCurrentLoadManager: LockCurrentLoadManager;
   releaseCurrentLoadManager: ReleaseCurrentLoadManager;
+}
+
+export enum StrategyType {
+  event = 'event',
+  runtime = 'runtime',
+}
+
+export interface Strategy {
+  type: StrategyType;
+  resolver: (value?: any) => boolean;
 }
