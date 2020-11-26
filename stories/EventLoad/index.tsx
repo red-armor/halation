@@ -3,26 +3,26 @@ import { applyMiddleware, createStore, thunk, Provider } from '@xhs/relinx'
 import { Halation } from '../../src'
 
 import PluginARegister from './plugin-a/register'
-import PluginModalRegister from './plugin-modal/register'
+import PluginBRegister from './plugin-b/register'
 
 const halationState = [{
   name: 'plugin-a',
   key: 'plugin-a-1',
   prevSibling: null,
-  nextSibling: 'plugin-modal-1',
+  nextSibling: 'plugin-b-1',
   children: [],
   type: 'block',
 }, {
-  name: 'plugin-modal',
-  key: 'plugin-modal-1',
+  name: 'plugin-b',
+  key: 'plugin-b-1',
   prevSibling: 'plugin-a-1',
   nextSibling: null,
   children: [],
   type: 'block',
   strategies: [{
-    type: 'runtime',
-    resolver: (props) => {
-      const { visible } = props
+    type: 'event',
+    resolver: ({ event }) => {
+      const { visible } = event
       return !!visible
     }
   }]
@@ -50,7 +50,7 @@ const store = createStore({
 export default () => {
   const registers = [
     PluginARegister,
-    PluginModalRegister,
+    PluginBRegister,
   ]
 
   return (
@@ -64,7 +64,7 @@ export default () => {
         blockRenderFn={blockRenderFn}
         store={store}
         events={{
-          flags: {},
+          visible: false,
         }}
       />
     </Provider>

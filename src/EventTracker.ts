@@ -6,7 +6,6 @@ import { logActivity } from './logger';
 
 class EventTracker {
   public events: HalationEvents;
-  private eventObject: ProxyEvent;
   private _proxyEvent: ProxyEvent;
   private currentLoadManager: LoadManager | null;
   private effectNodeTree: EffectNode;
@@ -14,8 +13,7 @@ class EventTracker {
   constructor(props: { events: HalationEvents }) {
     const { events } = props;
     this.events = events;
-    this.eventObject = this.initEventObject();
-    this._proxyEvent = produce(this.eventObject);
+    this._proxyEvent = produce(this.events);
 
     this.effectNodeTree = new EffectNode({
       key: 'root',
@@ -41,12 +39,6 @@ class EventTracker {
 
   getProxyEvent() {
     return this._proxyEvent;
-  }
-
-  initEventObject(): {} {
-    return this.events.reduce((acc, cur) => {
-      return { ...acc, [cur]: {} };
-    }, {});
   }
 
   setLoadManager(loadManager: LoadManager) {

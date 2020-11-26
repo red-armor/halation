@@ -8,7 +8,9 @@ import { GetComponent } from './module';
 import LoadManager from 'LoadManager';
 import { EventValue } from './eventTracker';
 
-export type HalationEvents = Array<string>;
+export type HalationEvents = {
+  [key: string]: any;
+};
 
 export interface HalationProps {
   name: string;
