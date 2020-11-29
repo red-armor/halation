@@ -7,16 +7,16 @@ export const isPromise = (o: any) =>
 
 export const reflect = (p: Promise<any>) =>
   p.then(
-    value => {
+    (value) => {
       return { value, success: true };
     },
-    value => {
+    (value) => {
       return { value, success: false };
     }
   );
 
 export const settledPromise = (ps: Array<Promise<any>>) =>
-  Promise.all(ps.map(p => reflect(p)));
+  Promise.all(ps.map((p) => reflect(p)));
 
 export const canIUseProxy = () => {
   try {

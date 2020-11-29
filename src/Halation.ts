@@ -75,7 +75,7 @@ class Halation extends PureComponent<HalationProps, HalationState> {
     this.startListen();
     this.store = store;
 
-    registers.forEach(register => {
+    registers.forEach((register) => {
       const moduleProps: RegisterResult = register.call(null);
       const { name, getModel, getComponent, strategies } = moduleProps;
       if (!this.moduleMap.get(name)) {
@@ -107,10 +107,10 @@ class Halation extends PureComponent<HalationProps, HalationState> {
   startListen() {
     for (let key in this.hooks) {
       const hook = this.hooks[key as keyof Hooks];
-      hook.tap(key, function() {});
+      hook.tap(key, function () {});
 
       hook.intercept({
-        register: tabInfo => {
+        register: (tabInfo) => {
           logActivity('Halation', {
             message: 'register info',
             value: tabInfo,
@@ -127,7 +127,7 @@ class Halation extends PureComponent<HalationProps, HalationState> {
 
   static createBlockNode(list: Array<any>): Map<string, Block> {
     const nodeMap = new Map();
-    list.forEach(item => {
+    list.forEach((item) => {
       const { key } = item;
       nodeMap.set(key, new Block(item));
     });

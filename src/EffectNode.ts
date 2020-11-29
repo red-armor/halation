@@ -41,7 +41,7 @@ class EffectNode {
   }
 
   addChildren({ paths, loadManager }: AddChildrenProps) {
-    paths.forEach(path => {
+    paths.forEach((path) => {
       this.addChild(path, loadManager);
     });
   }

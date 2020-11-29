@@ -67,7 +67,7 @@ class LoadManager {
   }
 
   teardown() {
-    this.teardownEffects.forEach(fn => fn());
+    this.teardownEffects.forEach((fn) => fn());
   }
 
   /**
@@ -144,11 +144,11 @@ class LoadManager {
     let modelInstance = null;
     if (isPromise(modelCreator)) {
       return (modelCreator as Promise<Function>)
-        .then(m => {
+        .then((m) => {
           modelInstance = m.call(null);
           return this.mountModel(resolver, modelInstance, {});
         })
-        .catch(err => {
+        .catch((err) => {
           logActivity('LoadManager', {
             message: `Has error on verify runtime..${err}`,
           });
@@ -170,11 +170,11 @@ class LoadManager {
 
     if (isPromise(modelCreator)) {
       return (modelCreator as Promise<Function>)
-        .then(m => {
+        .then((m) => {
           modelInstance = m.call(null);
           return this.injectModelIntoStore(modelInstance, {});
         })
-        .catch(err => {
+        .catch((err) => {
           logActivity('LoadManager', {
             message: `Directly inject model ${this._moduleName} failed with ${err}`,
           });
