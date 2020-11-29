@@ -84,6 +84,7 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
       if (isPromise(component)) {
         const loadComponentTask = Promise.resolve(component);
         reflect(loadComponentTask).then((result) => {
+          if (!result.success) throw result.value;
           forceUpdate(result);
         });
       } else {
