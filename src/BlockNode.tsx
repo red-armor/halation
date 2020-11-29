@@ -6,6 +6,7 @@ import React, {
   useCallback,
   createElement,
   FunctionComponentElement,
+  useEffect,
 } from 'react';
 import invariant from 'invariant';
 import {
@@ -19,13 +20,25 @@ import { logActivity } from './logger';
 import { isPromise, reflect } from './commons';
 
 const BlockWrapper: FC<BlockNodeProps> = (props) => {
-  const { hooks, block, moduleMap, loadManagerMap, blockRenderFn } = props;
+  const {
+    moduleMap,
+    loadManagerMap,
+    blockRenderFn,
+    reportRef,
+    addBlockLoadManager,
+    children,
+    refs,
+    ...restProps
+  } = props;
+  const { hooks, block } = props;
+
   const [wrapper, setWrapper] = useState<BlockNodeState>({});
   const blockKey = block.getKey();
   const moduleName = block.getName();
   const blockRef = useRef();
   const isLoadingRef = useRef(false);
   const isMountedRef = useRef(false);
+  const isComponentLoadRef = useRef(false);
   const loadManager = loadManagerMap.get(blockKey)!;
 
   const unsubscribeLoadRoutine = useRef<Function | null>(null);
@@ -49,6 +62,12 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
     }
     setWrapper(state);
   }, []) // eslint-disable-line
+
+  useEffect(() => {
+    if (wrapper.Component && isComponentLoadRef.current) {
+      reportRef(blockKey, blockRef);
+    }
+  }, [reportRef, blockKey, blockRef, wrapper, isComponentLoadRef]);
 
   const loadAndForceUpdate = useCallback(() => {
     logActivity('BlockNode', {
@@ -94,6 +113,7 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
   }
 
   if (!wrapper.Component) return null;
+  isComponentLoadRef.current = true;
 
   let blockRenderer = null;
 
@@ -114,12 +134,12 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
   if (blockRenderer) {
     return createElement(
       blockRenderer,
-      props,
-      <RefForwardingWrapper {...props} ref={blockRef} />
+      restProps,
+      <RefForwardingWrapper {...restProps} ref={blockRef} />
     );
   }
 
-  return <RefForwardingWrapper {...props} ref={blockRef} />;
+  return <RefForwardingWrapper {...restProps} ref={blockRef} />;
 };
 
 const BlockNode: FC<BlockNodePreProps> = (props) => {

@@ -1,0 +1,35 @@
+import Index from './index'
+
+<Meta title="Usage/getRefs" />
+
+<Index />
+
+# Usage
+
+```js
+const PluginA: FC<any> = (props) => {
+  const { forwardRef, getRef, watch } = props
+  const [height, setHeight] = useState(0)
+
+  useEffect(() => {
+    return watch(() => {
+      const ref = getRef('plugin-b-2')
+      if (ref) {
+        setHeight(ref.current.clientHeight)
+      }
+    })
+  }, [])
+
+  const text = 'plugin a' + (height ? ` with b's height ${height}` : '')
+
+  return <div ref={forwardRef}>{text}</div>
+};
+```
+
+## getRef
+
+需要通过`getRef(blockKey: string)`的方式进行获取，同时因为`forwardRef`在渲染时被进行了delay，所以`ref`什么时候有值其实不太确定的；这个时候的解决方式是将`getRef`方法放到`watch`中；当使用到的`ref`突然变化（也就是有值）的时候，watch会自动被触发，从而运行当ref存在时的操作
+
+## watch
+
+为了解决`ref`由于`blockWrapper`在渲染层面的delay造成的ref不一定什么时候被获取到的问题，这个时候需要将`getRef`放置到里面进行触发；如果不放到watch中的话，是没有办法感知到`ref`已经被赋予了新值

@@ -50,6 +50,9 @@ export interface PropsAPI {
   refs: Refs;
   addBlockLoadManager: AddBlockLoadManager;
   dispatchEvent: (event: string) => void;
+  reportRef: (key: string, value: any) => void;
+  getRef: (key: string) => any;
+  watch: (fn: Function) => void;
 }
 
 export type ModuleMap = Map<string, Module>;
