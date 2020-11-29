@@ -78,7 +78,7 @@ class Module {
       return this.resolvedModulesMap.get(moduleName) as Function;
     }
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       switch (currentStatus) {
         case ModuleStatus.Idle:
           this.resolversMap.get(moduleName)?.push(resolve);
@@ -98,10 +98,10 @@ class Module {
         // __webpack_require__ will not return a Promise, so it need to wrapped
         // with Promise.resolve.
         Promise.resolve(fn.call(this)).then(
-          rawModule => {
+          (rawModule) => {
             const module = this.resolveModule(rawModule as RawModule);
             const resolvers = this.resolversMap.get(moduleName) || [];
-            resolvers.forEach(resolver => resolver(module));
+            resolvers.forEach((resolver) => resolver(module));
             this.resolvedModulesMap.set(moduleName, module);
             logActivity('Module', {
               message: `finish load module ${this._name} ${moduleName}`,

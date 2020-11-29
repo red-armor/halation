@@ -18,7 +18,7 @@ import {
 import { logActivity } from './logger';
 import { isPromise, reflect } from './commons';
 
-const BlockWrapper: FC<BlockNodeProps> = props => {
+const BlockWrapper: FC<BlockNodeProps> = (props) => {
   const { hooks, block, moduleMap, loadManagerMap, blockRenderFn } = props;
   const [wrapper, setWrapper] = useState<BlockNodeState>({});
   const blockKey = block.getKey();
@@ -33,7 +33,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
   const loadRoutine = useCallback(() => {
     const shouldLoadModule = loadManager?.shouldModuleLoad();
     if (isPromise(shouldLoadModule)) {
-      (shouldLoadModule as Promise<boolean>).then(falsy => {
+      (shouldLoadModule as Promise<boolean>).then((falsy) => {
         if (falsy) loadAndForceUpdate();
       });
     } else if (shouldLoadModule) {
@@ -41,7 +41,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     }
   }, []); // eslint-disable-line
 
-  const forceUpdate = useCallback(componentResult => {
+  const forceUpdate = useCallback((componentResult) => {
     const state: BlockNodeState = {};
 
     if (componentResult.success) {
@@ -64,7 +64,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
 
       if (isPromise(component)) {
         const loadComponentTask = Promise.resolve(component);
-        reflect(loadComponentTask).then(result => {
+        reflect(loadComponentTask).then((result) => {
           forceUpdate(result);
         });
       } else {
@@ -122,7 +122,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
   return <RefForwardingWrapper {...props} ref={blockRef} />;
 };
 
-const BlockNode: FC<BlockNodePreProps> = props => {
+const BlockNode: FC<BlockNodePreProps> = (props) => {
   const { block, nodeMap, blockRenderFn, addBlockLoadManager, ...rest } = props;
   const children: Array<FunctionComponentElement<BlockNodePreProps>> = [];
   const childKeys = block.getChildKeys();
@@ -154,7 +154,7 @@ const BlockNode: FC<BlockNodePreProps> = props => {
   const slotKeys = Object.keys(slot);
   const slotComponents = slotKeys.reduce((acc, cur) => {
     const group = ([] as Array<string>).concat(slot[cur]);
-    acc[cur] = group.map(childKey => {
+    acc[cur] = group.map((childKey) => {
       const node = nodeMap.get(childKey);
       if (node) {
         return createElement(
@@ -176,7 +176,7 @@ const BlockNode: FC<BlockNodePreProps> = props => {
     return acc;
   }, {} as SlotProps);
 
-  childKeys.forEach(childKey => {
+  childKeys.forEach((childKey) => {
     const node = nodeMap.get(childKey);
     if (node) {
       children.push(
