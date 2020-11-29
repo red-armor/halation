@@ -27,6 +27,7 @@ import { logActivity } from './logger';
 import BlockNode from './BlockNode';
 import LoadManager from './LoadManager';
 import EventTracker from './EventTracker';
+import RefTracker from './RefTracker';
 import { isPlainObject, isString } from './commons';
 
 class Halation extends PureComponent<HalationProps, HalationState> {
@@ -40,6 +41,7 @@ class Halation extends PureComponent<HalationProps, HalationState> {
   private _refs: Refs;
   public eventTracker: EventTracker;
   public store: Store;
+  public refTracker: RefTracker;
 
   constructor(props: HalationProps) {
     super(props);
@@ -74,6 +76,7 @@ class Halation extends PureComponent<HalationProps, HalationState> {
 
     this.startListen();
     this.store = store;
+    this.refTracker = new RefTracker();
 
     registers.forEach((register) => {
       const moduleProps: RegisterResult = register.call(null);
@@ -90,6 +93,8 @@ class Halation extends PureComponent<HalationProps, HalationState> {
     });
     this.dispatchEvent = this.dispatchEvent.bind(this);
     this.addBlockLoadManager = this.addBlockLoadManager.bind(this);
+    this.reportRef = this.reportRef.bind(this);
+    this.getRef = this.getRef.bind(this);
   }
 
   static getDerivedStateFromProps(props: HalationProps, state: HalationState) {
@@ -153,7 +158,19 @@ class Halation extends PureComponent<HalationProps, HalationState> {
       refs: this.getRefs(),
       addBlockLoadManager: this.addBlockLoadManager,
       dispatchEvent: this.dispatchEvent,
+      reportRef: this.reportRef,
+      getRef: this.getRef,
+      watch: this.refTracker.watch,
     };
+  }
+
+  public reportRef(key: string, ref: any) {
+    this._refs[key] = ref;
+    this.refTracker.setRef(key, ref);
+  }
+
+  public getRef(key: string) {
+    return this.refTracker.getRef(key);
   }
 
   public addBlockLoadManager({
