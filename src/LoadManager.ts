@@ -9,7 +9,7 @@ import {
   ReleaseCurrentLoadManager,
   LoadManagerConstructorProps,
 } from './types';
-import { isFunction, isPromise } from './commons';
+import { isFunction, isPromise, noop } from './commons';
 import { logActivity } from './logger';
 import invariant from 'invariant';
 
@@ -30,6 +30,8 @@ class LoadManager {
   private teardownEffects: Array<Function>;
   private _loadRoutine: Function | null;
   private _isModelInjected: boolean;
+  private _storeSubscriptionRemover: Function;
+  private _lockPromiseLoad: boolean;
 
   constructor(props: LoadManagerConstructorProps) {
     const {
@@ -56,6 +58,11 @@ class LoadManager {
     this.teardownEffects = [];
     this._loadRoutine = null;
     this._isModelInjected = false;
+    this._storeSubscriptionRemover = noop;
+    this.update = this.update.bind(this);
+    // 为了约束，runtime策略，如果是介入了Promise这个时候shouldModuleLoad
+    // 不应该继续被执行，直到Promise真正resolve
+    this._lockPromiseLoad = false;
   }
 
   getKey() {
@@ -75,8 +82,8 @@ class LoadManager {
    * @param strategies
    * 按照event', 'runtime'的顺序进行排序；因为只有在'event'层级都加载完毕
    * 其实'runtime'层面才需要开始加载（这个时候其实单独触发的model的加载）；
-   * 之所以，将flags单独放出来，因为假如说flags都没有过的话，其实runtime的model都
-   * 不需要进行加载的；
+   * 之所以，将flags单独放出来，因为假如说flags都没有过的话，其实runtime的
+   * model都不需要进行加载的；
    */
   sort(strategies: Array<Strategy>): Array<Strategy> {
     const typeMap = {
@@ -90,7 +97,12 @@ class LoadManager {
 
   update() {
     this.teardown();
-    if (this._loadRoutine) this._loadRoutine();
+    if (this._loadRoutine) {
+      logActivity('loadManager', {
+        message: `trigger strategy update`,
+      });
+      this._loadRoutine();
+    }
   }
 
   injectModelIntoStore(modelInstance: any, initialValue: any = {}): boolean {
@@ -109,20 +121,45 @@ class LoadManager {
     initialValue: any = {}
   ): boolean {
     const modelKey = this._key;
-    this.injectModelIntoStore(modelInstance, initialValue);
-
-    const base = this._store.getState();
-
     // TODO: If injected model is pending with effects. base[modelKey]
+    const base = this._store.getState();
     // may get old value...
-    const currentModelState = base[modelKey];
-    const falsy = resolver(currentModelState);
 
-    if (!falsy) {
-      this._store.subscribe(this.update.bind(this));
+    if (!this._isModelInjected) {
+      this.injectModelIntoStore(modelInstance, initialValue);
     }
 
-    return !!falsy;
+    const currentModelState = base[modelKey];
+
+    if (!this._isModelInjected) {
+      const falsy = resolver(currentModelState);
+
+      if (!falsy) {
+        // updater should be a new value on each process.
+        this._storeSubscriptionRemover = this._store.subscribe(this.update);
+      }
+
+      this._isModelInjected = true;
+      return falsy;
+    }
+
+    const outerFalsy = !!resolver(currentModelState);
+
+    if (outerFalsy) {
+      if (isFunction(this._storeSubscriptionRemover)) {
+        this._storeSubscriptionRemover();
+        this._storeSubscriptionRemover = noop;
+      }
+    } else {
+      if (
+        !this._storeSubscriptionRemover ||
+        this._storeSubscriptionRemover === noop
+      ) {
+        this._storeSubscriptionRemover = this._store.subscribe(this.update);
+      }
+    }
+
+    return !!resolver(currentModelState);
   }
 
   getModelCreator(strict: boolean = false) {
@@ -141,11 +178,16 @@ class LoadManager {
     });
     const modelCreator = this.getModelCreator(true);
 
+    if (this._lockPromiseLoad) return false;
+
     let modelInstance = null;
     if (isPromise(modelCreator)) {
+      this._lockPromiseLoad = true;
+
       return (modelCreator as Promise<Function>)
         .then((m) => {
           modelInstance = m.call(null);
+          this._lockPromiseLoad = false;
           return this.mountModel(resolver, modelInstance, {});
         })
         .catch((err) => {
