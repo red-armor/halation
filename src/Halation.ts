@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import { SyncHook } from 'tapable';
 import {
-  Refs,
   Hooks,
   Store,
   PropsAPI,
@@ -38,7 +37,6 @@ class Halation extends PureComponent<HalationProps, HalationState> {
   private rootRenderFn?: FC<PropsAPI>;
   public hooks: Hooks;
   public runtimeRegisterModule: Map<string, any>;
-  private _refs: Refs;
   public eventTracker: EventTracker;
   public store: Store;
   public refTracker: RefTracker;
@@ -66,7 +64,6 @@ class Halation extends PureComponent<HalationProps, HalationState> {
     this.hooks = {
       register: new SyncHook(['block']),
     };
-    this._refs = {};
 
     this.runtimeRegisterModule = new Map();
 
@@ -145,17 +142,12 @@ class Halation extends PureComponent<HalationProps, HalationState> {
     return nodeMap;
   }
 
-  public getRefs(): Refs {
-    return this._refs;
-  }
-
   public getPropsAPI(): PropsAPI {
     return {
       hooks: this.hooks,
       nodeMap: this.state.nodeMap,
       moduleMap: this.moduleMap,
       loadManagerMap: this.loadManagerMap,
-      refs: this.getRefs(),
       addBlockLoadManager: this.addBlockLoadManager,
       dispatchEvent: this.dispatchEvent,
       reportRef: this.reportRef,
@@ -165,7 +157,6 @@ class Halation extends PureComponent<HalationProps, HalationState> {
   }
 
   public reportRef(key: string, ref: any) {
-    this._refs[key] = ref;
     this.refTracker.setRef(key, ref);
   }
 

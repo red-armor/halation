@@ -47,7 +47,6 @@ export interface PropsAPI {
   nodeMap: Map<string, Block>;
   moduleMap: Map<string, Module>;
   loadManagerMap: Map<string, LoadManager>;
-  refs: Refs;
   addBlockLoadManager: AddBlockLoadManager;
   dispatchEvent: (event: string) => void;
   reportRef: (key: string, value: any) => void;
