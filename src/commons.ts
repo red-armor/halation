@@ -48,3 +48,5 @@ export const TRACKER: unique symbol = hasSymbol
 export const isTrackable = (o: any) => { // eslint-disable-line
   return ['[object Object]', '[object Array]'].indexOf(toString(o)) !== -1;
 };
+
+export const noop = () => {};
