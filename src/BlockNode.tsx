@@ -26,8 +26,6 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
     blockRenderFn,
     reportRef,
     addBlockLoadManager,
-    children,
-    refs,
     ...restProps
   } = props;
   const { hooks, block } = props;
