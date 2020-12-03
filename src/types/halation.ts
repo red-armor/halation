@@ -12,6 +12,15 @@ export type HalationEvents = {
   [key: string]: any;
 };
 
+export type HalationStateItem = {
+  key: string;
+  name: string;
+  type: string;
+  prevSibling: null | string;
+  nextSibling: null | string;
+  parent: null | string;
+};
+
 export interface HalationProps {
   name: string;
 

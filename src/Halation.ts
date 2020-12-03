@@ -131,7 +131,8 @@ class Halation extends PureComponent<HalationProps, HalationState> {
     const nodeMap = new Map();
     list.forEach((item) => {
       const { key } = item;
-      nodeMap.set(key, new Block(item));
+      // Only if key not exist in nodeMap, then create `new Block`
+      if (!nodeMap.has(key)) nodeMap.set(key, new Block(item));
     });
 
     logActivity('Halation', {
