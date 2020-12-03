@@ -1,13 +1,13 @@
-import { BlockProps } from './block';
+import { OrderedMapProps } from './block';
 
 export type Predicate = (
-  v: BlockProps,
+  v: OrderedMapProps,
   k: string,
-  context: Array<BlockProps>
+  context: Array<OrderedMapProps>
 ) => boolean;
 
 export type Iterator = (
-  v: BlockProps,
+  v: OrderedMapProps,
   k: string,
-  context: Array<BlockProps>
+  context: Array<OrderedMapProps>
 ) => boolean | void;

@@ -1,0 +1,372 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`basic usage has parent key 1`] = `
+OrderedMap {
+  "_list": Array [
+    Object {
+      "key": "plugin-a-1",
+      "name": "plugin-a",
+      "parent": null,
+      "type": "block",
+    },
+    Object {
+      "key": "plugin-b-1",
+      "name": "plugin-b",
+      "parent": "plugin-a-1",
+      "type": "block",
+    },
+    Object {
+      "key": "plugin-c-1",
+      "name": "plugin-c",
+      "parent": "plugin-a-1",
+      "type": "block",
+    },
+  ],
+  "_map": Map {
+    "plugin-a-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {},
+      "children": Array [
+        "plugin-b-1",
+        "plugin-c-1",
+      ],
+      "key": "plugin-a-1",
+      "name": "plugin-a",
+      "nextSibling": null,
+      "parent": null,
+      "prevSibling": null,
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+    "plugin-b-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {},
+      "children": Array [],
+      "key": "plugin-b-1",
+      "name": "plugin-b",
+      "nextSibling": "plugin-c-1",
+      "parent": null,
+      "prevSibling": null,
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+    "plugin-c-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {},
+      "children": Array [],
+      "key": "plugin-c-1",
+      "name": "plugin-c",
+      "nextSibling": null,
+      "parent": null,
+      "prevSibling": "plugin-b-1",
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+  },
+}
+`;
+
+exports[`basic usage has slot key 1`] = `
+OrderedMap {
+  "_list": Array [
+    Object {
+      "key": "plugin-a-1",
+      "name": "plugin-a",
+      "parent": null,
+      "type": "block",
+    },
+    Object {
+      "key": "plugin-b-1",
+      "name": "plugin-b",
+      "parent": "plugin-a-1.slot.header",
+      "type": "block",
+    },
+    Object {
+      "key": "plugin-c-1",
+      "name": "plugin-c",
+      "parent": "plugin-a-1.slot.header",
+      "type": "block",
+    },
+  ],
+  "_map": Map {
+    "plugin-a-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {
+        "header": Array [
+          "plugin-b-1",
+          "plugin-c-1",
+        ],
+      },
+      "children": Array [],
+      "key": "plugin-a-1",
+      "name": "plugin-a",
+      "nextSibling": null,
+      "parent": null,
+      "prevSibling": null,
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+    "plugin-b-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {},
+      "children": Array [],
+      "key": "plugin-b-1",
+      "name": "plugin-b",
+      "nextSibling": "plugin-c-1",
+      "parent": null,
+      "prevSibling": null,
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+    "plugin-c-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {},
+      "children": Array [],
+      "key": "plugin-c-1",
+      "name": "plugin-c",
+      "nextSibling": null,
+      "parent": null,
+      "prevSibling": "plugin-b-1",
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+  },
+}
+`;
+
+exports[`basic usage has slot with different key 1`] = `
+OrderedMap {
+  "_list": Array [
+    Object {
+      "key": "plugin-a-1",
+      "name": "plugin-a",
+      "parent": null,
+      "type": "block",
+    },
+    Object {
+      "key": "plugin-b-1",
+      "name": "plugin-b",
+      "parent": "plugin-a-1.slot.header",
+      "type": "block",
+    },
+    Object {
+      "key": "plugin-c-1",
+      "name": "plugin-c",
+      "parent": "plugin-a-1.slot.content",
+      "type": "block",
+    },
+  ],
+  "_map": Map {
+    "plugin-a-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {
+        "content": Array [
+          "plugin-c-1",
+        ],
+        "header": Array [
+          "plugin-b-1",
+        ],
+      },
+      "children": Array [],
+      "key": "plugin-a-1",
+      "name": "plugin-a",
+      "nextSibling": null,
+      "parent": null,
+      "prevSibling": null,
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+    "plugin-b-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {},
+      "children": Array [],
+      "key": "plugin-b-1",
+      "name": "plugin-b",
+      "nextSibling": null,
+      "parent": null,
+      "prevSibling": null,
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+    "plugin-c-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {},
+      "children": Array [],
+      "key": "plugin-c-1",
+      "name": "plugin-c",
+      "nextSibling": null,
+      "parent": null,
+      "prevSibling": null,
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+  },
+}
+`;
+
+exports[`basic usage multiple header and has slot with different key 1`] = `
+OrderedMap {
+  "_list": Array [
+    Object {
+      "key": "plugin-a-1",
+      "name": "plugin-a",
+      "parent": null,
+      "type": "block",
+    },
+    Object {
+      "key": "plugin-b-1",
+      "name": "plugin-b",
+      "parent": "plugin-a-1.slot.header",
+      "type": "block",
+    },
+    Object {
+      "key": "plugin-c-1",
+      "name": "plugin-c",
+      "parent": "plugin-a-1.slot.content",
+      "type": "block",
+    },
+    Object {
+      "key": "plugin-d-1",
+      "name": "plugin-c",
+      "parent": null,
+      "type": "block",
+    },
+  ],
+  "_map": Map {
+    "plugin-a-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {
+        "content": Array [
+          "plugin-c-1",
+        ],
+        "header": Array [
+          "plugin-b-1",
+        ],
+      },
+      "children": Array [],
+      "key": "plugin-a-1",
+      "name": "plugin-a",
+      "nextSibling": "plugin-d-1",
+      "parent": null,
+      "prevSibling": null,
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+    "plugin-b-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {},
+      "children": Array [],
+      "key": "plugin-b-1",
+      "name": "plugin-b",
+      "nextSibling": null,
+      "parent": null,
+      "prevSibling": null,
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+    "plugin-c-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {},
+      "children": Array [],
+      "key": "plugin-c-1",
+      "name": "plugin-c",
+      "nextSibling": null,
+      "parent": null,
+      "prevSibling": null,
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+    "plugin-d-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {},
+      "children": Array [],
+      "key": "plugin-d-1",
+      "name": "plugin-c",
+      "nextSibling": null,
+      "parent": null,
+      "prevSibling": "plugin-a-1",
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+  },
+}
+`;
+
+exports[`basic usage parent is null 1`] = `
+OrderedMap {
+  "_list": Array [
+    Object {
+      "key": "plugin-a-1",
+      "name": "plugin-a",
+      "parent": null,
+      "type": "block",
+    },
+    Object {
+      "key": "plugin-b-1",
+      "name": "plugin-b",
+      "parent": null,
+      "type": "block",
+    },
+    Object {
+      "key": "plugin-c-1",
+      "name": "plugin-c",
+      "parent": null,
+      "type": "block",
+    },
+  ],
+  "_map": Map {
+    "plugin-a-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {},
+      "children": Array [],
+      "key": "plugin-a-1",
+      "name": "plugin-a",
+      "nextSibling": "plugin-b-1",
+      "parent": null,
+      "prevSibling": null,
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+    "plugin-b-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {},
+      "children": Array [],
+      "key": "plugin-b-1",
+      "name": "plugin-b",
+      "nextSibling": "plugin-c-1",
+      "parent": null,
+      "prevSibling": "plugin-a-1",
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+    "plugin-c-1" => Record {
+      "_map": [Circular],
+      "_slot": Object {},
+      "children": Array [],
+      "key": "plugin-c-1",
+      "name": "plugin-c",
+      "nextSibling": null,
+      "parent": null,
+      "prevSibling": "plugin-b-1",
+      "props": Object {},
+      "strategies": Array [],
+      "type": "block",
+    },
+  },
+}
+`;

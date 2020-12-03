@@ -11,13 +11,25 @@ export interface BlockProps {
   key: string;
   name: string;
   type: string;
-  prevSibling: string;
-  nextSibling: string;
+  prevSibling: string | null;
+  nextSibling: string | null;
   data: Block;
   children: Array<string>;
   strategies?: Array<Strategy>;
   props?: object;
   slot?: Slot;
+  parent: null | string;
+}
+
+export interface OrderedMapProps {
+  key: string;
+  name: string;
+  type: string;
+  data?: Block;
+  strategies?: Array<Strategy>;
+  props?: object;
+  slot?: Slot;
+  parent: null | string;
 }
 
 export interface BlockRenderProps {

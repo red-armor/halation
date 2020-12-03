@@ -1,37 +1,32 @@
-import { BlockProps, BlockRenderProps, Strategy, Slot } from '../types';
+import { OrderedMapProps, BlockRenderProps, Strategy, Slot } from '../types';
+import invariant from 'invariant';
 
 class Record {
   private name: string;
   private key: string;
-  private prevSibling: string;
-  private nextSibling: string;
+  private prevSibling: string | null;
+  private nextSibling: string | null;
   private type: string;
   private children: Array<string>;
   private strategies?: Array<Strategy>;
   private props?: object;
-  private slot: Slot;
+  private _slot: Slot;
+  readonly _map: Map<string, Record>;
+  private parent: string | null;
 
-  constructor(props: BlockProps) {
-    const {
-      key,
-      type,
-      prevSibling,
-      nextSibling,
-      children,
-      name,
-      strategies,
-      slot = {},
-      props: blockProps,
-    } = props;
+  constructor(props: OrderedMapProps, _map: Map<string, Record>) {
+    const { key, type, name, strategies, props: blockProps } = props;
     this.key = key;
-    this.slot = slot;
+    this._slot = {};
     this.name = name;
-    this.prevSibling = prevSibling;
-    this.nextSibling = nextSibling;
+    this.prevSibling = null;
+    this.nextSibling = null;
     this.type = type || 'block';
-    this.children = children || [];
-    this.strategies = strategies;
-    this.props = blockProps;
+    this.children = [];
+    this.strategies = strategies || [];
+    this.props = blockProps || {};
+    this._map = _map;
+    this.parent = null;
   }
 
   getChildKeys(): Array<string> {
@@ -63,7 +58,7 @@ class Record {
   }
 
   getSlot(): Slot {
-    return this.slot;
+    return this._slot;
   }
 
   getRenderProps(): BlockRenderProps {
@@ -73,6 +68,172 @@ class Record {
       type: this.type,
       props: this.props,
     };
+  }
+
+  insertChildren(options: {
+    record: Record;
+    targetKey: string;
+    before: boolean;
+  }) {
+    const { targetKey, before, record } = options;
+    const list = this.children;
+    this.updateList({
+      list,
+      record,
+      targetKey,
+      before,
+    });
+  }
+
+  createSlotPropertyIfNeeded(slotProperty: string) {
+    if (!this._slot[slotProperty]) this._slot[slotProperty] = [];
+  }
+
+  appendChildren(options: { record: Record }) {
+    const { record } = options;
+    const list = this.children;
+    if (!list.length) {
+      this.children.push(record.getKey());
+      return;
+    }
+    const len = list.length;
+    const lastKey = list[len - 1];
+
+    this.updateList({
+      list,
+      record,
+      targetKey: lastKey,
+      before: false,
+    });
+  }
+
+  insertIntoChildren(options: {
+    record: Record;
+    targetKey: string | null;
+    before: boolean;
+  }) {
+    const { record, targetKey, before } = options;
+    const list = this.children;
+    if (!list.length) {
+      this.children.push(record.getKey());
+      return;
+    }
+    invariant(targetKey, `targetKey is required for insertIntoSlot function`);
+    this.updateList({
+      list,
+      record,
+      targetKey,
+      before,
+    });
+  }
+
+  appendSlot(options: { record: Record; slotProperty: string }) {
+    const { record, slotProperty } = options;
+    this.createSlotPropertyIfNeeded(slotProperty);
+    const list = this._slot[slotProperty];
+
+    if (!list.length) {
+      list.push(record.getKey());
+      return;
+    }
+    const len = list.length;
+    const lastKey = list[len - 1];
+    this.updateList({
+      list,
+      record,
+      targetKey: lastKey,
+      before: false,
+    });
+  }
+
+  insertIntoSlot(options: {
+    record: Record;
+    slotProperty: string;
+    targetKey: string | null;
+    before: boolean;
+  }) {
+    const { record, slotProperty, targetKey, before } = options;
+    this.createSlotPropertyIfNeeded(slotProperty);
+    const list = this._slot[slotProperty];
+    if (!list.length) {
+      list.push(record.getKey());
+      return;
+    }
+    invariant(targetKey, `targetKey is required for insertIntoSlot function`);
+    this.updateList({
+      list,
+      record,
+      targetKey,
+      before,
+    });
+  }
+
+  updateSibling({
+    prevSibling,
+    nextSibling,
+  }: {
+    prevSibling?: string | null;
+    nextSibling?: null | string;
+  }) {
+    if (typeof prevSibling !== 'undefined') {
+      this.prevSibling = prevSibling;
+    }
+
+    if (typeof nextSibling !== 'undefined') {
+      this.nextSibling = nextSibling;
+    }
+  }
+
+  updateParent(parent: string | null) {
+    if (typeof parent !== 'undefined') this.parent = parent;
+  }
+
+  updateList(options: {
+    list: Array<string>;
+    record: Record;
+    targetKey: string;
+    before: boolean;
+  }) {
+    const { list, record, targetKey, before } = options;
+
+    const { key } = record;
+
+    if (!list.length) {
+      list.push(key);
+      return;
+    }
+
+    const targetItem = this._map.get(targetKey);
+
+    invariant(
+      targetItem,
+      `UpdateList Error: targetItem ${targetKey} is used before created`
+    );
+
+    if (before) {
+      const targetItemPrevSibling = targetItem.prevSibling;
+      const targetItemParent = targetItem.parent;
+      record.updateSibling({
+        prevSibling: targetItemPrevSibling,
+        nextSibling: targetItem.getKey(),
+      });
+      targetItem.updateSibling({
+        prevSibling: record.getKey(),
+      });
+      targetItem.updateParent(targetItemParent);
+    } else {
+      const targetItemNextSibling = targetItem.nextSibling;
+      const targetItemParent = targetItem.parent;
+      record.updateSibling({
+        prevSibling: targetItem.getKey(),
+        nextSibling: targetItemNextSibling,
+      });
+      targetItem.updateSibling({
+        nextSibling: record.getKey(),
+      });
+      targetItem.updateParent(targetItemParent);
+    }
+    list.push(key);
   }
 }
 

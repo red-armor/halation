@@ -1,36 +1,81 @@
-import { BlockProps, Predicate, Iterator } from '../types';
+import invariant from 'invariant';
+import { OrderedMapProps, Predicate, Iterator } from '../types';
 import Record from './Record';
 
 class OrderedMap {
   private _map: Map<string, Record>;
-  private _list: Array<BlockProps>;
+  private _list: Array<OrderedMapProps>;
 
-  constructor(list: Array<BlockProps>) {
+  constructor(list: Array<OrderedMapProps>) {
     this._list = list;
-    this.convert(list);
     this._map = new Map<string, Record>();
+    this.build();
   }
 
-  convert(list: Array<BlockProps>) {
-    list.reduce(
-      (result, cur) => {
-        const { prevItem, nextItem, listMap } = result;
-        const { prevSibling, nextSibling, parent } = cur;
-        const {
-          prevSibling: prevItemPrevSibling,
-          nextSibling: prevItemNextSibling,
-          parent: prevItemParent,
-        } = prevItem;
+  updateNullParentLinks(keys?: Array<string>) {
+    const nextKeys = keys || [];
+    const len = nextKeys.length;
+    for (let index = 0; index < len; index++) {
+      const currentKey = nextKeys[index];
+      const nextKey = nextKeys[index + 1];
+      const current = this._map.get(currentKey);
+      const next = this._map.get(nextKey);
 
-        if (parent !== prevItemParent) {
-        }
-      },
-      {
-        prevItem: {},
-        nextItem: {},
-        listMap: new Map(),
+      if (current && next) {
+        current.updateSibling({
+          nextSibling: next.getKey(),
+        });
+        next.updateSibling({
+          prevSibling: current.getKey(),
+        });
+
+        continue;
       }
-    );
+    }
+  }
+
+  build() {
+    if (this._list.length) this.createFromArray(this._list);
+  }
+
+  createFromArray(list: Array<OrderedMapProps>) {
+    const len = list.length;
+    const keysWithNullParent = [];
+    for (let index = 0; index < len; index++) {
+      const currentItem = list[index];
+      const { parent, key } = currentItem;
+      if (this._map.has(key)) {
+        throw new Error(`Duplicated key '${key}' is not allowed`);
+      }
+      const record = new Record(currentItem, this._map);
+      this._map.set(key, record);
+
+      if (!parent) {
+        keysWithNullParent.push(key);
+        continue;
+      }
+      this.validateParentKey(parent);
+      const parts = parent.split('.');
+      const [parentKey, , slotProperty] = parts;
+      const parentItem = this._map.get(parentKey);
+      invariant(
+        parentItem,
+        `Parent with key '${parentKey}' should be defined first`
+      );
+
+      // 当前的item是slot property
+      if (slotProperty) {
+        parentItem.appendSlot({ slotProperty, record });
+      } else {
+        parentItem.appendChildren({ record });
+      }
+    }
+
+    this.updateNullParentLinks(keysWithNullParent);
+  }
+
+  get(key: string) {
+    return this._map.get(key);
   }
 
   validateChildren() {}
@@ -41,20 +86,18 @@ class OrderedMap {
     if (!parent) return true;
     if (typeof parent === 'string') {
       const parts = parent.split('.');
-      if (parts.length >= 3)
+      if (parts.length > 3)
         throw new Error(
           'Parent key only support two level access. and' +
             "the second key should be 'slot'"
         );
-      if (parts.length === 2 && parts[1] !== 'slot')
+      if (parts.length === 3 && parts[1] !== 'slot')
         throw new Error("The second parent key should be 'slot'");
       return true;
     }
 
     throw new Error(`parent should be a string or null value`);
   }
-
-  validateLinks() {}
 
   find(predicate: Predicate, notSetValue: any) {
     const index = this.each(predicate);
@@ -74,12 +117,12 @@ class OrderedMap {
       const value = this._list[index];
       const { key } = value;
 
-      if (!fn(value, key, this._list)) return index;
+      if (fn(value, key, this._list)) return index;
     }
     return -1;
   }
 
-  skipUntil(predicate: Predicate) {}
+  skipUntil() {}
 
   takeUntil() {}
 
