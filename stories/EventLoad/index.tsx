@@ -8,16 +8,11 @@ import PluginBRegister from './plugin-b/register'
 const halationState = [{
   name: 'plugin-a',
   key: 'plugin-a-1',
-  prevSibling: null,
-  nextSibling: 'plugin-b-1',
-  children: [],
+  parent: null,
   type: 'block',
 }, {
   name: 'plugin-b',
   key: 'plugin-b-1',
-  prevSibling: 'plugin-a-1',
-  nextSibling: null,
-  children: [],
   type: 'block',
   strategies: [{
     type: 'event',
@@ -57,15 +52,16 @@ export default () => {
     <Provider
       store={store}
     >
+
       <Halation
         name='super'
         halationState={halationState}
         registers={registers}
         blockRenderFn={blockRenderFn}
         store={store}
-        events={{
-          visible: false,
-        }}
+        // events={{
+        //   visible: false,
+        // }}
       />
     </Provider>
   )

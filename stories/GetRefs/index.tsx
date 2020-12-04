@@ -8,16 +8,10 @@ import PluginBRegister from './plugin-b/register'
 const halationState = [{
   name: 'plugin-a',
   key: 'plugin-a-1',
-  prevSibling: null,
-  nextSibling: 'plugin-b-2',
-  children: [],
   type: 'block',
 }, {
   name: 'plugin-b',
   key: 'plugin-b-2',
-  prevSibling: 'plugin-a-1',
-  nextSibling: null,
-  children: [],
   type: 'block',
 }]
 

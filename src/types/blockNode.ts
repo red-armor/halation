@@ -1,6 +1,6 @@
 import { FC, FunctionComponentElement } from 'react';
 import { PropsAPI, BlockRenderFn } from './halation';
-import Block from '../Block';
+import Record from '../data/Record';
 
 export interface BlockNodeData {
   [key: string]: any;
@@ -11,7 +11,7 @@ export interface SlotProps {
 }
 
 export type BlockNodePreProps = PropsAPI & {
-  block: Block;
+  block: Record;
   blockRenderFn?: BlockRenderFn;
 };
 

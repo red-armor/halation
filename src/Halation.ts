@@ -20,7 +20,6 @@ import {
   LoadManagerMap,
   EventValue,
 } from './types';
-import Block from './Block';
 import Module from './Module';
 import { logActivity } from './logger';
 import BlockNode from './BlockNode';
@@ -28,6 +27,7 @@ import LoadManager from './LoadManager';
 import EventTracker from './EventTracker';
 import RefTracker from './RefTracker';
 import { isPlainObject, isString } from './commons';
+import OrderedMap from './data/OrderedMap';
 
 class Halation extends PureComponent<HalationProps, HalationState> {
   public name: string;
@@ -52,9 +52,11 @@ class Halation extends PureComponent<HalationProps, HalationState> {
       halationState,
       rootRenderFn,
     } = props;
+
     this.state = {
-      nodeMap: Halation.createBlockNode(halationState),
+      // nodeMap: Halation.createBlockNode(halationState),
       halationState: halationState,
+      nodeMap: new OrderedMap(halationState as any).getMap() as any,
     };
     this.blockRenderFn = blockRenderFn;
     this.name = name;
@@ -94,17 +96,17 @@ class Halation extends PureComponent<HalationProps, HalationState> {
     this.getRef = this.getRef.bind(this);
   }
 
-  static getDerivedStateFromProps(props: HalationProps, state: HalationState) {
-    const { halationState } = props;
-    if (halationState !== state.halationState) {
-      return {
-        nodeMap: Halation.createBlockNode(halationState),
-        halationState: halationState,
-      };
-    }
-    // 默认不改动 state
-    return null;
-  }
+  // static getDerivedStateFromProps(props: HalationProps, state: HalationState) {
+  //   const { halationState } = props;
+  //   if (halationState !== state.halationState) {
+  //     return {
+  //       nodeMap: Halation.createBlockNode(halationState),
+  //       halationState: halationState,
+  //     };
+  //   }
+  //   // 默认不改动 state
+  //   return null;
+  // }
 
   startListen() {
     for (let key in this.hooks) {
@@ -125,22 +127,6 @@ class Halation extends PureComponent<HalationProps, HalationState> {
 
   getName() {
     return this.name;
-  }
-
-  static createBlockNode(list: Array<any>): Map<string, Block> {
-    const nodeMap = new Map();
-    list.forEach((item) => {
-      const { key } = item;
-      // Only if key not exist in nodeMap, then create `new Block`
-      if (!nodeMap.has(key)) nodeMap.set(key, new Block(item));
-    });
-
-    logActivity('Halation', {
-      message: 'finish to create nodes ',
-      value: nodeMap,
-    });
-
-    return nodeMap;
   }
 
   public getPropsAPI(): PropsAPI {

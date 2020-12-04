@@ -15,7 +15,7 @@ class Record {
   private parent: string | null;
 
   constructor(props: OrderedMapProps, _map: Map<string, Record>) {
-    const { key, type, name, strategies, props: blockProps } = props;
+    const { key, type, name, strategies, props: blockProps, parent } = props;
     this.key = key;
     this._slot = {};
     this.name = name;
@@ -26,7 +26,7 @@ class Record {
     this.strategies = strategies || [];
     this.props = blockProps || {};
     this._map = _map;
-    this.parent = null;
+    this.parent = parent;
   }
 
   getChildKeys(): Array<string> {
@@ -47,6 +47,10 @@ class Record {
 
   getKey(): string {
     return this.key;
+  }
+
+  getParent(): string | null {
+    return this.parent;
   }
 
   getType(): string {
@@ -212,7 +216,13 @@ class Record {
 
     if (before) {
       const targetItemPrevSibling = targetItem.prevSibling;
-      const targetItemParent = targetItem.parent;
+      if (targetItemPrevSibling) {
+        const targetItemPrevSiblingEntry = this._map.get(targetItemPrevSibling);
+        targetItemPrevSiblingEntry?.updateSibling({
+          nextSibling: record.getKey(),
+        });
+      }
+      const targetItemParent = targetItem.getParent();
       record.updateSibling({
         prevSibling: targetItemPrevSibling,
         nextSibling: targetItem.getKey(),
@@ -220,9 +230,18 @@ class Record {
       targetItem.updateSibling({
         prevSibling: record.getKey(),
       });
+
       targetItem.updateParent(targetItemParent);
+      const targetKeyIndex = list.findIndex((item) => item === targetKey);
+      list.splice(targetKeyIndex - 1, 0, record.getKey());
     } else {
       const targetItemNextSibling = targetItem.nextSibling;
+      if (targetItemNextSibling) {
+        const targetItemNextSiblingEntry = this._map.get(targetItemNextSibling);
+        targetItemNextSiblingEntry?.updateSibling({
+          prevSibling: record.getKey(),
+        });
+      }
       const targetItemParent = targetItem.parent;
       record.updateSibling({
         prevSibling: targetItem.getKey(),
@@ -232,8 +251,9 @@ class Record {
         nextSibling: record.getKey(),
       });
       targetItem.updateParent(targetItemParent);
+      const targetKeyIndex = list.findIndex((item) => item === targetKey);
+      list.splice(targetKeyIndex + 1, 0, record.getKey());
     }
-    list.push(key);
   }
 }
 

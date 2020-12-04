@@ -1,7 +1,7 @@
 import { FC, MutableRefObject } from 'react';
 import { SyncHook } from 'tapable';
 import Module from '../Module';
-import Block from '../Block';
+import Record from '../data/Record';
 import { BlockRenderProps } from './block';
 import { Strategy } from './loadManager';
 import { GetComponent } from './module';
@@ -39,7 +39,7 @@ export interface HalationProps {
 }
 
 export interface HalationState {
-  nodeMap: Map<string, Block>;
+  nodeMap: Map<string, Record>;
   halationState: Array<any>;
 }
 
@@ -53,7 +53,7 @@ export interface Hooks {
 
 export interface PropsAPI {
   hooks: Hooks;
-  nodeMap: Map<string, Block>;
+  nodeMap: Map<string, Record>;
   moduleMap: Map<string, Module>;
   loadManagerMap: Map<string, LoadManager>;
   addBlockLoadManager: AddBlockLoadManager;

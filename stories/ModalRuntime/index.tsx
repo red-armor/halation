@@ -8,16 +8,10 @@ import PluginModalRegister from './plugin-modal/register'
 const halationState = [{
   name: 'plugin-a',
   key: 'plugin-a-1',
-  prevSibling: null,
-  nextSibling: 'plugin-modal-1',
-  children: [],
   type: 'block',
 }, {
   name: 'plugin-modal',
   key: 'plugin-modal-1',
-  prevSibling: 'plugin-a-1',
-  nextSibling: null,
-  children: [],
   type: 'block',
   strategies: [{
     type: 'runtime',
