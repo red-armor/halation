@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { applyMiddleware, createStore, thunk, Provider } from '@xhs/relinx'
-import { Halation } from '../../src'
+import { Halation, OrderedMap } from '../../src'
 
 import PluginARegister from './plugin-a/register'
 import PluginModalRegister from './plugin-modal/register'
@@ -42,6 +42,8 @@ const store = createStore({
 }, applyMiddleware(thunk))
 
 export default () => {
+  const [state] = useState(new OrderedMap(halationState))
+
   const registers = [
     PluginARegister,
     PluginModalRegister,
@@ -53,7 +55,7 @@ export default () => {
     >
       <Halation
         name='super'
-        halationState={halationState}
+        halationState={state}
         registers={registers}
         blockRenderFn={blockRenderFn}
         store={store}

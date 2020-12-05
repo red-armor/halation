@@ -28,7 +28,6 @@ import EventTracker from './EventTracker';
 import RefTracker from './RefTracker';
 import { isPlainObject, isString } from './commons';
 import OrderedMap from './data/OrderedMap';
-
 class Halation extends PureComponent<HalationProps, HalationState> {
   public name: string;
   public blockRenderFn?: BlockRenderFn;
@@ -49,15 +48,9 @@ class Halation extends PureComponent<HalationProps, HalationState> {
       events,
       registers,
       blockRenderFn,
-      halationState,
       rootRenderFn,
     } = props;
 
-    this.state = {
-      // nodeMap: Halation.createBlockNode(halationState),
-      halationState: halationState,
-      nodeMap: new OrderedMap(halationState as any).getMap() as any,
-    };
     this.blockRenderFn = blockRenderFn;
     this.name = name;
     this.moduleMap = new Map();
@@ -94,19 +87,11 @@ class Halation extends PureComponent<HalationProps, HalationState> {
     this.addBlockLoadManager = this.addBlockLoadManager.bind(this);
     this.reportRef = this.reportRef.bind(this);
     this.getRef = this.getRef.bind(this);
+    this.state = {
+      nodeMap: new Map(),
+      halationState: [],
+    };
   }
-
-  // static getDerivedStateFromProps(props: HalationProps, state: HalationState) {
-  //   const { halationState } = props;
-  //   if (halationState !== state.halationState) {
-  //     return {
-  //       nodeMap: Halation.createBlockNode(halationState),
-  //       halationState: halationState,
-  //     };
-  //   }
-  //   // 默认不改动 state
-  //   return null;
-  // }
 
   startListen() {
     for (let key in this.hooks) {
@@ -123,6 +108,18 @@ class Halation extends PureComponent<HalationProps, HalationState> {
         },
       });
     }
+  }
+
+  static getDerivedStateFromProps(nextProps: any) {
+    const { halationState } = nextProps;
+    if (halationState instanceof OrderedMap) {
+      return {
+        halationState,
+        nodeMap: halationState.getMap(),
+      };
+    }
+
+    return null;
   }
 
   getName() {
