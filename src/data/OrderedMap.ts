@@ -117,11 +117,11 @@ class OrderedMap {
       }
 
       if (currentParentKey !== parent) {
-        this.assertParentKey({
-          currentParentKey,
-          currentKey,
-          nextParentKey: parent,
-        });
+        // this.assertParentKey({
+        //   currentParentKey,
+        //   currentKey,
+        //   nextParentKey: parent,
+        // });
         currentParentKey = parent;
       }
       currentKey = key;
@@ -247,11 +247,11 @@ class OrderedMap {
 
       if (!baseParent) {
         if (currentParentKey !== parent) {
-          this.assertParentKey({
-            currentParentKey,
-            currentKey,
-            nextParentKey: parent,
-          });
+          // this.assertParentKey({
+          //   currentParentKey,
+          //   currentKey,
+          //   nextParentKey: parent,
+          // });
           currentParentKey = parent;
           currentKey = key;
         }
