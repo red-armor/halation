@@ -107,7 +107,7 @@ class OrderedMap {
     const len = list.length;
     const keysWithNullParent = [];
     let currentParentKey = null;
-    let currentKey = null;
+    // let currentKey = null;
 
     for (let index = 0; index < len; index++) {
       const currentItem = list[index];
@@ -124,7 +124,7 @@ class OrderedMap {
         // });
         currentParentKey = parent;
       }
-      currentKey = key;
+      // currentKey = key;
 
       const record = new Record(currentItem, this._map);
       this._map.set(key, record);
@@ -233,7 +233,7 @@ class OrderedMap {
     const len = list.length;
     const keysWithNullParent = [];
     let currentParentKey = baseParent;
-    let currentKey = null;
+    // let currentKey = null;
     const nextList = before ? list : list.reverse();
 
     for (let index = 0; index < len; index++) {
@@ -253,7 +253,7 @@ class OrderedMap {
           //   nextParentKey: parent,
           // });
           currentParentKey = parent;
-          currentKey = key;
+          // currentKey = key;
         }
       } else {
         if (!currentParentKey)
