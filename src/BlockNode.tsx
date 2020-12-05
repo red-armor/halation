@@ -195,7 +195,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
     return acc;
   }, {} as SlotProps);
 
-  childKeys.forEach((childKey) => {
+  childKeys.forEach((childKey: string) => {
     const node = nodeMap.get(childKey);
     if (node) {
       children.push(

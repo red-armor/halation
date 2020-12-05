@@ -20,7 +20,6 @@ import {
   LoadManagerMap,
   EventValue,
 } from './types';
-import Block from './Block';
 import Module from './Module';
 import { logActivity } from './logger';
 import BlockNode from './BlockNode';
@@ -28,7 +27,7 @@ import LoadManager from './LoadManager';
 import EventTracker from './EventTracker';
 import RefTracker from './RefTracker';
 import { isPlainObject, isString } from './commons';
-
+import OrderedMap from './data/OrderedMap';
 class Halation extends PureComponent<HalationProps, HalationState> {
   public name: string;
   public blockRenderFn?: BlockRenderFn;
@@ -49,13 +48,9 @@ class Halation extends PureComponent<HalationProps, HalationState> {
       events,
       registers,
       blockRenderFn,
-      halationState,
       rootRenderFn,
     } = props;
-    this.state = {
-      nodeMap: Halation.createBlockNode(halationState),
-      halationState: halationState,
-    };
+
     this.blockRenderFn = blockRenderFn;
     this.name = name;
     this.moduleMap = new Map();
@@ -92,18 +87,10 @@ class Halation extends PureComponent<HalationProps, HalationState> {
     this.addBlockLoadManager = this.addBlockLoadManager.bind(this);
     this.reportRef = this.reportRef.bind(this);
     this.getRef = this.getRef.bind(this);
-  }
-
-  static getDerivedStateFromProps(props: HalationProps, state: HalationState) {
-    const { halationState } = props;
-    if (halationState !== state.halationState) {
-      return {
-        nodeMap: Halation.createBlockNode(halationState),
-        halationState: halationState,
-      };
-    }
-    // 默认不改动 state
-    return null;
+    this.state = {
+      nodeMap: new Map(),
+      halationState: [],
+    };
   }
 
   startListen() {
@@ -123,23 +110,20 @@ class Halation extends PureComponent<HalationProps, HalationState> {
     }
   }
 
-  getName() {
-    return this.name;
+  static getDerivedStateFromProps(nextProps: any) {
+    const { halationState } = nextProps;
+    if (halationState instanceof OrderedMap) {
+      return {
+        halationState,
+        nodeMap: halationState.getMap(),
+      };
+    }
+
+    return null;
   }
 
-  static createBlockNode(list: Array<any>): Map<string, Block> {
-    const nodeMap = new Map();
-    list.forEach((item) => {
-      const { key } = item;
-      nodeMap.set(key, new Block(item));
-    });
-
-    logActivity('Halation', {
-      message: 'finish to create nodes ',
-      value: nodeMap,
-    });
-
-    return nodeMap;
+  getName() {
+    return this.name;
   }
 
   public getPropsAPI(): PropsAPI {

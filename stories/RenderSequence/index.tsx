@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { applyMiddleware, createStore, thunk, Provider } from '@xhs/relinx'
-import { Halation } from '../../src'
+import { Halation, OrderedMap } from '../../src'
 
 import PluginARegister from './plugin-a/register'
 import PluginBRegister from './plugin-b/register'
@@ -10,16 +10,10 @@ import PluginDRegister from './plugin-d/register'
 const halationState = [{
   name: 'plugin-a',
   key: 'plugin-a-1',
-  prevSibling: null,
-  nextSibling: 'plugin-b-1',
-  children: [],
   type: 'block',
 }, {
   name: 'plugin-b',
   key: 'plugin-b-1',
-  prevSibling: 'plugin-a-1',
-  nextSibling: 'plugin-c-1',
-  children: [],
   type: 'block',
   strategies: [{
     type: 'event',
@@ -31,9 +25,6 @@ const halationState = [{
 }, {
   name: 'plugin-c',
   key: 'plugin-c-1',
-  prevSibling: 'plugin-b-1',
-  nextSibling: 'plugin-d-1',
-  children: [],
   type: 'block',
   strategies: [{
     type: 'event',
@@ -45,9 +36,6 @@ const halationState = [{
 }, {
   name: 'plugin-d',
   key: 'plugin-d-1',
-  prevSibling: 'plugin-c-1',
-  nextSibling: null,
-  children: [],
   type: 'block',
   strategies: [{
     type: 'event',
@@ -78,6 +66,8 @@ const store = createStore({
 }, applyMiddleware(thunk))
 
 export default () => {
+  const [state] = useState(new OrderedMap(halationState))
+
   const registers = [
     PluginARegister,
     PluginBRegister,
@@ -91,7 +81,7 @@ export default () => {
     >
       <Halation
         name='super'
-        halationState={halationState}
+        halationState={state}
         registers={registers}
         blockRenderFn={blockRenderFn}
         store={store}

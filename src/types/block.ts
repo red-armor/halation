@@ -1,8 +1,6 @@
-import Block from '../Block';
 import { Strategy } from './loadManager';
 import { Refs } from './halation';
 
-export { Block };
 export type Slot = {
   [key: string]: Array<string>;
 };
@@ -11,13 +9,23 @@ export interface BlockProps {
   key: string;
   name: string;
   type: string;
-  prevSibling: string;
-  nextSibling: string;
-  data: Block;
+  prevSibling: string | null;
+  nextSibling: string | null;
   children: Array<string>;
   strategies?: Array<Strategy>;
   props?: object;
   slot?: Slot;
+  parent: null | string;
+}
+
+export interface OrderedMapProps {
+  key: string;
+  name: string;
+  type: string;
+  strategies?: Array<Strategy>;
+  props?: object;
+  slot?: Slot;
+  parent: null | string;
 }
 
 export interface BlockRenderProps {

@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { applyMiddleware, createStore, thunk, Provider, useDispatch, observe } from '@xhs/relinx'
-import { Halation } from '../../src'
+import { Halation, OrderedMap } from '../../src'
 
 import PluginARegister from './plugin-a/register'
 import PluginBRegister from './plugin-b/register'
@@ -135,6 +135,8 @@ const Helper = () => {
 const ObservedHelper = observe(Helper)
 
 export default () => {
+  const [state] = useState(new OrderedMap(halationState))
+
   const registers = [
     PluginARegister,
     PluginBRegister,
@@ -147,7 +149,7 @@ export default () => {
       <ObservedHelper />
       <Halation
         name='super'
-        halationState={halationState}
+        halationState={state}
         registers={registers}
         blockRenderFn={blockRenderFn}
         store={store}
