@@ -12,6 +12,7 @@ import {
 import { isFunction, isPromise, noop } from './commons';
 import { logActivity } from './logger';
 import invariant from 'invariant';
+import { StateTrackerUtil } from 'state-tracker';
 
 /**
  * loadManager需要在进行渲染之前就要处理一直，这样在`BlockNode`渲染的时候，可以直接对那些不需要判断的
@@ -244,13 +245,13 @@ class LoadManager {
 
       switch (type) {
         case StrategyType.event:
-          this._proxyEvent.strictEnter('event');
+          StateTrackerUtil.enter(this._proxyEvent as any);
           value = !!resolver({
             event: this._proxyEvent,
             dispatchEvent: this._dispatchEvent,
           });
           this._releaseCurrentLoadManager();
-          this._proxyEvent.leave();
+          StateTrackerUtil.leave(this._proxyEvent as any);
           break;
         // 如果说是runtime的话，首先需要先加载model；运行一次resolver将需要
         // 监听的属性进行绑定。

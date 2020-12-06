@@ -1,4 +1,4 @@
-import produce from 'state-tracker';
+import produce, { StateTrackerUtil } from 'state-tracker';
 import { EventValue, HalationEvents, ProxyEvent } from './types';
 import LoadManager from './LoadManager';
 import EffectNode from './EffectNode';
@@ -46,7 +46,9 @@ class EventTracker {
   }
 
   releaseLoadManager() {
-    const tracker = this._proxyEvent.getContext().getCurrent();
+    const tracker = StateTrackerUtil.getContext(
+      this._proxyEvent as any
+    ).getCurrent();
     const tipPoints = tracker.getRemarkable();
     if (this.currentLoadManager) {
       this.effectNodeTree.addChildren({
