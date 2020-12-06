@@ -1,5 +1,6 @@
 import {
   Store,
+  RESOLVER_TYPE,
   Strategy,
   ModuleMap,
   StrategyType,
@@ -9,10 +10,10 @@ import {
   ReleaseCurrentLoadManager,
   LoadManagerConstructorProps,
 } from './types';
-import { isFunction, isPromise, noop } from './commons';
+import { isFunction, isPromise } from './commons';
 import { logActivity } from './logger';
 import invariant from 'invariant';
-import { StateTrackerUtil } from 'state-tracker';
+import { StateTrackerUtil, when } from 'state-tracker';
 
 /**
  * loadManager需要在进行渲染之前就要处理一直，这样在`BlockNode`渲染的时候，可以直接对那些不需要判断的
@@ -31,8 +32,9 @@ class LoadManager {
   private teardownEffects: Array<Function>;
   private _loadRoutine: Function | null;
   private _isModelInjected: boolean;
-  private _storeSubscriptionRemover: Function;
+  // private _storeSubscriptionRemover: Function;
   private _lockPromiseLoad: boolean;
+  private _resolverValueMap: Map<Function, RESOLVER_TYPE>;
 
   constructor(props: LoadManagerConstructorProps) {
     const {
@@ -59,11 +61,12 @@ class LoadManager {
     this.teardownEffects = [];
     this._loadRoutine = null;
     this._isModelInjected = false;
-    this._storeSubscriptionRemover = noop;
+    // this._storeSubscriptionRemover = noop;
     this.update = this.update.bind(this);
     // 为了约束，runtime策略，如果是介入了Promise这个时候shouldModuleLoad
     // 不应该继续被执行，直到Promise真正resolve
     this._lockPromiseLoad = false;
+    this._resolverValueMap = new Map();
   }
 
   getKey() {
@@ -121,46 +124,41 @@ class LoadManager {
     modelInstance: any,
     initialValue: any = {}
   ): boolean {
+    if (this._resolverValueMap.get(resolver) === RESOLVER_TYPE.PENDING)
+      return false;
+    if (this._resolverValueMap.get(resolver) === RESOLVER_TYPE.RESOLVED)
+      return true;
+
     const modelKey = this._key;
     // TODO: If injected model is pending with effects. base[modelKey]
-    const base = this._store.getState();
+    // const base = this._store.getState();
     // may get old value...
 
     if (!this._isModelInjected) {
       this.injectModelIntoStore(modelInstance, initialValue);
-    }
-
-    const currentModelState = base[modelKey];
-
-    if (!this._isModelInjected) {
-      const falsy = resolver(currentModelState);
-
-      if (!falsy) {
-        // updater should be a new value on each process.
-        this._storeSubscriptionRemover = this._store.subscribe(this.update);
-      }
-
       this._isModelInjected = true;
-      return falsy;
     }
 
-    const outerFalsy = !!resolver(currentModelState);
-
-    if (outerFalsy) {
-      if (isFunction(this._storeSubscriptionRemover)) {
-        this._storeSubscriptionRemover();
-        this._storeSubscriptionRemover = noop;
+    const proxyState = (this._store as any)._application.proxyState;
+    let value = false;
+    when(
+      proxyState,
+      (state) => {
+        const currentModelState = state[modelKey];
+        const falsy = resolver(currentModelState);
+        value = falsy;
+        return falsy;
+      },
+      () => {
+        this._resolverValueMap.set(resolver, RESOLVER_TYPE.RESOLVED);
+        this.update();
       }
-    } else {
-      if (
-        !this._storeSubscriptionRemover ||
-        this._storeSubscriptionRemover === noop
-      ) {
-        this._storeSubscriptionRemover = this._store.subscribe(this.update);
-      }
-    }
+    );
 
-    return !!resolver(currentModelState);
+    if (!value) this._resolverValueMap.set(resolver, RESOLVER_TYPE.PENDING);
+    else this._resolverValueMap.set(resolver, RESOLVER_TYPE.RESOLVED);
+
+    return value;
   }
 
   getModelCreator(strict: boolean = false) {

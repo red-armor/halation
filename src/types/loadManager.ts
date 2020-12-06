@@ -33,3 +33,8 @@ export interface Strategy {
   type: StrategyType;
   resolver: (value?: any) => boolean;
 }
+
+export enum RESOLVER_TYPE {
+  'PENDING',
+  'RESOLVED',
+}
