@@ -12,6 +12,7 @@ export interface SlotProps {
 
 export type BlockNodePreProps = PropsAPI & {
   block: Record;
+  modelKey: string;
   blockRenderFn?: BlockRenderFn;
 };
 

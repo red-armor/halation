@@ -33,7 +33,7 @@ class EffectNode {
   }
 
   addEffect(loadManager: LoadManager) {
-    const key = loadManager.getKey();
+    const key = loadManager.getModelKey();
     this.effectMap[key] = {
       loadManager,
     };

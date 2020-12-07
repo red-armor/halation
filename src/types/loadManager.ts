@@ -15,6 +15,7 @@ export interface LoadManagerConstructor {
 export interface LoadManagerConstructorProps {
   store: Store;
   blockKey: string;
+  modelKey: string;
   moduleName: string;
   strategies: Array<Strategy>;
   moduleMap: ModuleMap;

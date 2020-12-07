@@ -70,8 +70,10 @@ export type AddBlockLoadManager = ({
   blockKey,
   strategies,
   moduleName,
+  modelKey,
 }: {
   blockKey: string;
+  modelKey: string;
   moduleName: string;
   strategies: Array<Strategy>;
 }) => boolean;
