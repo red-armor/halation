@@ -6,6 +6,7 @@ import React, {
   FunctionComponentElement,
 } from 'react';
 import { SyncHook } from 'tapable';
+import produce, { IStateTracker, StateTrackerUtil } from 'state-tracker';
 import {
   Hooks,
   Store,
@@ -24,7 +25,6 @@ import Module from './Module';
 import { logActivity } from './logger';
 import BlockNode from './BlockNode';
 import LoadManager from './LoadManager';
-import EventTracker from './EventTracker';
 import RefTracker from './RefTracker';
 import { isPlainObject, isString } from './commons';
 import OrderedMap from './data/OrderedMap';
@@ -35,10 +35,9 @@ class Halation extends PureComponent<HalationProps, HalationState> {
   public loadManagerMap: LoadManagerMap;
   private rootRenderFn?: FC<PropsAPI>;
   public hooks: Hooks;
-  public runtimeRegisterModule: Map<string, any>;
-  public eventTracker: EventTracker;
   public store: Store;
   public refTracker: RefTracker;
+  public proxyEvent: IStateTracker;
 
   constructor(props: HalationProps) {
     super(props);
@@ -60,11 +59,7 @@ class Halation extends PureComponent<HalationProps, HalationState> {
       register: new SyncHook(['block']),
     };
 
-    this.runtimeRegisterModule = new Map();
-
-    this.eventTracker = new EventTracker({
-      events: events || [],
-    });
+    this.proxyEvent = produce(events);
 
     this.startListen();
     this.store = store;
@@ -176,35 +171,29 @@ class Halation extends PureComponent<HalationProps, HalationState> {
         moduleName,
         moduleMap: this.moduleMap,
         dispatchEvent: this.dispatchEvent.bind(this),
-        proxyEvent: this.eventTracker.getProxyEvent(),
-        lockCurrentLoadManager: this.lockCurrentLoadManager.bind(this),
-        releaseCurrentLoadManager: this.releaseCurrentLoadManager.bind(this),
+        proxyEvent: this.proxyEvent,
       })
     );
 
     return true;
   }
 
-  lockCurrentLoadManager(loadManager: LoadManager) {
-    this.eventTracker.setLoadManager(loadManager);
-  }
-
-  releaseCurrentLoadManager() {
-    this.eventTracker.releaseLoadManager();
-  }
-
-  dispatchEvent(event: string | object) {
-    let nextValue = event;
-
+  dispatchEvent(event: string | EventValue) {
     if (isString(event)) {
-      nextValue = {
-        event,
-        value: true,
-      };
+      StateTrackerUtil.relink(this.proxyEvent, [event as string], true);
     }
 
-    if (isPlainObject(nextValue)) {
-      this.eventTracker.updateEventValue(nextValue as EventValue);
+    if (isPlainObject(event)) {
+      const keys = Object.keys(event);
+      const len = keys.length;
+      for (let index = 0; index < len; index++) {
+        const key = keys[index];
+        StateTrackerUtil.relink(
+          this.proxyEvent,
+          [key],
+          (event as EventValue)[key]
+        );
+      }
     }
   }
 

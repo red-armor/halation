@@ -1,12 +1,6 @@
+import { IStateTracker } from 'state-tracker';
 import LoadManager from '../LoadManager';
-import {
-  Store,
-  ModuleMap,
-  ProxyEvent,
-  DispatchEvent,
-  LockCurrentLoadManager,
-  ReleaseCurrentLoadManager,
-} from './halation';
+import { Store, ModuleMap, DispatchEvent } from './halation';
 
 export interface LoadManagerConstructor {
   new (moduleKey: string, strategies: Array<Strategy>): LoadManager;
@@ -19,10 +13,8 @@ export interface LoadManagerConstructorProps {
   moduleName: string;
   strategies: Array<Strategy>;
   moduleMap: ModuleMap;
-  proxyEvent: ProxyEvent;
+  proxyEvent: IStateTracker;
   dispatchEvent: DispatchEvent;
-  lockCurrentLoadManager: LockCurrentLoadManager;
-  releaseCurrentLoadManager: ReleaseCurrentLoadManager;
 }
 
 export enum StrategyType {

@@ -4,16 +4,13 @@ import {
   Strategy,
   ModuleMap,
   StrategyType,
-  ProxyEvent,
   DispatchEvent,
-  LockCurrentLoadManager,
-  ReleaseCurrentLoadManager,
   LoadManagerConstructorProps,
 } from './types';
 import { isFunction, isPromise } from './commons';
 import { logActivity } from './logger';
 import invariant from 'invariant';
-import { StateTrackerUtil, when } from 'state-tracker';
+import { when, IStateTracker } from 'state-tracker';
 
 /**
  * loadManager需要在进行渲染之前就要处理一直，这样在`BlockNode`渲染的时候，可以直接对那些不需要判断的
@@ -26,14 +23,10 @@ class LoadManager {
   readonly strategies: Array<Strategy>;
   readonly _moduleName: string;
   readonly _moduleMap: ModuleMap;
-  readonly _lockCurrentLoadManager: LockCurrentLoadManager;
-  readonly _releaseCurrentLoadManager: ReleaseCurrentLoadManager;
-  readonly _proxyEvent: ProxyEvent;
+  readonly _proxyEvent: IStateTracker;
   private _dispatchEvent: DispatchEvent;
-  private teardownEffects: Array<Function>;
   private _loadRoutine: Function | null;
   private _isModelInjected: boolean;
-  // private _storeSubscriptionRemover: Function;
   private _lockPromiseLoad: boolean;
   private _resolverValueMap: Map<Function, RESOLVER_TYPE>;
 
@@ -47,8 +40,6 @@ class LoadManager {
       moduleMap,
       proxyEvent,
       dispatchEvent,
-      lockCurrentLoadManager,
-      releaseCurrentLoadManager,
     } = props;
 
     this._key = blockKey;
@@ -57,14 +48,10 @@ class LoadManager {
     this.strategies = this.sort(strategies);
     this._moduleName = moduleName;
     this._moduleMap = moduleMap;
-    this._lockCurrentLoadManager = lockCurrentLoadManager;
-    this._releaseCurrentLoadManager = releaseCurrentLoadManager;
     this._proxyEvent = proxyEvent;
     this._dispatchEvent = dispatchEvent;
-    this.teardownEffects = [];
     this._loadRoutine = null;
     this._isModelInjected = false;
-    // this._storeSubscriptionRemover = noop;
     this.update = this.update.bind(this);
     // 为了约束，runtime策略，如果是介入了Promise这个时候shouldModuleLoad
     // 不应该继续被执行，直到Promise真正resolve
@@ -78,14 +65,6 @@ class LoadManager {
 
   getModelKey() {
     return this._modelKey;
-  }
-
-  addTeardown(fn: Function) {
-    this.teardownEffects.push(fn);
-  }
-
-  teardown() {
-    this.teardownEffects.forEach((fn) => fn());
   }
 
   /**
@@ -106,11 +85,10 @@ class LoadManager {
     });
   }
 
-  update() {
-    this.teardown();
+  update(type: StrategyType) {
     if (this._loadRoutine) {
       logActivity('loadManager', {
-        message: `trigger strategy update`,
+        message: `trigger ${this.getModelKey()} ${type} strategy update`,
       });
       this._loadRoutine();
     }
@@ -158,7 +136,7 @@ class LoadManager {
       },
       () => {
         this._resolverValueMap.set(resolver, RESOLVER_TYPE.RESOLVED);
-        this.update();
+        this.update(StrategyType.runtime);
       }
     );
 
@@ -240,7 +218,6 @@ class LoadManager {
    */
   shouldModuleLoad(): boolean | Promise<boolean> {
     const len = this.strategies.length;
-    this._lockCurrentLoadManager(this);
 
     for (let i = 0; i < len; i++) {
       const strategy = this.strategies[i];
@@ -248,15 +225,28 @@ class LoadManager {
 
       let value: boolean = false;
 
+      if (this._resolverValueMap.get(resolver) === RESOLVER_TYPE.PENDING)
+        return false;
+
+      if (this._resolverValueMap.get(resolver) === RESOLVER_TYPE.RESOLVED)
+        continue;
+
       switch (type) {
         case StrategyType.event:
-          StateTrackerUtil.enter(this._proxyEvent as any);
-          value = !!resolver({
-            event: this._proxyEvent,
-            dispatchEvent: this._dispatchEvent,
-          });
-          this._releaseCurrentLoadManager();
-          StateTrackerUtil.leave(this._proxyEvent as any);
+          when(
+            this._proxyEvent,
+            (state) => {
+              value = !!resolver({
+                event: state,
+                dispatchEvent: this._dispatchEvent,
+              });
+              return value;
+            },
+            () => {
+              this._resolverValueMap.set(resolver, RESOLVER_TYPE.RESOLVED);
+              this.update(StrategyType.event);
+            }
+          );
           break;
         // 如果说是runtime的话，首先需要先加载model；运行一次resolver将需要
         // 监听的属性进行绑定。
@@ -265,7 +255,10 @@ class LoadManager {
       }
 
       // The previous strategy will block next if it is false..
-      if (!value) return false;
+      if (!value) {
+        this._resolverValueMap.set(resolver, RESOLVER_TYPE.PENDING);
+        return false;
+      } else this._resolverValueMap.set(resolver, RESOLVER_TYPE.RESOLVED);
     }
 
     // runtime strategy is not defined..

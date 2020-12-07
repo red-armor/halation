@@ -6,7 +6,6 @@ import { BlockRenderProps } from './block';
 import { Strategy } from './loadManager';
 import { GetComponent } from './module';
 import LoadManager from 'LoadManager';
-import { EventValue } from './eventTracker';
 
 export type HalationEvents = {
   [key: string]: any;
@@ -92,8 +91,7 @@ export interface RegisterResult {
 
 export type LockCurrentLoadManager = (loadManager: LoadManager) => void;
 export type ReleaseCurrentLoadManager = () => void;
-
-export type ProxyEvent = {
+export type EventValue = {
   [key: string]: any;
 };
 

@@ -61,9 +61,9 @@ export default () => {
         registers={registers}
         blockRenderFn={blockRenderFn}
         store={store}
-        // events={{
-        //   visible: false,
-        // }}
+        events={{
+          visible: false,
+        }}
       />
     </Provider>
   )
