@@ -13,10 +13,20 @@ class Record {
   private _slot: Slot;
   readonly _map: Map<string, Record>;
   private parent: string | null;
+  private _modelKey: string;
 
   constructor(props: OrderedMapProps, _map: Map<string, Record>) {
-    const { key, type, name, strategies, props: blockProps, parent } = props;
+    const {
+      key,
+      type,
+      name,
+      strategies,
+      props: blockProps,
+      parent,
+      modelKey,
+    } = props;
     this.key = key;
+    this._modelKey = modelKey || key;
     this._slot = {};
     this.name = name;
     this.prevSibling = null;
@@ -47,6 +57,10 @@ class Record {
 
   getKey(): string {
     return this.key;
+  }
+
+  getModelKey(): string {
+    return this._modelKey;
   }
 
   getParent(): string | null {

@@ -152,9 +152,11 @@ class Halation extends PureComponent<HalationProps, HalationState> {
     blockKey,
     moduleName,
     strategies,
+    modelKey,
   }: {
     blockKey: string;
     moduleName: string;
+    modelKey: string;
     strategies: Array<Strategy>;
   }): boolean {
     if (this.loadManagerMap.get(blockKey)) {
@@ -169,6 +171,7 @@ class Halation extends PureComponent<HalationProps, HalationState> {
       new LoadManager({
         store: this.store,
         blockKey,
+        modelKey,
         strategies,
         moduleName,
         moduleMap: this.moduleMap,
@@ -217,6 +220,7 @@ class Halation extends PureComponent<HalationProps, HalationState> {
           {
             block,
             key: block.getKey(),
+            modelKey: block.getModelKey(),
             blockRenderFn: this.blockRenderFn,
             ...this.getPropsAPI(),
           },

@@ -58,7 +58,7 @@ class EventTracker {
     }
 
     logActivity('EventTracker', {
-      message: `add effects to loadManager ${this.currentLoadManager?.getKey()}`,
+      message: `add effects to loadManager ${this.currentLoadManager?.getModelKey()}`,
     });
 
     this.currentLoadManager = null;

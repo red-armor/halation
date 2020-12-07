@@ -26,6 +26,7 @@ export interface OrderedMapProps {
   props?: object;
   slot?: Slot;
   parent: null | string;
+  modelKey?: string;
 }
 
 export interface BlockRenderProps {

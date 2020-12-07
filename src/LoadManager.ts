@@ -21,6 +21,7 @@ import { StateTrackerUtil, when } from 'state-tracker';
  */
 class LoadManager {
   private _key: string;
+  private _modelKey: string;
   readonly _store: Store;
   readonly strategies: Array<Strategy>;
   readonly _moduleName: string;
@@ -40,6 +41,7 @@ class LoadManager {
     const {
       store,
       blockKey,
+      modelKey,
       moduleName,
       strategies,
       moduleMap,
@@ -50,6 +52,7 @@ class LoadManager {
     } = props;
 
     this._key = blockKey;
+    this._modelKey = modelKey;
     this._store = store;
     this.strategies = this.sort(strategies);
     this._moduleName = moduleName;
@@ -71,6 +74,10 @@ class LoadManager {
 
   getKey() {
     return this._key;
+  }
+
+  getModelKey() {
+    return this._modelKey;
   }
 
   addTeardown(fn: Function) {
@@ -110,7 +117,7 @@ class LoadManager {
   }
 
   injectModelIntoStore(modelInstance: any, initialValue: any = {}): boolean {
-    const modelKey = this._key;
+    const modelKey = this.getModelKey();
     this._store.injectModel(modelKey, modelInstance, initialValue);
 
     logActivity('LoadManager', {
@@ -129,7 +136,7 @@ class LoadManager {
     if (this._resolverValueMap.get(resolver) === RESOLVER_TYPE.RESOLVED)
       return true;
 
-    const modelKey = this._key;
+    const modelKey = this.getModelKey();
     // TODO: If injected model is pending with effects. base[modelKey]
     // const base = this._store.getState();
     // may get old value...

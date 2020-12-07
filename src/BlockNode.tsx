@@ -124,7 +124,7 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
     (props, ref) => {
       return createElement(wrapper.Component as FC<any>, {
         ...props,
-        $_modelKey: loadManager.getKey(),
+        $_modelKey: loadManager.getModelKey(),
         forwardRef: ref,
       });
     }
@@ -142,7 +142,14 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
 };
 
 const BlockNode: FC<BlockNodePreProps> = (props) => {
-  const { block, nodeMap, blockRenderFn, addBlockLoadManager, ...rest } = props;
+  const {
+    block,
+    nodeMap,
+    blockRenderFn,
+    addBlockLoadManager,
+    modelKey,
+    ...rest
+  } = props;
   const children: Array<FunctionComponentElement<BlockNodePreProps>> = [];
   const childKeys = block.getChildKeys();
   const blockKey = block.getKey();
@@ -161,6 +168,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
   const strategies = block.getStrategies() || module.getStrategies() || [];
   addBlockLoadManager({
     blockKey,
+    modelKey,
     moduleName,
     strategies,
   });
@@ -180,6 +188,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
           BlockNode,
           {
             key: childKey,
+            modelKey: node.getModelKey(),
             block: node,
             nodeMap,
             blockRenderFn,
@@ -204,6 +213,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
           {
             key: childKey,
             block: node,
+            modelKey: node.getModelKey(),
             nodeMap,
             blockRenderFn,
             addBlockLoadManager,
