@@ -59,7 +59,7 @@
     "@types/invariant": "^2.2.34",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "@xhs/relinx": "^3.3.3",
+    "@xhs/relinx": "^3.4.0",
     "babel-loader": "^8.2.2",
     "husky": "^4.3.0",
     "react": "^17.0.1",
@@ -72,7 +72,7 @@
   },
   "dependencies": {
     "invariant": "^2.2.4",
-    "state-tracker": "^0.5.0",
+    "state-tracker": "^1.2.0",
     "tapable": "^1.1.3"
   }
 }
