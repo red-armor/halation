@@ -56,9 +56,6 @@ const store = createStore({
   models: {},
 }, applyMiddleware(thunk))
 
-
-console.log('store ', store)
-
 export default () => {
   const [state] = useState(new OrderedMap(halationState))
 
