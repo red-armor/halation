@@ -22,7 +22,8 @@
     "build-storybook": "build-storybook"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=16",
+    "state-tracker": "^1.2.0"
   },
   "husky": {
     "hooks": {
@@ -72,7 +73,6 @@
   },
   "dependencies": {
     "invariant": "^2.2.4",
-    "state-tracker": "^1.2.0",
     "tapable": "^1.1.3"
   }
 }
