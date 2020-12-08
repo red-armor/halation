@@ -85,8 +85,13 @@ class RefTracker {
   }
 
   setRef(name: string, value: any) {
+    // setRef调用的时候，有可能说组件从来没有被调用过`getRef`方法；
+    // 所以，这里先进行创建
+    if (!this.TrackerNodeMap.has(name)) {
+      this.TrackerNodeMap.set(name, new TrackerNode());
+    }
     const trackerNode = this.TrackerNodeMap.get(name);
-    if (trackerNode) trackerNode.setValue(value);
+    trackerNode!.setValue(value);
   }
 
   getRef(name: string) {
