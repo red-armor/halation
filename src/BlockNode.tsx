@@ -6,7 +6,6 @@ import React, {
   useCallback,
   createElement,
   FunctionComponentElement,
-  useEffect,
 } from 'react';
 import invariant from 'invariant';
 import {
@@ -34,6 +33,13 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
   const blockKey = block.getKey();
   const moduleName = block.getName();
   const blockRef = useRef();
+  const setBlockRef = useCallback(
+    (el: any) => {
+      blockRef.current = el;
+      reportRef(blockKey, blockRef);
+    },
+    [blockKey, reportRef]
+  );
   const isLoadingRef = useRef(false);
   const isMountedRef = useRef(false);
   const isComponentLoadRef = useRef(false);
@@ -61,11 +67,11 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
     setWrapper(state);
   }, []) // eslint-disable-line
 
-  useEffect(() => {
-    if (wrapper.Component && isComponentLoadRef.current) {
-      reportRef(blockKey, blockRef);
-    }
-  }, [reportRef, blockKey, blockRef, wrapper, isComponentLoadRef]);
+  // useEffect(() => {
+  //   if (wrapper.Component && isComponentLoadRef.current) {
+  //     reportRef(blockKey, blockRef);
+  //   }
+  // }, [reportRef, blockKey, blockRef, wrapper, isComponentLoadRef]);
 
   const loadAndForceUpdate = useCallback(() => {
     logActivity('BlockNode', {
@@ -134,11 +140,11 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
     return createElement(
       blockRenderer,
       restProps,
-      <RefForwardingWrapper {...restProps} ref={blockRef} />
+      <RefForwardingWrapper {...restProps} ref={setBlockRef} />
     );
   }
 
-  return <RefForwardingWrapper {...restProps} ref={blockRef} />;
+  return <RefForwardingWrapper {...restProps} ref={setBlockRef} />;
 };
 
 const BlockNode: FC<BlockNodePreProps> = (props) => {
