@@ -1,10 +1,11 @@
 import React, {
   FC,
-  Fragment,
+  useContext,
   createElement,
   PureComponent,
   FunctionComponentElement,
 } from 'react';
+import invariant from 'invariant';
 import { SyncHook } from 'tapable';
 import produce, { IStateTracker, StateTrackerUtil } from 'state-tracker';
 import {
@@ -14,12 +15,14 @@ import {
   Strategy,
   ModuleMap,
   HalationProps,
+  HalationClassProps,
   HalationState,
   BlockRenderFn,
   BlockNodePreProps,
   RegisterResult,
   LoadManagerMap,
   EventValue,
+  HalationContextValue,
 } from './types';
 import Module from './Module';
 import { logActivity } from './logger';
@@ -28,7 +31,9 @@ import LoadManager from './LoadManager';
 import RefTracker from './RefTracker';
 import { isPlainObject, isString } from './commons';
 import OrderedMap from './data/OrderedMap';
-class Halation extends PureComponent<HalationProps, HalationState> {
+import context from './context';
+
+class HalationClass extends PureComponent<HalationClassProps, HalationState> {
   public name: string;
   public blockRenderFn?: BlockRenderFn;
   public moduleMap: ModuleMap;
@@ -38,8 +43,9 @@ class Halation extends PureComponent<HalationProps, HalationState> {
   public store: Store;
   public refTracker: RefTracker;
   public proxyEvent: IStateTracker;
+  private contextValue: HalationContextValue;
 
-  constructor(props: HalationProps) {
+  constructor(props: HalationClassProps) {
     super(props);
     const {
       name,
@@ -48,6 +54,7 @@ class Halation extends PureComponent<HalationProps, HalationState> {
       registers,
       blockRenderFn,
       rootRenderFn,
+      contextValue,
     } = props;
 
     this.blockRenderFn = blockRenderFn;
@@ -59,10 +66,20 @@ class Halation extends PureComponent<HalationProps, HalationState> {
       register: new SyncHook(['block']),
     };
 
-    this.proxyEvent = produce(events);
+    invariant(
+      !(store && contextValue.store),
+      `Nested Halation should not be passing with 'store' props`
+    );
 
+    invariant(
+      !(events && contextValue.proxyEvent),
+      `Nested Halation should not be passing with 'events' props`
+    );
+
+    this.store = contextValue.store || store;
+    this.proxyEvent = contextValue.proxyEvent || produce(events || {});
     this.startListen();
-    this.store = store;
+
     this.refTracker = new RefTracker();
 
     registers.forEach((register) => {
@@ -85,6 +102,10 @@ class Halation extends PureComponent<HalationProps, HalationState> {
     this.state = {
       nodeMap: new Map(),
       halationState: [],
+    };
+    this.contextValue = {
+      store: this.store,
+      proxyEvent: this.proxyEvent,
     };
   }
 
@@ -230,8 +251,16 @@ class Halation extends PureComponent<HalationProps, HalationState> {
       );
     }
 
-    return React.createElement(Fragment, {}, children);
+    return (
+      <context.Provider value={this.contextValue}>{children}</context.Provider>
+    );
   }
 }
+
+const Halation: React.FC<HalationProps> = (props) => {
+  const contextValue = useContext(context);
+
+  return <HalationClass {...props} contextValue={contextValue} />;
+};
 
 export default Halation;
