@@ -6,6 +6,7 @@ import { BlockRenderProps } from './block';
 import { Strategy } from './loadManager';
 import { GetComponent } from './module';
 import LoadManager from 'LoadManager';
+import { IStateTracker } from 'state-tracker';
 
 export type HalationEvents = {
   [key: string]: any;
@@ -36,6 +37,15 @@ export interface HalationProps {
   events?: HalationEvents;
   store: Store;
 }
+
+export type HalationContextValue = {
+  store: null | Store;
+  proxyEvent: null | IStateTracker;
+};
+
+export type HalationClassProps = HalationProps & {
+  contextValue: HalationContextValue;
+};
 
 export interface HalationState {
   nodeMap: Map<string, Record>;
