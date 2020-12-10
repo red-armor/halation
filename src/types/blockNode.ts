@@ -1,5 +1,6 @@
 import { FC, FunctionComponentElement } from 'react';
-import { PropsAPI, BlockRenderFn } from './halation';
+import { PropsAPI, RenderBlock, ComponentPropsAPI } from './halation';
+import { BlockRenderProps } from './block';
 import Record from '../data/Record';
 
 export interface BlockNodeData {
@@ -13,10 +14,18 @@ export interface SlotProps {
 export type BlockNodePreProps = PropsAPI & {
   block: Record;
   modelKey: string;
-  blockRenderFn?: BlockRenderFn;
+  renderBlock?: RenderBlock;
 };
 
 export type BlockNodeProps = BlockNodePreProps & {
+  slot: SlotProps;
+};
+
+export type RenderBlockNodeProps = ComponentPropsAPI & {
+  blockProps: BlockRenderProps;
+  block: Record;
+  modelKey: string;
+  renderBlock?: RenderBlock;
   slot: SlotProps;
 };
 

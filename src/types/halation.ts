@@ -2,7 +2,7 @@ import { FC, MutableRefObject } from 'react';
 import { SyncHook } from 'tapable';
 import Module from '../Module';
 import Record from '../data/Record';
-import { BlockRenderProps } from './block';
+import { RenderBlockNodeProps } from './blockNode';
 import { Strategy } from './loadManager';
 import { GetComponent } from './module';
 import LoadManager from 'LoadManager';
@@ -27,7 +27,7 @@ export interface HalationProps {
   /**
    * According to block type to render component with wrapper
    */
-  blockRenderFn?: BlockRenderFn;
+  renderBlock?: RenderBlock;
 
   rootRenderFn?: FC;
 
@@ -52,25 +52,26 @@ export interface HalationState {
   halationState: Array<any>;
 }
 
-export type BlockRenderFn = (
-  props: BlockRenderProps
-) => null | undefined | FC<any>;
+export type RenderBlock = React.FC<RenderBlockNodeProps>;
 
 export interface Hooks {
   register: SyncHook;
 }
 
-export interface PropsAPI {
-  hooks: Hooks;
+export type PropsAPI = ComponentPropsAPI & {
   nodeMap: Map<string, Record>;
   moduleMap: Map<string, Module>;
   loadManagerMap: Map<string, LoadManager>;
   addBlockLoadManager: AddBlockLoadManager;
-  dispatchEvent: (event: string) => void;
   reportRef: (key: string, value: any) => void;
+};
+
+export type ComponentPropsAPI = {
+  hooks: Hooks;
+  dispatchEvent: (event: string) => void;
   getRef: (key: string) => any;
   watch: (fn: Function) => void;
-}
+};
 
 export type ModuleMap = Map<string, Module>;
 export type LoadManagerMap = Map<string, LoadManager>;

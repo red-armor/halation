@@ -8,7 +8,7 @@ import {
   LoadManagerConstructorProps,
 } from './types';
 import { isFunction, isPromise } from './commons';
-import { logActivity } from './logger';
+import { logActivity, LogActivityType } from './logger';
 import invariant from 'invariant';
 import { when, IStateTracker } from 'state-tracker';
 
@@ -96,8 +96,9 @@ class LoadManager {
 
   injectModelIntoStore(modelInstance: any, initialValue: any = {}): boolean {
     const modelKey = this.getModelKey();
+    if (this._isModelInjected) return true;
     this._store.injectModel(modelKey, modelInstance, initialValue);
-
+    this._isModelInjected = true;
     logActivity('LoadManager', {
       message: `inject model ${modelKey} into store`,
     });
@@ -177,6 +178,7 @@ class LoadManager {
         .catch((err) => {
           logActivity('LoadManager', {
             message: `Has error on verify runtime..${err}`,
+            type: LogActivityType.ERROR,
           });
           return false;
         });

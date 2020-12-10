@@ -17,7 +17,7 @@ import {
   HalationProps,
   HalationClassProps,
   HalationState,
-  BlockRenderFn,
+  RenderBlock,
   BlockNodePreProps,
   RegisterResult,
   LoadManagerMap,
@@ -25,7 +25,7 @@ import {
   HalationContextValue,
 } from './types';
 import Module from './Module';
-import { logActivity } from './logger';
+import { logActivity, LogActivityType } from './logger';
 import BlockNode from './BlockNode';
 import LoadManager from './LoadManager';
 import RefTracker from './RefTracker';
@@ -35,7 +35,7 @@ import context from './context';
 
 class HalationClass extends PureComponent<HalationClassProps, HalationState> {
   public name: string;
-  public blockRenderFn?: BlockRenderFn;
+  public renderBlock?: RenderBlock;
   public moduleMap: ModuleMap;
   public loadManagerMap: LoadManagerMap;
   private rootRenderFn?: FC<PropsAPI>;
@@ -52,12 +52,12 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
       store,
       events,
       registers,
-      blockRenderFn,
+      renderBlock,
       rootRenderFn,
       contextValue,
     } = props;
 
-    this.blockRenderFn = blockRenderFn;
+    this.renderBlock = renderBlock;
     this.name = name;
     this.moduleMap = new Map();
     this.loadManagerMap = new Map();
@@ -178,6 +178,7 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
     if (this.loadManagerMap.get(blockKey)) {
       logActivity('Halation', {
         message: `Duplicated module key ${blockKey} is registered in halation application`,
+        type: LogActivityType.WARNING,
       });
       return false;
     }
@@ -231,7 +232,7 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
             block,
             key: block.getKey(),
             modelKey: block.getModelKey(),
-            blockRenderFn: this.blockRenderFn,
+            renderBlock: this.renderBlock,
             ...this.getPropsAPI(),
           },
           null

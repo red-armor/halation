@@ -1,11 +1,13 @@
 import React, {
   FC,
   useRef,
+  useMemo,
   useState,
   forwardRef,
   useCallback,
   createElement,
   FunctionComponentElement,
+  useEffect,
 } from 'react';
 import invariant from 'invariant';
 import {
@@ -15,14 +17,14 @@ import {
   BlockNodeState,
   SlotProps,
 } from './types';
-import { logActivity } from './logger';
+import { logActivity, LogActivityType } from './logger';
 import { isPromise, reflect } from './commons';
 
 const BlockWrapper: FC<BlockNodeProps> = (props) => {
   const {
     moduleMap,
     loadManagerMap,
-    blockRenderFn,
+    renderBlock,
     reportRef,
     addBlockLoadManager,
     ...restProps
@@ -44,8 +46,18 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
   const isMountedRef = useRef(false);
   const isComponentLoadRef = useRef(false);
   const loadManager = loadManagerMap.get(blockKey)!;
+  const modelKey = loadManager.getModelKey();
 
   const unsubscribeLoadRoutine = useRef<Function | null>(null);
+
+  useEffect(() => {
+    return () => {
+      logActivity('BlockNode', {
+        message: `Component ${blockKey} is unmounted`,
+        type: LogActivityType.ERROR,
+      });
+    };
+  }, [blockKey]);
 
   const loadRoutine = useCallback(() => {
     const shouldLoadModule = loadManager?.shouldModuleLoad();
@@ -76,6 +88,7 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
   const loadAndForceUpdate = useCallback(() => {
     logActivity('BlockNode', {
       message: `Trigger 'loadAndForceUpdate'`,
+      type: LogActivityType.INFO,
     });
     if (unsubscribeLoadRoutine.current)
       unsubscribeLoadRoutine.current?.call(null);
@@ -117,29 +130,31 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
     loadRoutine();
   }
 
+  // should memo, or will be a new on update..
+  const RefForwardingWrapper = useMemo(
+    () =>
+      forwardRef<any, BlockWrapperProps>((props, ref) => {
+        return createElement(wrapper.Component as FC<any>, {
+          ...props,
+          modelKey,
+          $_modelKey: modelKey,
+          forwardRef: ref,
+        });
+      }),
+    [wrapper.Component, modelKey]
+  );
+
   if (!wrapper.Component) return null;
   isComponentLoadRef.current = true;
 
-  let blockRenderer = null;
-
-  if (typeof blockRenderFn === 'function') {
-    blockRenderer = blockRenderFn(block.getRenderProps());
-  }
-
-  const RefForwardingWrapper = forwardRef<any, BlockWrapperProps>(
-    (props, ref) => {
-      return createElement(wrapper.Component as FC<any>, {
-        ...props,
-        $_modelKey: loadManager.getModelKey(),
-        forwardRef: ref,
-      });
-    }
-  );
-
-  if (blockRenderer) {
+  if (renderBlock) {
     return createElement(
-      blockRenderer,
-      restProps,
+      renderBlock,
+      {
+        ...restProps,
+        key: blockKey,
+        blockProps: block.getRenderProps(),
+      },
       <RefForwardingWrapper {...restProps} ref={setBlockRef} />
     );
   }
@@ -151,7 +166,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
   const {
     block,
     nodeMap,
-    blockRenderFn,
+    renderBlock,
     addBlockLoadManager,
     modelKey,
     ...rest
@@ -197,7 +212,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
             modelKey: node.getModelKey(),
             block: node,
             nodeMap,
-            blockRenderFn,
+            renderBlock,
             addBlockLoadManager,
             ...rest,
           },
@@ -221,7 +236,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
             block: node,
             modelKey: node.getModelKey(),
             nodeMap,
-            blockRenderFn,
+            renderBlock,
             addBlockLoadManager,
             ...rest,
           },
