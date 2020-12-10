@@ -4,13 +4,23 @@ import { Halation, OrderedMap } from '../../src'
 
 import PluginARegister from './plugin-a/register'
 import PluginBRegister from './plugin-b/register'
-import PluginCRegister from './plugin-c/register'
-import PluginDRegister from './plugin-d/register'
 
 const halationState = [{
   name: 'plugin-a',
   key: 'plugin-a-1',
+  parent: null,
   type: 'block',
+  strategies: [{
+    type: 'event',
+    resolver: ({ event, dispatchEvent }) => {
+      const { abValues } = event
+      if (abValues.showPluginA === 0) {
+        console.log('plugin-a  dispatchEvent-displayPluginB')
+        dispatchEvent('displayPluginB')
+      }
+      return abValues.showPluginA === 1
+    }
+  }]
 }, {
   name: 'plugin-b',
   key: 'plugin-b-1',
@@ -18,30 +28,9 @@ const halationState = [{
   strategies: [{
     type: 'event',
     resolver: ({ event }) => {
-      const { pluginBVisible } = event
-      return !!pluginBVisible
-    }
-  }]
-}, {
-  name: 'plugin-c',
-  key: 'plugin-c-1',
-  type: 'block',
-  strategies: [{
-    type: 'event',
-    resolver: ({ event }) => {
-      const { pluginCVisible } = event
-      return !!pluginCVisible
-    }
-  }]
-}, {
-  name: 'plugin-d',
-  key: 'plugin-d-1',
-  type: 'block',
-  strategies: [{
-    type: 'event',
-    resolver: ({ event }) => {
-      const { pluginDVisible } = event
-      return !!pluginDVisible
+      const { displayPluginB } = event
+      console.log('plugin-b  displayPluginB', displayPluginB)
+      return !!displayPluginB
     }
   }]
 }]
@@ -74,14 +63,13 @@ export default () => {
   const registers = [
     PluginARegister,
     PluginBRegister,
-    PluginCRegister,
-    PluginDRegister
   ]
 
   return (
     <Provider
       store={store}
     >
+
       <Halation
         name='super'
         halationState={state}
@@ -89,10 +77,10 @@ export default () => {
         renderBlock={renderBlock}
         store={store}
         events={{
-          pluginAVisible: true,
-          pluginBVisible: false,
-          pluginCVisible: false,
-          pluginDVisible: false,
+          abValues: {
+            showPluginA: 0,
+          },
+          displayPluginB: false,
         }}
       />
     </Provider>

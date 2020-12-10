@@ -66,19 +66,22 @@ const halationState = [{
   type: 'block',
 }]
 
-const blockRenderFn = blockProps => {
-  const { type } = blockProps
+const renderBlock = props => {
+  const {
+    blockProps: { type },
+    children,
+    ...rest
+  } = props
 
   if (type === 'block') {
-    return props => {
-      const { children, ...rest } = props
-      return (
-        <div className="block-render-fn">
-          {React.cloneElement(children, {...rest, location: 'shanghai'})}
-        </div>
-      )
-    }
+    return (
+      <div className="block-render-fn">
+        {React.cloneElement(children, {...rest, location: 'shanghai'})}
+      </div>
+    )
   }
+
+  return null
 }
 
 const store = createStore({
@@ -125,7 +128,7 @@ export default () => {
         name='super'
         halationState={state}
         registers={registers}
-        blockRenderFn={blockRenderFn}
+        renderBlock={renderBlock}
         store={store}
 
         events={{
