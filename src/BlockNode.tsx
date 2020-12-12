@@ -79,12 +79,6 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
     setWrapper(state);
   }, []) // eslint-disable-line
 
-  // useEffect(() => {
-  //   if (wrapper.Component && isComponentLoadRef.current) {
-  //     reportRef(blockKey, blockRef);
-  //   }
-  // }, [reportRef, blockKey, blockRef, wrapper, isComponentLoadRef]);
-
   const loadAndForceUpdate = useCallback(() => {
     logActivity('BlockNode', {
       message: `Trigger 'loadAndForceUpdate'`,
@@ -178,6 +172,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
   const slot = block.getSlot();
   const moduleMap = props.moduleMap;
   const module = moduleMap.get(moduleName)!;
+  const isMountRef = useRef(false);
 
   invariant(
     module,
@@ -187,12 +182,16 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
 
   // block strategy comes first, then from module...
   const strategies = block.getStrategies() || module.getStrategies() || [];
-  addBlockLoadManager({
-    blockKey,
-    modelKey,
-    moduleName,
-    strategies,
-  });
+
+  if (!isMountRef.current) {
+    addBlockLoadManager({
+      blockKey,
+      modelKey,
+      moduleName,
+      strategies,
+    });
+    isMountRef.current = true;
+  }
 
   logActivity('BlockNode', {
     message: 'render block node',
