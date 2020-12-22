@@ -6,11 +6,6 @@ export const log = (...args: Array<any>) => {
   console.log.call(null, ...args);
 };
 
-export const error = (props: { type: string; message: string }) => {
-  const { message, type } = props;
-  console.error(message, type);
-};
-
 export enum LogActivityType {
   WARNING,
   ERROR,

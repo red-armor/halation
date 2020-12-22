@@ -8,7 +8,7 @@ import {
   ESModule,
   Strategy,
 } from './types';
-import { error, logActivity } from './logger';
+import { logActivity, LogActivityType } from './logger';
 
 class Module {
   private _name: string;
@@ -110,8 +110,8 @@ class Module {
             this.statusMap.set(moduleName, ModuleStatus.Loaded);
           },
           () => {
-            error({
-              type: 'module',
+            logActivity('Module', {
+              type: LogActivityType.ERROR,
               message: `'load' ${moduleName} fails`,
             });
           }
