@@ -1,3 +1,4 @@
+import error from '../error';
 import invariant from 'invariant';
 import { OrderedMapProps, Predicate, Iterator } from '../types';
 import Record from './Record';
@@ -41,7 +42,11 @@ class OrderedMap {
   }
 
   build() {
-    if (this._list.length) this.createFromArray(this._list);
+    try {
+      if (this._list.length) this.createFromArray(this._list);
+    } catch (err) {
+      error(10001, err);
+    }
   }
 
   assertParentKey(options: {

@@ -12,6 +12,8 @@ export enum LogActivityType {
   INFO,
 }
 
+const NODE_ENV = process.env.NODE_ENV;
+
 export const logActivity = (
   moduleName: string,
   {
@@ -20,6 +22,8 @@ export const logActivity = (
     type,
   }: { message: string; value?: any; type?: LogActivityType }
 ) => {
+  if (NODE_ENV === 'production') return;
+
   const title: string = `[${moduleName}]`;
   let messageColor = '#00529B';
 
