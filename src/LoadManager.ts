@@ -205,6 +205,7 @@ class LoadManager {
         .catch((err) => {
           logActivity('LoadManager', {
             message: `Directly inject model ${this._moduleName} failed with ${err}`,
+            type: LogActivityType.ERROR,
           });
           return false;
         });
