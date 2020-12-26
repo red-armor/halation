@@ -109,7 +109,13 @@ export type EventValue = {
 export type DispatchEvent = (eventValue: string | EventValue) => void;
 export type Store = {
   subscribe: (subscription: Function) => Function;
-  injectModel: (key: string, model: any, initialValue: any) => void;
+  injectModel: (opt: {
+    key: string;
+    model: any;
+    initialValue?: any;
+    targetKey?: string;
+  }) => void;
+  transfer: (key: string) => void;
   getState: () => {
     [key: string]: any;
   };

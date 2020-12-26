@@ -13,8 +13,8 @@ import invariant from 'invariant';
 import { when, IStateTracker } from 'state-tracker';
 
 /**
- * loadManager需要在进行渲染之前就要处理一直，这样在`BlockNode`渲染的时候，可以直接对那些不需要判断的
- * 组件直接进行加载；
+ * loadManager需要在进行渲染之前就要处理一直，这样在`BlockNode`渲染的时候，
+ * 可以直接对那些不需要判断的组件直接进行加载；
  */
 class LoadManager {
   private _key: string;
@@ -94,10 +94,20 @@ class LoadManager {
     }
   }
 
-  injectModelIntoStore(modelInstance: any, initialValue: any = {}): boolean {
+  injectModelIntoStore(
+    modelInstance: any,
+    initialValue: any = {},
+    falsy?: boolean
+  ): boolean {
     const modelKey = this.getModelKey();
     if (this._isModelInjected) return true;
-    this._store.injectModel(modelKey, modelInstance, initialValue);
+    this._store.injectModel({
+      key: this._key,
+      model: modelInstance,
+      initialValue,
+      targetKey: modelKey,
+    });
+    if (falsy) this._store.transfer(this._key);
     this._isModelInjected = true;
     logActivity('LoadManager', {
       message: `inject model ${modelKey} into store`,
@@ -200,7 +210,7 @@ class LoadManager {
       return (modelCreator as Promise<Function>)
         .then((m) => {
           modelInstance = m.call(null);
-          return this.injectModelIntoStore(modelInstance, {});
+          return this.injectModelIntoStore(modelInstance, {}, true);
         })
         .catch((err) => {
           logActivity('LoadManager', {
@@ -211,7 +221,7 @@ class LoadManager {
         });
     } else if (isFunction(modelCreator)) {
       modelInstance = (modelCreator as Function).call(null);
-      return this.injectModelIntoStore(modelInstance, {});
+      return this.injectModelIntoStore(modelInstance, {}, true);
     }
     return false;
   }
@@ -272,7 +282,14 @@ class LoadManager {
 
   bindLoadRoutine(loadRoutine: Function): Function {
     this._loadRoutine = loadRoutine;
-    return () => (this._loadRoutine = null);
+    return () => {
+      this._loadRoutine = null;
+
+      // Only if has runtime strategy
+      if (this.strategies.findIndex(({ type }) => type === 'runtime') !== -1) {
+        this._store.transfer(this.getKey());
+      }
+    };
   }
 }
 
