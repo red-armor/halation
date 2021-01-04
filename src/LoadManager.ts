@@ -137,6 +137,7 @@ class LoadManager {
 
     const proxyState = (this._store as any)._application.proxyState;
     let value = false;
+
     when(
       proxyState,
       (state) => {

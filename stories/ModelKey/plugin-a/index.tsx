@@ -4,7 +4,7 @@ import { observe, useDispatch } from '@xhs/relinx'
 export default observe((props) => {
   const { dispatchEvent } = props
   const [dispatch] = useDispatch()
-  const count = useRef(0)
+  const count = useRef(1)
   const handleClickShowB = useCallback(() => {
     dispatchEvent('pluginBVisible')
   }, [])
