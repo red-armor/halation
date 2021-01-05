@@ -54,10 +54,7 @@ export default () => {
   ]
 
   return (
-    <Provider
-      store={store}
-    >
-
+    <Provider store={store}>
       <Halation
         name='super'
         halationState={state}
