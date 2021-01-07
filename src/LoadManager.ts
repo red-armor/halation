@@ -67,6 +67,10 @@ class LoadManager {
     return this._modelKey;
   }
 
+  getDefinitelyModelKey() {
+    return this._modelKey || this._key;
+  }
+
   /**
    *
    * @param strategies
@@ -110,7 +114,7 @@ class LoadManager {
     if (falsy) this._store.transfer(this._key);
     this._isModelInjected = true;
     logActivity('LoadManager', {
-      message: `inject model ${modelKey} into store`,
+      message: `inject model ${this.getDefinitelyModelKey()} into store`,
     });
     return true;
   }
@@ -125,7 +129,7 @@ class LoadManager {
     if (this._resolverValueMap.get(resolver) === RESOLVER_TYPE.RESOLVED)
       return true;
 
-    const modelKey = this.getModelKey();
+    // const modelKey = this.getModelKey();
     // TODO: If injected model is pending with effects. base[modelKey]
     // const base = this._store.getState();
     // may get old value...
@@ -141,7 +145,7 @@ class LoadManager {
     when(
       proxyState,
       (state) => {
-        const currentModelState = state[modelKey];
+        const currentModelState = state[this._key];
         const falsy = resolver(currentModelState);
         value = falsy;
         return falsy;

@@ -46,7 +46,7 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
   const isMountedRef = useRef(false);
   const isComponentLoadRef = useRef(false);
   const loadManager = loadManagerMap.get(blockKey)!;
-  const modelKey = loadManager.getModelKey();
+  const modelKey = loadManager.getDefinitelyModelKey();
 
   const unsubscribeLoadRoutine = useRef<Function | null>(null);
 
@@ -147,6 +147,7 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
       {
         ...restProps,
         key: blockKey,
+        modelKey,
         blockProps: block.getRenderProps(),
       },
       <RefForwardingWrapper {...restProps} ref={setBlockRef} />
