@@ -13,7 +13,7 @@ export interface SlotProps {
 
 export type BlockNodePreProps = PropsAPI & {
   block: Record;
-  modelKey: string;
+  modelKey: string | undefined;
   renderBlock?: RenderBlock;
 };
 
