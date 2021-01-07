@@ -18,7 +18,7 @@ import { when, IStateTracker } from 'state-tracker';
  */
 class LoadManager {
   private _key: string;
-  private _modelKey: string;
+  private _modelKey?: string;
   readonly _store: Store;
   readonly strategies: Array<Strategy>;
   readonly _moduleName: string;

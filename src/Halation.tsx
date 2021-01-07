@@ -172,7 +172,7 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
   }: {
     blockKey: string;
     moduleName: string;
-    modelKey: string;
+    modelKey?: string;
     strategies: Array<Strategy>;
   }): boolean {
     if (this.loadManagerMap.get(blockKey)) {
