@@ -124,7 +124,7 @@ export default () => {
         registers={registers}
         renderBlock={renderBlock}
         store={store}
-
+        enableLog
         events={{
           flags: {},
         }}

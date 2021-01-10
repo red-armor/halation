@@ -4,6 +4,7 @@ export const isString = (o: any) => toString(o) === '[object String]';
 export const isPlainObject = (o: any) => toString(o) === '[object Object]';
 export const isPromise = (o: any) =>
   typeof o === 'object' && typeof o.then === 'function';
+export const isPresent = (o: any) => toString(o) !== '[object Undefined]';
 
 export const reflect = (p: Promise<any>) =>
   p.then(

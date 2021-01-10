@@ -36,11 +36,15 @@ export interface HalationProps {
   registers: Array<Function>;
   events?: HalationEvents;
   store: Store;
+
+  /** Display logger message or not. Default value is false */
+  enableLog?: boolean;
 }
 
 export type HalationContextValue = {
   store: null | Store;
   proxyEvent: null | IStateTracker;
+  enableLog: undefined | boolean;
 };
 
 export type HalationClassProps = HalationProps & {
