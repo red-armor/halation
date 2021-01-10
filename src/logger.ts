@@ -34,21 +34,21 @@ export const logActivity = (
   if (NODE_ENV === 'production') return;
 
   const title: string = `[${moduleName}]`;
-  let messageColor = '#00529B';
+  let messageColor = '#73d13d';
 
   switch (type) {
     case LogActivityType.ERROR:
       messageColor = '#D8000C';
       break;
     case LogActivityType.INFO:
-      messageColor = '#00529B';
+      messageColor = '#73d13d';
       break;
     case LogActivityType.WARNING:
       messageColor = '#9F6000';
       break;
   }
 
-  const titleStyle = 'color: #7cb305; font-weight: bold';
+  const titleStyle = 'color: #b7eb8f; font-weight: bold';
   const messageStyle = `color: ${messageColor}; font-weight: bold`;
 
   if (process && process.env.NODE_ENV !== 'production') {
