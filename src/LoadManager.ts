@@ -92,7 +92,7 @@ class LoadManager {
   update(type: StrategyType) {
     if (this._loadRoutine) {
       logActivity('loadManager', {
-        message: `trigger ${this.getDefinitelyModelKey()} ${type} strategy update`,
+        message: `trigger ${this.getKey()} ${type} strategy update`,
       });
       this._loadRoutine();
     }
@@ -174,7 +174,7 @@ class LoadManager {
 
   startVerifyRuntime(resolver: Function): Promise<boolean> | boolean {
     logActivity('LoadManager', {
-      message: `start verify ${this.getDefinitelyModelKey()} runtime strategy`,
+      message: `start verify ${this.getKey()} runtime strategy`,
     });
     const modelCreator = this.getModelCreator(true);
 

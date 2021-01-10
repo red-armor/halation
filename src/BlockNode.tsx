@@ -48,6 +48,20 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
   const loadManager = loadManagerMap.get(blockKey)!;
   const modelKey = loadManager.getDefinitelyModelKey();
 
+  // Why isForceUpdateCalledRef needs ?
+  // If strategy has a runtime type one. `forceUpdate` will be trigger twice.
+  // `update` function in `LoadManager` will call `loadRoutine` function every
+  // time one strategy return a true value. But it always has one more to trigger.
+  // For example, there are a `event` strategy and `runtime` strategy, if `runtime`
+  // function is true on the first time,
+  //   1. `shouldModuleLoad` function in LoadManager will be called first, However,
+  //       this._resolverValueMap's value are all `RESOLVED`. then it will return true
+  //       directly.
+  //   2. After one tick, the promise function created by `startVerifyRuntime` will
+  //      be called again. it will cause duplicated running of
+  //      function `loadAndForceUpdate`
+  const isForceUpdateCalledRef = useRef(false);
+
   const unsubscribeLoadRoutine = useRef<Function | null>(null);
 
   useEffect(() => {
@@ -80,12 +94,16 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
   }, []) // eslint-disable-line
 
   const loadAndForceUpdate = useCallback(() => {
+    if (isForceUpdateCalledRef.current) return;
+    isForceUpdateCalledRef.current = true;
     logActivity('BlockNode', {
-      message: `Trigger 'loadAndForceUpdate'`,
+      message: `Trigger loadAndForceUpdate ${blockKey}`,
       type: LogActivityType.INFO,
     });
-    if (unsubscribeLoadRoutine.current)
+    if (unsubscribeLoadRoutine.current) {
       unsubscribeLoadRoutine.current?.call(null);
+      unsubscribeLoadRoutine.current = null;
+    }
     if (isLoadingRef.current) return;
     const module = moduleMap.get(moduleName);
     if (module) {
@@ -196,7 +214,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
 
   logActivity('BlockNode', {
     message: 'render block node',
-    value: block,
+    value: block.getKey(),
   });
 
   const slotKeys = Object.keys(slot);
