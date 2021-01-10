@@ -25,11 +25,11 @@ import {
   HalationContextValue,
 } from './types';
 import Module from './Module';
-import { logActivity, LogActivityType } from './logger';
+import { logActivity, LogActivityType, setLoggerContext } from './logger';
 import BlockNode from './BlockNode';
 import LoadManager from './LoadManager';
 import RefTracker from './RefTracker';
-import { isPlainObject, isString } from './commons';
+import { isPlainObject, isString, isPresent } from './commons';
 import OrderedMap from './data/OrderedMap';
 import context from './context';
 
@@ -38,12 +38,14 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
   public renderBlock?: RenderBlock;
   public moduleMap: ModuleMap;
   public loadManagerMap: LoadManagerMap;
-  private rootRenderFn?: FC<PropsAPI>;
   public hooks: Hooks;
   public store: Store;
   public refTracker: RefTracker;
   public proxyEvent: IStateTracker;
+  public enableLog: boolean;
   private contextValue: HalationContextValue;
+  private rootRenderFn?: FC<PropsAPI>;
+  private clearLoggerContext: Function;
 
   constructor(props: HalationClassProps) {
     super(props);
@@ -51,6 +53,7 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
       name,
       store,
       events,
+      enableLog,
       registers,
       renderBlock,
       rootRenderFn,
@@ -76,9 +79,16 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
       `Nested Halation should not be passing with 'events' props`
     );
 
+    invariant(
+      !(isPresent(enableLog) && isPresent(contextValue.enableLog)),
+      `Nested Halation should not be passing with 'enableLog' props`
+    );
+
     this.store = contextValue.store || store;
     this.proxyEvent = contextValue.proxyEvent || produce(events || {});
+    this.enableLog = (isPresent(enableLog) ? enableLog : false) as boolean;
     this.startListen();
+    this.clearLoggerContext = setLoggerContext({ enableLog: this.enableLog });
 
     this.refTracker = new RefTracker();
 
@@ -106,7 +116,12 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
     this.contextValue = {
       store: this.store,
       proxyEvent: this.proxyEvent,
+      enableLog: this.enableLog,
     };
+  }
+
+  componentWillUmount() {
+    this.clearLoggerContext();
   }
 
   startListen() {

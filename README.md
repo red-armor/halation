@@ -2,20 +2,18 @@
 
 _Halation is integrated with caching, lazy load component features and aims to build high scalable, plugin-able and easy configurable React application._
 
-## TODO: Features
+## Installation
 
-1. Configurable for first screen component
-2. Controllable for necessary load component
-3. Assembled with plugin component
-4. Caching and Retry for Http request
-5. Optional for state management
-6. friendly to SPA
+```bash
+npm i @xhs/halation
+```
 
-## How to design lifecycle/hooks
+## Example
 
-- onApplicationMounted
-- onRouteForward
-- onRouteBack
-- onPageLeave
+## Usage
 
-## How to add customized hooks
+### Props
+
+#### enableLog: boolean
+
+Enable whether display logger or not. Default value is false.

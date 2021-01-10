@@ -1,3 +1,5 @@
+import { LoggerContextStack } from './types';
+
 export const warn = (...args: Array<any>) => {
   console.warn.call(null, ...args);
 };
@@ -13,6 +15,13 @@ export enum LogActivityType {
 }
 
 const NODE_ENV = process.env.NODE_ENV;
+
+const loggerContextStack = [] as Array<LoggerContextStack>;
+
+export const setLoggerContext = ({ enableLog }: { enableLog: boolean }) => {
+  loggerContextStack.push({ enableLog });
+  return () => loggerContextStack.pop();
+};
 
 export const logActivity = (
   moduleName: string,
@@ -43,12 +52,16 @@ export const logActivity = (
   const messageStyle = `color: ${messageColor}; font-weight: bold`;
 
   if (process && process.env.NODE_ENV !== 'production') {
-    console.log.apply(null, [
-      '%c' + title + ' %c' + message,
-      titleStyle,
-      messageStyle,
-      value ? value : '',
-      Date.now(),
-    ]);
+    const loggerContextLength = loggerContextStack.length;
+    const current = loggerContextStack[loggerContextLength - 1];
+    if (current && current.enableLog) {
+      console.log.apply(null, [
+        '%c' + title + ' %c' + message,
+        titleStyle,
+        messageStyle,
+        value ? value : '',
+        Date.now(),
+      ]);
+    }
   }
 };
