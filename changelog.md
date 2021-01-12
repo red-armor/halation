@@ -1,5 +1,9 @@
 # changelog
 
+## v0.5.5
+
+1. fix: error or warning always be logged
+
 ## v0.5.4
 
 1. fix runtime strategy will trigger `forceUpdate` twice issue
