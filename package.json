@@ -59,7 +59,7 @@
     "@types/invariant": "^2.2.34",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "@xhs/relinx": "^3.5.0",
+    "@xhs/relinx": "^3.5.6",
     "babel-loader": "^8.2.2",
     "husky": "^4.3.0",
     "react": "^17.0.1",
