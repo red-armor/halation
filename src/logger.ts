@@ -54,7 +54,12 @@ export const logActivity = (
   if (process && process.env.NODE_ENV !== 'production') {
     const loggerContextLength = loggerContextStack.length;
     const current = loggerContextStack[loggerContextLength - 1];
-    if (current && current.enableLog) {
+    // warning or error should always be logged
+    if (
+      type === LogActivityType.ERROR ||
+      type === LogActivityType.WARNING ||
+      (current && current.enableLog)
+    ) {
       console.log.apply(null, [
         '%c' + title + ' %c' + message,
         titleStyle,
