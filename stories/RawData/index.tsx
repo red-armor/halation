@@ -8,9 +8,6 @@ import PluginBRegister from './plugin-b/register'
 const halationStateRaw = JSON.stringify([{
   name: 'plugin-a',
   key: 'plugin-a-1',
-  prevSibling: null,
-  nextSibling: 'plugin-b-2',
-  children: [],
   type: 'block',
   strategies: [{
     type: 'runtime',
@@ -33,9 +30,6 @@ const halationStateRaw = JSON.stringify([{
 }, {
   name: 'plugin-b',
   key: 'plugin-b-2',
-  prevSibling: 'plugin-a-1',
-  nextSibling: 'plugin-a-3',
-  children: [],
   type: 'block',
   strategies: [{
     type: 'runtime',
@@ -61,16 +55,12 @@ const halationStateRaw = JSON.stringify([{
 }, {
   name: 'plugin-b',
   key: 'plugin-b-4',
-  prevSibling: null,
-  nextSibling: 'plugin-b-5',
-  children: [],
+  parent: 'plugin-a-3',
   type: 'block',
 }, {
   name: 'plugin-b',
   key: 'plugin-b-5',
-  prevSibling: 'plugin-b-4',
-  nextSibling: null,
-  children: [],
+  parent: 'plugin-a-3',
   type: 'block',
 }])
 
@@ -163,3 +153,4 @@ export default () => {
     </Provider>
   )
 }
+
