@@ -184,7 +184,6 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
     modelKey,
     ...rest
   } = props;
-  const children: Array<FunctionComponentElement<BlockNodePreProps>> = [];
   const childKeys = block.getChildKeys();
   const blockKey = block.getKey();
   const moduleName = block.getName();
@@ -218,51 +217,60 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
   });
 
   const slotKeys = Object.keys(slot);
-  const slotComponents = slotKeys.reduce((acc, cur) => {
-    const group = ([] as Array<string>).concat(slot[cur]);
-    acc[cur] = group.map((childKey) => {
-      const node = nodeMap.get(childKey);
-      if (node) {
-        return createElement(
-          BlockNode,
-          {
-            key: childKey,
-            modelKey: node.getModelKey(),
-            block: node,
-            nodeMap,
-            renderBlock,
-            addBlockLoadManager,
-            ...rest,
-          },
-          null
-        );
-      }
-      return null;
-    });
+  const slotComponents = useMemo(
+    () =>
+      slotKeys.reduce((acc, cur) => {
+        const group = ([] as Array<string>).concat(slot[cur]);
+        acc[cur] = group.map((childKey) => {
+          const node = nodeMap.get(childKey);
+          if (node) {
+            return createElement(
+              BlockNode,
+              {
+                key: childKey,
+                modelKey: node.getModelKey(),
+                block: node,
+                nodeMap,
+                renderBlock,
+                addBlockLoadManager,
+                ...rest,
+              },
+              null
+            );
+          }
+          return null;
+        });
 
-    return acc;
-  }, {} as SlotProps);
+        return acc;
+      }, {} as SlotProps),
+    [slot, addBlockLoadManager, nodeMap, renderBlock, slotKeys, rest]
+  );
 
-  childKeys.forEach((childKey: string) => {
-    const node = nodeMap.get(childKey);
-    if (node) {
-      children.push(
-        createElement(
-          BlockNode,
-          {
-            key: childKey,
-            block: node,
-            modelKey: node.getModelKey(),
-            nodeMap,
-            renderBlock,
-            addBlockLoadManager,
-            ...rest,
-          },
-          null
-        )
-      );
-    }
-  });
+  const children: Array<FunctionComponentElement<
+    BlockNodePreProps
+  > | null> = useMemo(() => {
+    return childKeys
+      .map((childKey: string) => {
+        const node = nodeMap.get(childKey);
+        if (node) {
+          return createElement(
+            BlockNode,
+            {
+              key: childKey,
+              block: node,
+              modelKey: node.getModelKey(),
+              nodeMap,
+              renderBlock,
+              addBlockLoadManager,
+              ...rest,
+            },
+            null
+          );
+        }
+        return null;
+      })
+      .filter((v) => v);
+  }, [childKeys, addBlockLoadManager, nodeMap, renderBlock, rest]);
 
   return createElement(
     BlockWrapper,

@@ -14,6 +14,7 @@ class Record {
   readonly _map: Map<string, Record>;
   private parent: string | null;
   private _modelKey: string | undefined;
+  private _blockProps: BlockRenderProps;
 
   constructor(props: OrderedMapProps, _map: Map<string, Record>) {
     const {
@@ -37,6 +38,12 @@ class Record {
     this.props = blockProps || {};
     this._map = _map;
     this.parent = parent;
+    this._blockProps = {
+      key: this.key,
+      name: this.name,
+      type: this.type,
+      props: this.props,
+    };
   }
 
   getChildKeys(): Array<string> {
@@ -84,12 +91,7 @@ class Record {
   }
 
   getRenderProps(): BlockRenderProps {
-    return {
-      key: this.key,
-      name: this.name,
-      type: this.type,
-      props: this.props,
-    };
+    return this._blockProps;
   }
 
   insertChildren(options: {
