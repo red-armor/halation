@@ -243,7 +243,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
 
         return acc;
       }, {} as SlotProps),
-    [slot, addBlockLoadManager, nodeMap, renderBlock, slotKeys, rest]
+    [slot]
   );
 
   const children: Array<FunctionComponentElement<
@@ -270,7 +270,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
         return null;
       })
       .filter((v) => v);
-  }, [childKeys, addBlockLoadManager, nodeMap, renderBlock, rest]);
+  }, [childKeys]);
 
   return createElement(
     BlockWrapper,
