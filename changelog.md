@@ -1,5 +1,9 @@
 # changelog
 
+## v0.5.6
+
+1. feat: props should be the same for performance
+
 ## v0.5.5
 
 1. fix: error or warning always be logged
