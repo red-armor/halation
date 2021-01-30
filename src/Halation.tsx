@@ -109,10 +109,6 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
     this.addBlockLoadManager = this.addBlockLoadManager.bind(this);
     this.reportRef = this.reportRef.bind(this);
     this.getRef = this.getRef.bind(this);
-    this.state = {
-      nodeMap: new Map(),
-      halationState: [],
-    };
     this.contextValue = {
       store: this.store,
       proxyEvent: this.proxyEvent,
