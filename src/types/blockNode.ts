@@ -13,7 +13,7 @@ export interface SlotProps {
 
 export type BlockNodePreProps = PropsAPI & {
   block: Record;
-  modelKey: string | undefined;
+  modelKey: string;
   renderBlock?: RenderBlock;
 };
 
@@ -29,7 +29,11 @@ export type RenderBlockNodeProps = ComponentPropsAPI & {
   slot: SlotProps;
 };
 
-export interface BlockWrapperProps {}
+export type BlockComponentProps = ComponentPropsAPI & {
+  block: Record;
+  modelKey: string;
+  slot: SlotProps;
+};
 
 export interface PluginAPI {}
 

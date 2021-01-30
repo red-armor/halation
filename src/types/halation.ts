@@ -7,6 +7,7 @@ import { Strategy } from './loadManager';
 import { GetComponent } from './module';
 import LoadManager from 'LoadManager';
 import { IStateTracker } from 'state-tracker';
+import OrderedMap from '../data/OrderedMap';
 
 export type HalationEvents = {
   [key: string]: any;
@@ -31,7 +32,7 @@ export interface HalationProps {
 
   rootRenderFn?: FC;
 
-  halationState: Array<any>;
+  halationState: OrderedMap;
 
   registers: Array<Function>;
   events?: HalationEvents;
@@ -53,7 +54,7 @@ export type HalationClassProps = HalationProps & {
 
 export interface HalationState {
   nodeMap: Map<string, Record>;
-  halationState: Array<any>;
+  halationState: OrderedMap;
 }
 
 export type RenderBlock = React.FC<RenderBlockNodeProps>;
@@ -70,9 +71,15 @@ export type PropsAPI = ComponentPropsAPI & {
   reportRef: (key: string, value: any) => void;
 };
 
+export type EventValue = {
+  [key: string]: any;
+};
+
+export type DispatchEvent = (eventValue: string | EventValue) => void;
+
 export type ComponentPropsAPI = {
   hooks: Hooks;
-  dispatchEvent: (event: string) => void;
+  dispatchEvent: DispatchEvent;
   getRef: (key: string) => any;
   watch: (fn: Function) => void;
 };
@@ -106,11 +113,7 @@ export interface RegisterResult {
 
 export type LockCurrentLoadManager = (loadManager: LoadManager) => void;
 export type ReleaseCurrentLoadManager = () => void;
-export type EventValue = {
-  [key: string]: any;
-};
 
-export type DispatchEvent = (eventValue: string | EventValue) => void;
 export type Store = {
   subscribe: (subscription: Function) => Function;
   injectModel: (opt: {
