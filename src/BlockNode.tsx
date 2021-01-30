@@ -13,7 +13,7 @@ import invariant from 'invariant';
 import {
   BlockNodeProps,
   BlockNodePreProps,
-  BlockWrapperProps,
+  BlockComponentProps,
   BlockNodeState,
   SlotProps,
 } from './types';
@@ -145,7 +145,7 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
   // should memo, or will be a new on update..
   const RefForwardingWrapper = useMemo(
     () =>
-      forwardRef<any, BlockWrapperProps>((props, ref) => {
+      forwardRef<any, BlockComponentProps>((props, ref) => {
         return createElement(wrapper.Component as FC<any>, {
           ...props,
           modelKey,
@@ -228,7 +228,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
               BlockNode,
               {
                 key: childKey,
-                modelKey: node.getModelKey(),
+                modelKey: node.getModelKey()!,
                 block: node,
                 nodeMap,
                 renderBlock,
@@ -258,7 +258,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
             {
               key: childKey,
               block: node,
-              modelKey: node.getModelKey(),
+              modelKey: node.getModelKey()!,
               nodeMap,
               renderBlock,
               addBlockLoadManager,
