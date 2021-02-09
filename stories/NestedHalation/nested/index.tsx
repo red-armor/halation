@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Halation, OrderedMap } from '../../../src'
+import { Halation, OrderedMap } from 'halation'
 
 import PluginARegister from './plugin-a/register'
 import PluginBRegister from './plugin-b/register'

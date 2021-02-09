@@ -243,7 +243,7 @@ const BlockNode: FC<BlockNodePreProps> = props => {
 
         return acc;
       }, {} as SlotProps),
-    [slot]
+    [slot] // eslint-disable-line
   );
 
   const children: Array<FunctionComponentElement<
@@ -270,7 +270,7 @@ const BlockNode: FC<BlockNodePreProps> = props => {
         return null;
       })
       .filter(v => v);
-  }, [childKeys]);
+  }, [childKeys]); // eslint-disable-line
 
   return createElement(
     BlockWrapper,

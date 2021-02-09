@@ -114,6 +114,13 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
       proxyEvent: this.proxyEvent,
       enableLog: this.enableLog,
     };
+
+    const initialState = new OrderedMap([]);
+
+    this.state = {
+      halationState: initialState,
+      nodeMap: initialState.getMap(),
+    };
   }
 
   componentWillUmount() {
