@@ -18,15 +18,15 @@ stages:
   - test
   - deploy
 
-test:
-  stage: test
-  script:
-    - formula lint -p
-    - npm run type-check
-  cache:
-    untracked: true
-    paths:
-      - node_modules/
+# test:
+#   stage: test
+#   script:
+#     - formula lint -p
+#     - npm run type-check
+#   cache:
+#     untracked: true
+#     paths:
+#       - node_modules/
 
 deploy:
   stage: deploy
