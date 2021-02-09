@@ -1,39 +1,37 @@
 image: docker-reg.devops.xiaohongshu.com/fe/fe-ci:$FE_CI_IMAGE_LATEST
 
+variables:
+  REMOTES: "static01,static02"
+  BROWSER_OUTOUT_FOLDER: "./public"
+  REMOTES_FOLDER: "/data/formula-static/$CI_PROJECT_NAME"
+
 before_script:
   - node -v
   - formula -V
   - lerna bootstrap
+  - export PKGLEFT=${CI_COMMIT_TAG%@*}
+  - export PKGNAME=${PKGLEFT/@xhs\/}
+  - export PKGVERSION=${CI_COMMIT_TAG##*@}
+  - echo $PKGNAME
 
 stages:
   - test
   - deploy
 
-test:
-  stage: test
-  script:
-    # - formula lint
-    - formula test
+# test:
+#   stage: test
+#   script:
+#     - formula lint -p
+#     - npm run type-check
+#   cache:
+#     untracked: true
+#     paths:
+#       - node_modules/
 
-deploy:production:
+deploy:
   stage: deploy
   script:
-    - lerna run build
-    - lerna publish
+    - cd packages/$PKGNAME
+    - npm publish
   only:
-    - /^v\d+\.\d+\.\d+$/
-
-deploy:prerelease:
-  stage: deploy
-  script:
-    - lerna publish --tag=prerelease
-  only:
-    - /^v\d+\.\d+\.\d+-\d+$/
-
-deploy:alpha:
-  stage: deploy
-  script:
-    - lerna run build
-    - lerna publish
-  only:
-    - /^v\d+\.\d+\.\d+-alpha\./
+    - tags
