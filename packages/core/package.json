@@ -1,0 +1,15 @@
+{
+  "name": "core",
+  "version": "0.0.0",
+  "description": "Core API for React Renderer",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "React",
+    "Renderer"
+  ],
+  "author": "youchao liu",
+  "license": "ISC"
+}

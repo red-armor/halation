@@ -1,4 +1,4 @@
-import { LoggerContextStack } from './types';
+import { LoggerContextStack, LogActivityType } from '../types';
 
 export const warn = (...args: Array<any>) => {
   console.warn.call(null, ...args);
@@ -7,12 +7,6 @@ export const warn = (...args: Array<any>) => {
 export const log = (...args: Array<any>) => {
   console.log.call(null, ...args);
 };
-
-export enum LogActivityType {
-  WARNING,
-  ERROR,
-  INFO,
-}
 
 const NODE_ENV = process.env.NODE_ENV;
 

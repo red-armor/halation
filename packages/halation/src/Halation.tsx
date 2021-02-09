@@ -25,7 +25,7 @@ import {
   HalationContextValue,
 } from './types';
 import Module from './Module';
-import { logActivity, LogActivityType, setLoggerContext } from './logger';
+import { logActivity, LogActivityType, setLoggerContext } from 'core';
 import BlockNode from './BlockNode';
 import LoadManager from './LoadManager';
 import RefTracker from './RefTracker';
