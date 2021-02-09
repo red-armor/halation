@@ -9,7 +9,7 @@ const errors: {
 const error = (code: number, ...args: Array<any>) => {
   const e = errors[code];
   const message = typeof e === 'function' ? e.apply(null, args) : e;
-  const err = new Error(`[Halation] ${message}`);
+  const err = new Error(`[HalationCore] ${message}`);
 
   if (args[0] instanceof Error) {
     err.name = args[0].name;

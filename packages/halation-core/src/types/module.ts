@@ -1,5 +1,3 @@
-import { Strategy } from './loadManager';
-
 export enum ModuleName {
   Model = 'model',
   Component = 'component',
@@ -13,9 +11,7 @@ export interface GetComponent {
 
 export interface ModuleProps {
   name: string;
-  getModel?: Function;
   getComponent: GetComponent;
-  strategies: Array<Strategy>;
 }
 
 export enum ModuleStatus {

@@ -1,5 +1,5 @@
 import { FC, FunctionComponentElement } from 'react';
-import { PropsAPI, RenderBlock, ComponentPropsAPI } from './halation';
+import { HalationPropsAPI, RenderBlock, ComponentPropsAPI } from './halation';
 import { BlockRenderProps } from './block';
 import Record from '../data/Record';
 
@@ -11,7 +11,7 @@ export interface SlotProps {
   [key: string]: Array<FunctionComponentElement<BlockNodePreProps> | null>;
 }
 
-export type BlockNodePreProps = PropsAPI & {
+export type BlockNodePreProps = HalationPropsAPI & {
   block: Record;
   modelKey: string;
   renderBlock?: RenderBlock;

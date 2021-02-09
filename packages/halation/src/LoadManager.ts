@@ -2,55 +2,54 @@ import {
   Store,
   RESOLVER_TYPE,
   Strategy,
-  ModuleMap,
+  HalationModuleMap,
   StrategyType,
   DispatchEvent,
   LoadManagerConstructorProps,
 } from './types';
-import { isFunction, isPromise } from './commons';
-import { logActivity, LogActivityType } from '@xhs/halation-core';
+import {
+  LoadManagerBase,
+  logActivity,
+  LogActivityType,
+  utils,
+} from '@xhs/halation-core';
 import invariant from 'invariant';
 import { when, IStateTracker } from 'state-tracker';
+
+const { isFunction, isPromise } = utils;
 
 /**
  * loadManager需要在进行渲染之前就要处理一直，这样在`BlockNode`渲染的时候，
  * 可以直接对那些不需要判断的组件直接进行加载；
  */
-class LoadManager {
-  private _key: string;
+class LoadManager extends LoadManagerBase {
   private _modelKey?: string;
   readonly _store: Store;
   readonly strategies: Array<Strategy>;
-  readonly _moduleName: string;
-  readonly _moduleMap: ModuleMap;
+  readonly _moduleMap: HalationModuleMap;
   readonly _proxyEvent: IStateTracker;
   private _dispatchEvent: DispatchEvent;
-  private _loadRoutine: Function | null;
   private _isModelInjected: boolean;
   private _lockPromiseLoad: boolean;
   private _resolverValueMap: Map<Function, RESOLVER_TYPE>;
 
   constructor(props: LoadManagerConstructorProps) {
+    super(props);
     const {
       store,
-      blockKey,
       modelKey,
-      moduleName,
       strategies,
       moduleMap,
       proxyEvent,
       dispatchEvent,
     } = props;
 
-    this._key = blockKey;
     this._modelKey = modelKey;
     this._store = store;
     this.strategies = this.sort(strategies);
-    this._moduleName = moduleName;
     this._moduleMap = moduleMap;
     this._proxyEvent = proxyEvent;
     this._dispatchEvent = dispatchEvent;
-    this._loadRoutine = null;
     this._isModelInjected = false;
     this.update = this.update.bind(this);
     // 为了约束，runtime策略，如果是介入了Promise这个时候shouldModuleLoad
@@ -59,16 +58,12 @@ class LoadManager {
     this._resolverValueMap = new Map();
   }
 
-  getKey() {
-    return this._key;
-  }
-
   getModelKey() {
     return this._modelKey;
   }
 
   getDefinitelyModelKey() {
-    return this._modelKey || this._key;
+    return this._modelKey || this.getKey();
   }
 
   /**
@@ -106,12 +101,12 @@ class LoadManager {
     const modelKey = this.getModelKey();
     if (this._isModelInjected) return true;
     this._store.injectModel({
-      key: this._key,
+      key: this.getKey(),
       model: modelInstance,
       initialValue,
       targetKey: modelKey,
     });
-    if (falsy) this._store.transfer(this._key);
+    if (falsy) this._store.transfer(this.getKey());
     this._isModelInjected = true;
     logActivity('LoadManager', {
       message: `inject model ${this.getDefinitelyModelKey()} into store`,
@@ -145,7 +140,7 @@ class LoadManager {
     when(
       proxyState,
       state => {
-        const currentModelState = state[this._key];
+        const currentModelState = state[this.getKey()];
         const falsy = resolver(currentModelState);
         value = falsy;
         return falsy;

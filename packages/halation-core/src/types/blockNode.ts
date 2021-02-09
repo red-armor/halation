@@ -1,8 +1,7 @@
 import { FC, FunctionComponentElement } from 'react';
 import { PropsAPI, RenderBlock, ComponentPropsAPI } from './halation';
 import { BlockRenderProps } from './block';
-import Record from '../data/Record';
-
+import RecordBase from '../data/RecordBase'
 export interface BlockNodeData {
   [key: string]: any;
 }
@@ -12,27 +11,29 @@ export interface SlotProps {
 }
 
 export type BlockNodePreProps = PropsAPI & {
-  block: Record;
-  modelKey: string;
+  block: RecordBase;
   renderBlock?: RenderBlock;
 };
 
 export type BlockNodeProps = BlockNodePreProps & {
-  slot: SlotProps;
+  // slot: SlotProps;
 };
 
 export type RenderBlockNodeProps = ComponentPropsAPI & {
   blockProps: BlockRenderProps;
-  block: Record;
-  modelKey: string;
+  block: RecordBase;
+  // modelKey: string;
   renderBlock?: RenderBlock;
-  slot: SlotProps;
+  // slot: SlotProps;
 };
 
+export type RenderBlockBaseProps = {
+  blockProps: BlockRenderProps;
+  block: RecordBase;
+}
+
 export type BlockComponentProps = ComponentPropsAPI & {
-  block: Record;
-  modelKey: string;
-  slot: SlotProps;
+  block: RecordBase;
 };
 
 export interface PluginAPI {}

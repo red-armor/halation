@@ -1,6 +1,5 @@
 import {
   ModuleProps,
-  GetComponent,
   ModuleStatus,
   RawModule,
   ModuleName,
@@ -8,22 +7,19 @@ import {
   ESModule,
   Strategy,
 } from './types';
-import { logActivity, LogActivityType } from '@xhs/halation-core';
+import { logActivity, LogActivityType, ModuleBase } from '@xhs/halation-core';
 
-class Module {
-  private _name: string;
+class Module extends ModuleBase {
   private _getModel?: Function;
-  private _getComponent: GetComponent;
   private statusMap: Map<ModuleName, ModuleStatus>;
   private resolversMap: Map<ModuleName, Array<Function>>;
   private resolvedModulesMap: Map<ModuleName, Function | null>;
   private _strategies: Array<Strategy>;
 
   constructor(props: ModuleProps) {
-    const { name, getModel, getComponent, strategies } = props;
-    this._name = name;
+    super(props);
+    const { name, getModel, strategies } = props;
     this._getModel = getModel;
-    this._getComponent = getComponent;
     this.statusMap = new Map<ModuleName, ModuleStatus>([
       [ModuleName.Model, ModuleStatus.Idle],
       [ModuleName.Component, ModuleStatus.Idle],
@@ -41,14 +37,6 @@ class Module {
     logActivity('Module', {
       message: `create ${name} Module`,
     });
-  }
-
-  getName(): string {
-    return this._name;
-  }
-
-  getComponent(): GetComponent {
-    return this._getComponent;
   }
 
   getStrategies(): Array<Strategy> {
@@ -73,7 +61,7 @@ class Module {
     // If module has been loaded already, then return directly.
     if (currentStatus === ModuleStatus.Loaded) {
       logActivity('Module', {
-        message: `load module ${this._name} ${moduleName} from cache`,
+        message: `load module ${this.getName()} ${moduleName} from cache`,
       });
       return this.resolvedModulesMap.get(moduleName) as Function;
     }
@@ -83,7 +71,7 @@ class Module {
         case ModuleStatus.Idle:
           this.resolversMap.get(moduleName)?.push(resolve);
           logActivity('Module', {
-            message: `start load module ${this._name} ${moduleName}`,
+            message: `start load module ${this.getName()} ${moduleName}`,
           });
           this.statusMap.set(moduleName, ModuleStatus.Pending);
           break;
@@ -104,7 +92,7 @@ class Module {
             resolvers.forEach(resolver => resolver(module));
             this.resolvedModulesMap.set(moduleName, module);
             logActivity('Module', {
-              message: `finish load module ${this._name} ${moduleName}`,
+              message: `finish load module ${this.getName()} ${moduleName}`,
             });
             this.resolversMap.set(moduleName, []);
             this.statusMap.set(moduleName, ModuleStatus.Loaded);

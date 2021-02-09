@@ -5,3 +5,4 @@ export * from './block';
 export * from './loadManager';
 export * from './orderedMap';
 export * from './logger'
+export * from './recordBase'

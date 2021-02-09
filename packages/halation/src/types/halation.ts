@@ -8,9 +8,20 @@ import { GetComponent } from './module';
 import LoadManager from '../LoadManager';
 import { IStateTracker } from 'state-tracker';
 import OrderedMap from '../data/OrderedMap';
+import { RenderBlockBaseProps, HalationBaseProps } from '@xhs/halation-core';
 
 export type HalationEvents = {
   [key: string]: any;
+};
+
+export type HalationStateRawDataProps = {
+  key: string;
+  name: string;
+  type: string;
+  strategies?: Array<Strategy>;
+  props?: object;
+  parent: null | string;
+  modelKey?: string;
 };
 
 export type HalationStateItem = {
@@ -22,25 +33,39 @@ export type HalationStateItem = {
   parent: null | string;
 };
 
-export interface HalationProps {
-  name: string;
+export type HalationRenderBlockProps = RenderBlockBaseProps & {
+  modelKey: string;
+};
 
-  /**
-   * According to block type to render component with wrapper
-   */
-  renderBlock?: RenderBlock;
+export type HalationRenderBlock<P> = FC<P>;
 
-  rootRenderFn?: FC;
-
-  halationState: OrderedMap;
-
-  registers: Array<Function>;
+export type HalationProps = HalationBaseProps<
+  HalationStateRawDataProps,
+  HalationRenderBlockProps
+> & {
   events?: HalationEvents;
   store: Store;
+};
 
-  /** Display logger message or not. Default value is false */
-  enableLog?: boolean;
-}
+// export interface HalationProps {
+//   name: string;
+
+//   /**
+//    * According to block type to render component with wrapper
+//    */
+//   renderBlock?: RenderBlock;
+
+//   rootRenderFn?: FC;
+
+//   halationState: HalationStateRawDataProps;
+
+//   registers: Array<Function>;
+//   events?: HalationEvents;
+//   store: Store;
+
+//   /** Display logger message or not. Default value is false */
+//   enableLog?: boolean;
+// }
 
 export type HalationContextValue = {
   store: null | Store;
@@ -57,13 +82,13 @@ export interface HalationState {
   halationState: OrderedMap;
 }
 
-export type RenderBlock = React.FC<RenderBlockNodeProps>;
+export type RenderBlock = React.FC<HalationRenderBlockProps>;
 
 export interface Hooks {
   register: SyncHook;
 }
 
-export type PropsAPI = ComponentPropsAPI & {
+export type HalationPropsAPI = ComponentPropsAPI & {
   nodeMap: Map<string, Record>;
   moduleMap: Map<string, Module>;
   loadManagerMap: Map<string, LoadManager>;
@@ -84,8 +109,8 @@ export type ComponentPropsAPI = {
   watch: (fn: Function) => void;
 };
 
-export type ModuleMap = Map<string, Module>;
-export type LoadManagerMap = Map<string, LoadManager>;
+export type HalationModuleMap = Map<string, Module>;
+export type HalationLoadManagerMap = Map<string, LoadManager>;
 
 export type AddBlockLoadManager = ({
   blockKey,

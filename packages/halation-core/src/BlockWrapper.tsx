@@ -6,21 +6,18 @@ import React, {
   forwardRef,
   useCallback,
   createElement,
-  FunctionComponentElement,
   useEffect,
 } from 'react';
-import invariant from 'invariant';
 import {
   BlockNodeProps,
-  BlockNodePreProps,
   BlockComponentProps,
   BlockNodeState,
-  SlotProps,
 } from './types';
-import { logActivity, LogActivityType } from '@xhs/halation-core';
-import { isPromise, reflect } from './commons';
+import { LogActivityType } from './types';
+import { logActivity } from './commons/logger'
+import { isPromise, reflect } from './commons/utils';
 
-const BlockWrapper: FC<BlockNodeProps> = props => {
+const BlockWrapper = <P extends BlockNodeProps>(props: P) => {
   const {
     moduleMap,
     loadManagerMap,
@@ -29,7 +26,7 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     addBlockLoadManager,
     ...restProps
   } = props;
-  const { hooks, block } = props;
+  const { block } = props;
 
   const [wrapper, setWrapper] = useState<BlockNodeState>({});
   const blockKey = block.getKey();
@@ -46,7 +43,6 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
   const isMountedRef = useRef(false);
   const isComponentLoadRef = useRef(false);
   const loadManager = loadManagerMap.get(blockKey)!;
-  const modelKey = loadManager.getDefinitelyModelKey();
 
   // Why isForceUpdateCalledRef needs ?
   // If strategy has a runtime type one. `forceUpdate` will be trigger twice.
@@ -84,13 +80,18 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     }
   }, []); // eslint-disable-line
 
+  useEffect(() => () => {
+    isMountedRef.current = false
+  }, [])
+
   const forceUpdate = useCallback(componentResult => {
     const state: BlockNodeState = {};
 
     if (componentResult.success) {
       state.Component = componentResult.value;
     }
-    setWrapper(state);
+
+    if (isMountedRef.current) setWrapper(state);
   }, []) // eslint-disable-line
 
   const loadAndForceUpdate = useCallback(() => {
@@ -107,7 +108,6 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
     if (isLoadingRef.current) return;
     const module = moduleMap.get(moduleName);
     if (module) {
-      hooks.register.call(blockKey, block);
       const component = module.loadComponent();
 
       if (isPromise(component)) {
@@ -148,12 +148,10 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
       forwardRef<any, BlockComponentProps>((props, ref) => {
         return createElement(wrapper.Component as FC<any>, {
           ...props,
-          modelKey,
-          $_modelKey: modelKey,
           forwardRef: ref,
         });
       }),
-    [wrapper.Component, modelKey]
+    [wrapper.Component]
   );
 
   if (!wrapper.Component) return null;
@@ -165,7 +163,6 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
       {
         ...restProps,
         key: blockKey,
-        modelKey,
         blockProps: block.getRenderProps(),
       },
       <RefForwardingWrapper {...restProps} ref={setBlockRef} />
@@ -175,111 +172,4 @@ const BlockWrapper: FC<BlockNodeProps> = props => {
   return <RefForwardingWrapper {...restProps} ref={setBlockRef} />;
 };
 
-const BlockNode: FC<BlockNodePreProps> = props => {
-  const {
-    block,
-    nodeMap,
-    renderBlock,
-    addBlockLoadManager,
-    modelKey,
-    ...rest
-  } = props;
-  const childKeys = block.getChildKeys();
-  const blockKey = block.getKey();
-  const moduleName = block.getName();
-  const slot = block.getSlot();
-  const moduleMap = props.moduleMap;
-  const module = moduleMap.get(moduleName)!;
-  const isMountRef = useRef(false);
-
-  invariant(
-    module,
-    `module ${moduleName} is required to register first. Please check whether ` +
-      `module ${moduleName} is defined in 'registers' props`
-  );
-
-  // block strategy comes first, then from module...
-  const strategies = block.getStrategies() || module.getStrategies() || [];
-
-  if (!isMountRef.current) {
-    addBlockLoadManager({
-      blockKey,
-      modelKey,
-      moduleName,
-      strategies,
-    });
-    isMountRef.current = true;
-  }
-
-  logActivity('BlockNode', {
-    message: 'render block node',
-    value: block.getKey(),
-  });
-
-  const slotKeys = Object.keys(slot);
-  const slotComponents = useMemo(
-    () =>
-      slotKeys.reduce((acc, cur) => {
-        const group = ([] as Array<string>).concat(slot[cur]);
-        acc[cur] = group.map(childKey => {
-          const node = nodeMap.get(childKey);
-          if (node) {
-            return createElement(
-              BlockNode,
-              {
-                key: childKey,
-                modelKey: node.getModelKey()!,
-                block: node,
-                nodeMap,
-                renderBlock,
-                addBlockLoadManager,
-                ...rest,
-              },
-              null
-            );
-          }
-          return null;
-        });
-
-        return acc;
-      }, {} as SlotProps),
-    [slot] // eslint-disable-line
-  );
-
-  const children: Array<FunctionComponentElement<
-    BlockNodePreProps
-  > | null> = useMemo(() => {
-    return childKeys
-      .map((childKey: string) => {
-        const node = nodeMap.get(childKey);
-        if (node) {
-          return createElement(
-            BlockNode,
-            {
-              key: childKey,
-              block: node,
-              modelKey: node.getModelKey()!,
-              nodeMap,
-              renderBlock,
-              addBlockLoadManager,
-              ...rest,
-            },
-            null
-          );
-        }
-        return null;
-      })
-      .filter(v => v);
-  }, [childKeys]); // eslint-disable-line
-
-  return createElement(
-    BlockWrapper,
-    {
-      ...props,
-      slot: slotComponents,
-    },
-    children
-  );
-};
-
-export default BlockNode;
+export default BlockWrapper

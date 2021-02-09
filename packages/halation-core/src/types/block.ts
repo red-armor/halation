@@ -1,4 +1,3 @@
-import { Strategy } from './loadManager';
 import { Refs } from './halation';
 
 export type Slot = {
@@ -32,7 +31,7 @@ export interface OrderedMapProps {
 export interface BlockRenderProps {
   key: string;
   name: string;
-  type: string;
+  type?: string;
   props?: object;
 }
 
