@@ -20,7 +20,7 @@ import {
 import { logActivity, LogActivityType } from './logger';
 import { isPromise, reflect } from './commons';
 
-const BlockWrapper: FC<BlockNodeProps> = (props) => {
+const BlockWrapper: FC<BlockNodeProps> = props => {
   const {
     moduleMap,
     loadManagerMap,
@@ -76,7 +76,7 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
   const loadRoutine = useCallback(() => {
     const shouldLoadModule = loadManager?.shouldModuleLoad();
     if (isPromise(shouldLoadModule)) {
-      (shouldLoadModule as Promise<boolean>).then((falsy) => {
+      (shouldLoadModule as Promise<boolean>).then(falsy => {
         if (falsy) loadAndForceUpdate();
       });
     } else if (shouldLoadModule) {
@@ -84,7 +84,7 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
     }
   }, []); // eslint-disable-line
 
-  const forceUpdate = useCallback((componentResult) => {
+  const forceUpdate = useCallback(componentResult => {
     const state: BlockNodeState = {};
 
     if (componentResult.success) {
@@ -112,7 +112,7 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
 
       if (isPromise(component)) {
         const loadComponentTask = Promise.resolve(component);
-        reflect(loadComponentTask).then((result) => {
+        reflect(loadComponentTask).then(result => {
           if (!result.success) throw result.value;
           forceUpdate(result);
         });
@@ -175,7 +175,7 @@ const BlockWrapper: FC<BlockNodeProps> = (props) => {
   return <RefForwardingWrapper {...restProps} ref={setBlockRef} />;
 };
 
-const BlockNode: FC<BlockNodePreProps> = (props) => {
+const BlockNode: FC<BlockNodePreProps> = props => {
   const {
     block,
     nodeMap,
@@ -221,7 +221,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
     () =>
       slotKeys.reduce((acc, cur) => {
         const group = ([] as Array<string>).concat(slot[cur]);
-        acc[cur] = group.map((childKey) => {
+        acc[cur] = group.map(childKey => {
           const node = nodeMap.get(childKey);
           if (node) {
             return createElement(
@@ -269,7 +269,7 @@ const BlockNode: FC<BlockNodePreProps> = (props) => {
         }
         return null;
       })
-      .filter((v) => v);
+      .filter(v => v);
   }, [childKeys]);
 
   return createElement(

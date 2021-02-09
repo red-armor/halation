@@ -295,7 +295,7 @@ class OrderedMap {
 
     if (!baseParent) {
       const targetIndex = this._nullParentKeys.findIndex(
-        (key) => key === targetKey
+        key => key === targetKey
       );
       if (targetIndex !== -1) {
         this._nullParentKeys = ([] as Array<string>).concat(

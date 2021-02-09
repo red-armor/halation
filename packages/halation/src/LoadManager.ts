@@ -144,7 +144,7 @@ class LoadManager {
 
     when(
       proxyState,
-      (state) => {
+      state => {
         const currentModelState = state[this._key];
         const falsy = resolver(currentModelState);
         value = falsy;
@@ -185,12 +185,12 @@ class LoadManager {
       this._lockPromiseLoad = true;
 
       return (modelCreator as Promise<Function>)
-        .then((m) => {
+        .then(m => {
           modelInstance = m.call(null);
           this._lockPromiseLoad = false;
           return this.mountModel(resolver, modelInstance, {});
         })
-        .catch((err) => {
+        .catch(err => {
           logActivity('LoadManager', {
             message: `Has error on verify runtime..${err}`,
             type: LogActivityType.ERROR,
@@ -213,11 +213,11 @@ class LoadManager {
 
     if (isPromise(modelCreator)) {
       return (modelCreator as Promise<Function>)
-        .then((m) => {
+        .then(m => {
           modelInstance = m.call(null);
           return this.injectModelIntoStore(modelInstance, {}, true);
         })
-        .catch((err) => {
+        .catch(err => {
           logActivity('LoadManager', {
             message: `Directly inject model ${this._moduleName} failed with ${err}`,
             type: LogActivityType.ERROR,
@@ -253,7 +253,7 @@ class LoadManager {
         case StrategyType.event:
           when(
             this._proxyEvent,
-            (state) => {
+            state => {
               value = !!resolver({
                 event: state,
                 dispatchEvent: this._dispatchEvent,

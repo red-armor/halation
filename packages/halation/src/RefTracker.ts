@@ -31,7 +31,7 @@ class AutoRunFn {
   }
 
   teardown() {
-    this.removers.forEach((remover) => remover());
+    this.removers.forEach(remover => remover());
     this.removers = [];
     this.deps = [];
   }
@@ -52,7 +52,7 @@ class TrackerNode {
   }
 
   removeEffect(autoRunFn: AutoRunFn) {
-    const index = this.effects.findIndex((item) => item === autoRunFn);
+    const index = this.effects.findIndex(item => item === autoRunFn);
     this.effects.splice(index, 1);
   }
 
@@ -60,7 +60,7 @@ class TrackerNode {
     if (newValue !== this.value) {
       this.value = newValue;
 
-      this.effects.forEach((effect) => {
+      this.effects.forEach(effect => {
         effect.teardown();
         effect.trigger();
       });

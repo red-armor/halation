@@ -92,7 +92,7 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
 
     this.refTracker = new RefTracker();
 
-    registers.forEach((register) => {
+    registers.forEach(register => {
       const moduleProps: RegisterResult = register.call(null);
       const { name, getModel, getComponent, strategies } = moduleProps;
       if (!this.moduleMap.get(name)) {
@@ -123,10 +123,10 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
   startListen() {
     for (let key in this.hooks) {
       const hook = this.hooks[key as keyof Hooks];
-      hook.tap(key, function () {});
+      hook.tap(key, function() {});
 
       hook.intercept({
-        register: (tabInfo) => {
+        register: tabInfo => {
           logActivity('Halation', {
             message: 'register info',
             value: tabInfo,
@@ -269,7 +269,7 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
   }
 }
 
-const Halation: React.FC<HalationProps> = (props) => {
+const Halation: React.FC<HalationProps> = props => {
   const contextValue = useContext(context);
 
   return <HalationClass {...props} contextValue={contextValue} />;

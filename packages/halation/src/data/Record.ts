@@ -252,7 +252,7 @@ class Record {
       });
 
       targetItem.updateParent(targetItemParent);
-      const targetKeyIndex = list.findIndex((item) => item === targetKey);
+      const targetKeyIndex = list.findIndex(item => item === targetKey);
       list.splice(targetKeyIndex - 1, 0, record.getKey());
     } else {
       const targetItemNextSibling = targetItem.nextSibling;
@@ -271,7 +271,7 @@ class Record {
         nextSibling: record.getKey(),
       });
       targetItem.updateParent(targetItemParent);
-      const targetKeyIndex = list.findIndex((item) => item === targetKey);
+      const targetKeyIndex = list.findIndex(item => item === targetKey);
       list.splice(targetKeyIndex + 1, 0, record.getKey());
     }
   }
