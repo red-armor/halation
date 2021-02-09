@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.1.0...@xhs/halation@1.2.0) (2021-02-09)
+
+
+### Features
+
+* add `core` repo ([70f5c05](https://code.devops.xiaohongshu.com/fe/halation/commits/70f5c05d1b91fe1042ef0c13e8770f36d0368b86))
+
+
+
+
+
 # [1.1.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.0.12...@xhs/halation@1.1.0) (2021-02-09)
 
 
