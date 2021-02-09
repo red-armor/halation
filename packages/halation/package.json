@@ -22,15 +22,7 @@
   "name": "@xhs/halation",
   "author": "youchaoliu",
   "module": "dist/halation.esm.js",
-  "size-limit": [
-    {
-      "path": "dist/mylib.cjs.production.min.js",
-      "limit": "10 KB"
-    },
-    {
-      "path": "dist/mylib.esm.js",
-      "limit": "10 KB"
-    }
-  ],
-  "gitHead": "15d42d848038638fd8d1161291c2cbd66abb2422"
+  "publishConfig": {
+    "access": "public"
+  }
 }

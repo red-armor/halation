@@ -9,6 +9,7 @@ before_script:
   - node -v
   - formula -V
   - lerna bootstrap
+  - echo $CI_COMMIT_TAG
   - export PKGLEFT=${CI_COMMIT_TAG%@*}
   - export PKGNAME=${PKGLEFT/@xhs\/}
   - export PKGVERSION=${CI_COMMIT_TAG##*@}
