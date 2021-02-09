@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@0.1.6...@xhs/halation-core@0.2.0) (2021-02-09)
+
+
+### Features
+
+* maybe no need to build halation-core ([0196ce2](https://code.devops.xiaohongshu.com/fe/halation/commits/0196ce28e9cd3162d9a76687412ec14b88e21eca))
+
+
+
+
+
 ## [0.1.6](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@0.1.5...@xhs/halation-core@0.1.6) (2021-02-09)
 
 **Note:** Version bump only for package @xhs/halation-core
