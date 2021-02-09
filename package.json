@@ -1,5 +1,4 @@
 {
-  "version": "0.5.9",
   "license": "MIT",
   "engines": {
     "node": ">=10"
@@ -10,7 +9,7 @@
     "version": "lerna version",
     "build": "lerna run build",
     "test": "lerna run test --passWithNoTests",
-    "lint": "lerna run lint --fix",
+    "lint": "lerna run lint",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "storybook": "start-storybook -p 6006",

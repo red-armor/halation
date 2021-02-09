@@ -1,7 +1,6 @@
 {
-  "version": "0.1.1",
+  "version": "0.0.1",
   "license": "MIT",
-  "description": "Core API for React Renderer",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -21,10 +20,13 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "@xhs/halation-core",
+  "name": "@xhs/halation-lite",
   "author": "youchaoliu",
-  "module": "dist/halation-core.esm.js",
+  "module": "dist/halation-lite.esm.js",
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@xhs/halation-core": "^0.1.1"
   }
 }

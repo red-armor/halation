@@ -4,10 +4,6 @@
   "compilerOptions": {
     "allowJs": false,
     "baseUrl": ".",
-    "typeRoots": ["./node_modules/@types", "./types"],
-    "paths": {
-      "@nest-dnd/core": ["packages/core"],
-      "@nest-dnd/react": ["packages/react"],
-    }
+    "typeRoots": ["./node_modules/@types", "./types"]
   }
 }
