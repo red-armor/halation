@@ -8,7 +8,7 @@ import {
   ESModule,
   Strategy,
 } from './types';
-import { logActivity, LogActivityType } from 'core';
+import { logActivity, LogActivityType } from '@xhs/halation-core';
 
 class Module {
   private _name: string;

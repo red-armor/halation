@@ -17,7 +17,7 @@ import {
   BlockNodeState,
   SlotProps,
 } from './types';
-import { logActivity, LogActivityType } from 'core';
+import { logActivity, LogActivityType } from '@xhs/halation-core';
 import { isPromise, reflect } from './commons';
 
 const BlockWrapper: FC<BlockNodeProps> = props => {

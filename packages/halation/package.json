@@ -27,6 +27,6 @@
     "access": "public"
   },
   "dependencies": {
-    "core": "^0.1.0"
+    "@xhs/halation-core": "^0.0.0"
   }
 }

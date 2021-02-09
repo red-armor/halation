@@ -6,6 +6,8 @@
   },
   "name": "halation",
   "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "version": "lerna version",
     "build": "lerna run build",
     "test": "lerna run test --passWithNoTests",
     "lint": "lerna run lint --fix",
