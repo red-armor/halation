@@ -17,7 +17,7 @@ import {
   BlockNodeState,
   SlotProps,
 } from './types';
-import { logActivity, LogActivityType } from './logger';
+import { logActivity, LogActivityType } from 'core';
 import { isPromise, reflect } from './commons';
 
 const BlockWrapper: FC<BlockNodeProps> = props => {

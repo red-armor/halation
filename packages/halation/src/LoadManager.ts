@@ -8,7 +8,7 @@ import {
   LoadManagerConstructorProps,
 } from './types';
 import { isFunction, isPromise } from './commons';
-import { logActivity, LogActivityType } from './logger';
+import { logActivity, LogActivityType } from 'core';
 import invariant from 'invariant';
 import { when, IStateTracker } from 'state-tracker';
 

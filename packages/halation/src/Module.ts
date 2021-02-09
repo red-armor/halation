@@ -8,7 +8,7 @@ import {
   ESModule,
   Strategy,
 } from './types';
-import { logActivity, LogActivityType } from './logger';
+import { logActivity, LogActivityType } from 'core';
 
 class Module {
   private _name: string;
