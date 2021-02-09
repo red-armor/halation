@@ -1,2 +1,2 @@
-export * from './src/types'
-export * from './src/commons/logger'
+export * from './src/types';
+export * from './src/commons/logger';
