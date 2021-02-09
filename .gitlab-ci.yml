@@ -33,3 +33,5 @@ deploy:
   script:
     - cd packages/$PKGNAME
     - npm publish
+  only:
+    - tags
