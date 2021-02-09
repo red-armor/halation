@@ -36,5 +36,3 @@ deploy:
     - npm publish
   only:
     - tags
-  except:
-    - /core/

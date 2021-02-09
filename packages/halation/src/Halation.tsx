@@ -25,7 +25,11 @@ import {
   HalationContextValue,
 } from './types';
 import Module from './Module';
-import { logActivity, LogActivityType, setLoggerContext } from 'core';
+import {
+  logActivity,
+  LogActivityType,
+  setLoggerContext,
+} from '@xhs/halation-core';
 import BlockNode from './BlockNode';
 import LoadManager from './LoadManager';
 import RefTracker from './RefTracker';
