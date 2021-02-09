@@ -11,8 +11,8 @@
     "node": ">=10"
   },
   "scripts": {
-    "lint": "tsdx lint --entry index.ts --fix",
-    "build": "tsdx build --entry index.ts --tsconfig tsconfig.build.json"
+    "lint": "tsdx lint --fix",
+    "build": "tsdx build --tsconfig tsconfig.build.json"
   },
   "prettier": {
     "printWidth": 80,
