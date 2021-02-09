@@ -5,7 +5,7 @@ import Record from '../data/Record';
 import { RenderBlockNodeProps } from './blockNode';
 import { Strategy } from './loadManager';
 import { GetComponent } from './module';
-import LoadManager from 'LoadManager';
+import LoadManager from '../LoadManager';
 import { IStateTracker } from 'state-tracker';
 import OrderedMap from '../data/OrderedMap';
 

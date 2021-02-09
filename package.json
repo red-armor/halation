@@ -1,21 +1,14 @@
 {
   "version": "0.5.9",
   "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "src"
-  ],
   "engines": {
     "node": ">=10"
   },
+  "name": "@xhs/halation",
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test --passWithNoTests",
-    "lint": "tsdx lint --fix",
-    "prepare": "tsdx build",
+    "build": "lerna run build",
+    "test": "lerna run test --passWithNoTests",
+    "lint": "lerna run lint --fix",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "storybook": "start-storybook -p 6006",
@@ -23,7 +16,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsdx lint",
+      "pre-commit": "lerna run lint",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
@@ -33,19 +26,11 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "@xhs/halation",
-  "author": "youchaoliu",
-  "module": "dist/halation.esm.js",
-  "size-limit": [
-    {
-      "path": "dist/mylib.cjs.production.min.js",
-      "limit": "10 KB"
-    },
-    {
-      "path": "dist/mylib.esm.js",
-      "limit": "10 KB"
-    }
+  "workspaces": [
+    "packages/*"
   ],
+  "private": true,
+  "author": "youchaoliu",
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@commitlint/cli": "^11.0.0",
@@ -62,6 +47,7 @@
     "@xhs/relinx": "^3.5.6",
     "babel-loader": "^8.2.2",
     "husky": "^4.3.0",
+    "lerna": "^3.22.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-is": "^17.0.1",
