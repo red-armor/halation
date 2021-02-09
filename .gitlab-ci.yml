@@ -33,6 +33,7 @@ deploy:
   stage: deploy
   script:
     - cd packages/$PKGNAME
+    - npm run build
     - npm publish
   only:
     - tags
