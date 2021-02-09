@@ -6,6 +6,22 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 # 0.1.0 (2021-02-09)
 
 
+### Bug Fixes
+
+* use @xhs/halation-core instead ([dfec05b](https://code.devops.xiaohongshu.com/fe/halation/commits/dfec05b9f3e0459fc582b18800c1719a46ace600))
+
+
+### Features
+
+* add `core` repo ([70f5c05](https://code.devops.xiaohongshu.com/fe/halation/commits/70f5c05d1b91fe1042ef0c13e8770f36d0368b86))
+
+
+
+
+
+# 0.1.0 (2021-02-09)
+
+
 ### Features
 
 * add `core` repo ([70f5c05](https://code.devops.xiaohongshu.com/fe/halation/commits/70f5c05d1b91fe1042ef0c13e8770f36d0368b86))
