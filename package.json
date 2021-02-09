@@ -14,12 +14,6 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lerna run lint",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
   "prettier": {
     "printWidth": 80,
     "semi": true,
