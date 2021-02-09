@@ -9,7 +9,6 @@ before_script:
   - node -v
   - formula -V
   - lerna bootstrap
-  - lerna run build
   - echo $CI_COMMIT_TAG
   - export PKGLEFT=${CI_COMMIT_TAG%@*}
   - export PKGNAME=${PKGLEFT/@xhs\/}
@@ -32,6 +31,7 @@ test:
 deploy:
   stage: deploy
   script:
+    - lerna run build
     - cd packages/$PKGNAME
     - npm publish
   only:
