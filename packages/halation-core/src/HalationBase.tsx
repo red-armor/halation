@@ -1,4 +1,4 @@
-import { FC, PureComponent, FunctionComponentElement } from 'react';
+import React, { FC, PureComponent, FunctionComponentElement } from 'react';
 import invariant from 'invariant';
 import {
   ModuleMap,
@@ -124,23 +124,21 @@ abstract class HalationBaseClass<
 
   abstract createChildren(): Array<FunctionComponentElement<any>>
 
-  // render() {
-  //   const children = this.createChildren()
+  renderCompat() {
+    const children = this.createChildren()
 
-  //   if (typeof this.rootRenderFn === 'function') {
-  //     return React.createElement(
-  //       this.rootRenderFn,
-  //       {
-  //         ...this.getPropsAPI(),
-  //       },
-  //       children
-  //     );
-  //   }
+    if (typeof this.rootRenderFn === 'function') {
+      return React.createElement(
+        this.rootRenderFn,
+        {
+          ...this.getPropsAPI(),
+        },
+        children
+      );
+    }
 
-  //   return (
-  //     <context.Provider value={this.contextValue}>{children}</context.Provider>
-  //   );
-  // }
+    return children
+  }
 }
 
 export default HalationBaseClass

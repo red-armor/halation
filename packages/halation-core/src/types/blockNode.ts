@@ -1,13 +1,9 @@
-import { FC, FunctionComponentElement } from 'react';
+import { FC } from 'react';
 import { PropsAPI, RenderBlock, ComponentPropsAPI } from './halation';
 import { BlockRenderProps } from './block';
 import RecordBase from '../data/RecordBase'
 export interface BlockNodeData {
   [key: string]: any;
-}
-
-export interface SlotProps {
-  [key: string]: Array<FunctionComponentElement<BlockNodePreProps> | null>;
 }
 
 export type BlockNodePreProps = PropsAPI & {
@@ -35,6 +31,10 @@ export type RenderBlockBaseProps = {
 export type BlockComponentProps = ComponentPropsAPI & {
   block: RecordBase;
 };
+
+export type ForwardBlockComponentProps = BlockComponentProps & {
+  forwardRef: any
+}
 
 export interface PluginAPI {}
 

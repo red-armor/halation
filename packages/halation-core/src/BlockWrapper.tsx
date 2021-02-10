@@ -12,6 +12,7 @@ import {
   BlockNodeProps,
   BlockComponentProps,
   BlockNodeState,
+  ForwardBlockComponentProps,
 } from './types';
 import { LogActivityType } from './types';
 import { logActivity } from './commons/logger'
@@ -146,7 +147,7 @@ const BlockWrapper = <P extends BlockNodeProps>(props: P) => {
   const RefForwardingWrapper = useMemo(
     () =>
       forwardRef<any, BlockComponentProps>((props, ref) => {
-        return createElement(wrapper.Component as FC<any>, {
+        return createElement(wrapper.Component as FC<ForwardBlockComponentProps> , {
           ...props,
           forwardRef: ref,
         });

@@ -23,7 +23,7 @@ export interface HalationBaseProps<HS, RBP> {
 }
 
 export type HalationContextValue = {
-  enableLog: undefined | boolean;
+  enableLog: boolean;
 };
 
 export type HalationClassProps<HS, RBP> = HalationBaseProps<HS, RBP> & {

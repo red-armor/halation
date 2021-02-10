@@ -48,6 +48,7 @@ class HalationClass extends HalationBase<
   public contextValue: HalationContextValue;
   public moduleMap: HalationModuleMap;
   public loadManagerMap: HalationLoadManagerMap;
+  public context: any;
 
   constructor(props: HalationClassProps) {
     super(props);
@@ -98,9 +99,6 @@ class HalationClass extends HalationBase<
       halationState: initialState,
       nodeMap: initialState.getMap(),
     };
-
-    this.registerModules = this.registerModules.bind(this);
-    this.createChildren = this.createChildren.bind(this);
   }
 
   registerModules() {
@@ -244,18 +242,7 @@ class HalationClass extends HalationBase<
   }
 
   render() {
-    const children = this.createChildren();
-
-    if (typeof this.rootRenderFn === 'function') {
-      return React.createElement(
-        this.rootRenderFn,
-        {
-          ...this.getPropsAPI(),
-        },
-        children
-      );
-    }
-
+    const children = this.renderCompat();
     return (
       <context.Provider value={this.contextValue}>{children}</context.Provider>
     );

@@ -30,7 +30,7 @@ class HalationLiteClass extends HalationBase<
     this.state = {
       halationState: [],
     };
-    const { enableLog } = props;
+    const { enableLog = false } = props;
 
     this.contextValue = {
       enableLog,
@@ -47,6 +47,8 @@ class HalationLiteClass extends HalationBase<
 
     return null;
   }
+
+  registerModules() {}
 
   public getPropsAPI() {
     return {
@@ -71,6 +73,13 @@ class HalationLiteClass extends HalationBase<
         },
         []
       )
+    );
+  }
+
+  render() {
+    const children = this.renderCompat();
+    return (
+      <context.Provider value={this.contextValue}>{children}</context.Provider>
     );
   }
 }
