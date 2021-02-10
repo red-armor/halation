@@ -21,6 +21,7 @@ import {
   HalationRenderBlockProps,
   HalationStateRawDataProps,
   RegisterResult,
+  HalationRegister,
 } from './types';
 import {
   HalationBase,
@@ -49,10 +50,11 @@ class HalationClass extends HalationBase<
   public moduleMap: HalationModuleMap;
   public loadManagerMap: HalationLoadManagerMap;
   public context: any;
+  public registers: Array<HalationRegister>;
 
   constructor(props: HalationClassProps) {
     super(props);
-    const { store, events, enableLog, contextValue } = props;
+    const { store, events, enableLog, contextValue, registers } = props;
 
     this.hooks = {
       register: new SyncHook(['block']),
@@ -60,6 +62,7 @@ class HalationClass extends HalationBase<
 
     this.moduleMap = new Map();
     this.loadManagerMap = new Map();
+    this.registers = registers;
 
     invariant(
       !(store && contextValue.store),

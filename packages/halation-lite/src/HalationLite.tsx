@@ -7,10 +7,15 @@ import {
   HalationLiteStateRawDataProps,
   RenderBlockBaseProps,
   HalationContextValue,
+  ModuleBase,
 } from '@xhs/halation-core';
 import context from './context';
 import BlockNode from './BlockNode';
-import { HalationLiteClassProps } from './types';
+import {
+  HalationLiteClassProps,
+  RegisterFunction,
+  HalationLiteRegisterResult,
+} from './types';
 
 class HalationLiteClass extends HalationBase<
   HalationLiteStateRawDataProps,
@@ -19,6 +24,7 @@ class HalationLiteClass extends HalationBase<
   HalationClassProps<HalationLiteStateRawDataProps, RenderBlockBaseProps>
 > {
   public contextValue: HalationContextValue;
+  public registers: Array<RegisterFunction>;
 
   constructor(
     props: HalationClassProps<
@@ -30,11 +36,12 @@ class HalationLiteClass extends HalationBase<
     this.state = {
       halationState: [],
     };
-    const { enableLog = false } = props;
+    const { enableLog = false, registers } = props;
 
     this.contextValue = {
       enableLog,
     };
+    this.registers = registers;
   }
 
   static getDerivedStateFromProps(nextProps: { halationState: HalationState }) {
@@ -48,7 +55,20 @@ class HalationLiteClass extends HalationBase<
     return null;
   }
 
-  registerModules() {}
+  registerModules() {
+    this.registers.forEach(register => {
+      const moduleProps: HalationLiteRegisterResult = register.call(null);
+      const { name, getComponent } = moduleProps;
+      if (!this.moduleMap.get(name)) {
+        const module = new ModuleBase({
+          name,
+          getComponent,
+        });
+
+        this.moduleMap.set(name, module);
+      }
+    });
+  }
 
   public getPropsAPI() {
     return {

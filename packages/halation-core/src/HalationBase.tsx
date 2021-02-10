@@ -30,14 +30,13 @@ abstract class HalationBaseClass<
   public abstract contextValue: HalationContextValue;
   public rootRenderFn?: FC<any>;
   private clearLoggerContext: Function;
-  public registers: Array<Function>
+  public abstract registers: any
 
   constructor(props: P) {
     super(props);
     const {
       name,
       enableLog,
-      registers,
       renderBlock,
       rootRenderFn,
       contextValue,
@@ -48,7 +47,6 @@ abstract class HalationBaseClass<
     this.moduleMap = new Map();
     this.loadManagerMap = new Map();
     this.rootRenderFn = rootRenderFn;
-    this.registers = registers
 
     invariant(
       !(isPresent(enableLog) && isPresent(contextValue.enableLog)),

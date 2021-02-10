@@ -16,7 +16,7 @@ export interface HalationBaseProps<HS, RBP> {
 
   halationState: HS,
 
-  registers: Array<Function>;
+  registers: Array<any>;
 
   /** Display logger message or not. Default value is false */
   enableLog?: boolean;

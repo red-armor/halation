@@ -107,12 +107,11 @@ export interface Refs {
   [key: string]: MutableRefObject<FC>;
 }
 
+export type HalationRegister = () => GetComponent;
 export interface RegisterResult {
   name: string;
-  key: string;
-  strategies?: Array<Strategy>;
   getComponent: GetComponent;
-  getModel: Function;
+  getModel?: Function;
 }
 
 export type LockCurrentLoadManager = (loadManager: LoadManager) => void;
