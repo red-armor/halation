@@ -2,7 +2,6 @@ import { FC, MutableRefObject } from 'react';
 import { SyncHook } from 'tapable';
 import Module from '../Module';
 import Record from '../data/Record';
-import { RenderBlockNodeProps } from './blockNode';
 import { Strategy } from './loadManager';
 import { GetComponent } from './module';
 import LoadManager from '../LoadManager';
@@ -47,30 +46,10 @@ export type HalationProps = HalationBaseProps<
   store: Store;
 };
 
-// export interface HalationProps {
-//   name: string;
-
-//   /**
-//    * According to block type to render component with wrapper
-//    */
-//   renderBlock?: RenderBlock;
-
-//   rootRenderFn?: FC;
-
-//   halationState: HalationStateRawDataProps;
-
-//   registers: Array<Function>;
-//   events?: HalationEvents;
-//   store: Store;
-
-//   /** Display logger message or not. Default value is false */
-//   enableLog?: boolean;
-// }
-
 export type HalationContextValue = {
   store: null | Store;
   proxyEvent: null | IStateTracker;
-  enableLog: undefined | boolean;
+  enableLog: boolean;
 };
 
 export type HalationClassProps = HalationProps & {

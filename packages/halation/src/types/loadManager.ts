@@ -1,6 +1,6 @@
 import { IStateTracker } from 'state-tracker';
 import LoadManager from '../LoadManager';
-import { Store, ModuleMap, DispatchEvent } from './halation';
+import { Store, HalationModuleMap, DispatchEvent } from './halation';
 
 export interface LoadManagerConstructor {
   new (moduleKey: string, strategies: Array<Strategy>): LoadManager;
@@ -12,7 +12,7 @@ export interface LoadManagerConstructorProps {
   modelKey?: string;
   moduleName: string;
   strategies: Array<Strategy>;
-  moduleMap: ModuleMap;
+  moduleMap: HalationModuleMap;
   proxyEvent: IStateTracker;
   dispatchEvent: DispatchEvent;
 }
