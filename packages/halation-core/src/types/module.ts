@@ -3,7 +3,7 @@ export enum ModuleName {
   Component = 'component',
 }
 
-export type ModuleGetter = () => Function | undefined;
+export type ModuleGetter = () => Promise<Function>
 
 export interface GetComponent {
   (): Promise<Function>;
@@ -11,7 +11,7 @@ export interface GetComponent {
 
 export interface ModuleProps {
   name: string;
-  getComponent: GetComponent;
+  // getComponent: GetComponent;
 }
 
 export enum ModuleStatus {

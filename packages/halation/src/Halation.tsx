@@ -74,10 +74,10 @@ class HalationClass extends HalationBase<
       `Nested Halation should not be passing with 'events' props`
     );
 
-    invariant(
-      !(isPresent(enableLog) && isPresent(contextValue.enableLog)),
-      `Nested Halation should not be passing with 'enableLog' props`
-    );
+    // invariant(
+    //   !(isPresent(enableLog) && isPresent(contextValue.enableLog)),
+    //   `Nested Halation should not be passing with 'enableLog' props`
+    // );
 
     this.store = contextValue.store || store;
     this.proxyEvent = contextValue.proxyEvent || produce(events || {});

@@ -48,10 +48,10 @@ abstract class HalationBaseClass<
     this.loadManagerMap = new Map();
     this.rootRenderFn = rootRenderFn;
 
-    invariant(
-      !(isPresent(enableLog) && isPresent(contextValue.enableLog)),
-      `Nested Halation should not be passing with 'enableLog' props`
-    );
+    // invariant(
+    //   !(isPresent(enableLog) && isPresent(contextValue.enableLog)),
+    //   `Nested Halation should not be passing with 'enableLog' props`
+    // );
 
     this.enableLog = (isPresent(enableLog) ? enableLog : false) as boolean;
     this.clearLoggerContext = setLoggerContext({ enableLog: this.enableLog });

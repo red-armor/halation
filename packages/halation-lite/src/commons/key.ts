@@ -2,7 +2,6 @@ interface SeenKeys {
   [key: string]: boolean;
 }
 
-
 const seenKeys: SeenKeys = {};
 const MULTIPLIER = Math.pow(2, 24) // eslint-disable-line
 

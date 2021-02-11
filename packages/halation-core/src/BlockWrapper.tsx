@@ -72,6 +72,7 @@ const BlockWrapper = <P extends BlockNodeProps>(props: P) => {
 
   const loadRoutine = useCallback(() => {
     const shouldLoadModule = loadManager?.shouldModuleLoad();
+
     if (isPromise(shouldLoadModule)) {
       (shouldLoadModule as Promise<boolean>).then(falsy => {
         if (falsy) loadAndForceUpdate();

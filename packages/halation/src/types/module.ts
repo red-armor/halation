@@ -13,7 +13,7 @@ export interface GetComponent {
 
 export interface ModuleProps {
   name: string;
-  getModel?: Function;
+  getModel?: GetComponent;
   getComponent: GetComponent;
   strategies: Array<Strategy>;
 }

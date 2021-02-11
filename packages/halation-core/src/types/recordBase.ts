@@ -23,11 +23,3 @@ export type CreateFromArrayProps = {
   extraProps?: object;
   children?: Array<CreateFromArrayProps>
 }
-
-export type HalationLiteStateRawDataProps = {
-  name: string;
-  key: string;
-  props?: object;
-  extraProps?: object;
-  children?: Array<CreateFromLiteArrayProps>
-}
