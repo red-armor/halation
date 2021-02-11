@@ -9,27 +9,27 @@ import React, {
   useEffect,
 } from 'react';
 import {
-  BlockNodeProps,
+  BlockWrapperProps,
   BlockComponentProps,
-  BlockNodeState,
+  BlockWrapperState,
   ForwardBlockComponentProps,
+  RenderBlockBaseComponentProps,
 } from './types';
 import { LogActivityType } from './types';
 import { logActivity } from './commons/logger'
 import { isPromise, reflect } from './commons/utils';
 
-const BlockWrapper = <P extends BlockNodeProps>(props: P) => {
+const BlockWrapper = <RBP extends RenderBlockBaseComponentProps, P extends BlockWrapperProps<RBP>>(props: P) => {
   const {
     moduleMap,
     loadManagerMap,
     renderBlock,
     reportRef,
-    addBlockLoadManager,
     ...restProps
   } = props;
   const { block } = props;
 
-  const [wrapper, setWrapper] = useState<BlockNodeState>({});
+  const [wrapper, setWrapper] = useState<BlockWrapperState>({});
   const blockKey = block.getKey();
   const moduleName = block.getName();
   const blockRef = useRef();
@@ -87,7 +87,7 @@ const BlockWrapper = <P extends BlockNodeProps>(props: P) => {
   }, [])
 
   const forceUpdate = useCallback(componentResult => {
-    const state: BlockNodeState = {};
+    const state: BlockWrapperState = {};
 
     if (componentResult.success) {
       state.Component = componentResult.value;
@@ -166,7 +166,7 @@ const BlockWrapper = <P extends BlockNodeProps>(props: P) => {
         ...restProps,
         key: blockKey,
         blockProps: block.getRenderProps(),
-      },
+      } as any as RBP,
       <RefForwardingWrapper {...restProps} ref={setBlockRef} />
     );
   }

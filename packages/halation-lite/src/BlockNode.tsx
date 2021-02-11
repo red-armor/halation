@@ -11,7 +11,7 @@ import {
 } from '@xhs/halation-core';
 
 const BlockNode = (props: any) => {
-  const { block, modelKey, addBlockLoadManager, ...rest } = props;
+  const { block, addBlockLoadManager, ...rest } = props;
   const recordKey = block.getKey();
   const moduleName = block.getName();
   const isMountRef = useRef(false);
@@ -20,7 +20,6 @@ const BlockNode = (props: any) => {
   if (!isMountRef.current) {
     addBlockLoadManager({
       blockKey: recordKey,
-      modelKey,
       moduleName,
     });
     isMountRef.current = true;

@@ -1,15 +1,15 @@
 import {
   HalationBaseProps,
-  HalationLiteStateRawDataProps,
-  RenderBlockBaseProps,
+  RenderBlockBaseComponentProps,
 } from '@xhs/halation-core';
+import { HalationLiteStateRawDataProps } from './createFromLiteArray';
 
 export type HalationLiteClassProps = HalationBaseProps<
   HalationLiteStateRawDataProps,
-  RenderBlockBaseProps
+  RenderBlockBaseComponentProps
 >;
 
-export interface GetComponent {
+export interface ModuleGetter {
   (): Promise<Function>;
 }
 
@@ -17,8 +17,3 @@ export type RegisterFunction = () => {
   name: string;
   getComponent: () => Promise<any>;
 };
-export type HalationLiteRegister = () => GetComponent;
-export interface HalationLiteRegisterResult {
-  name: string;
-  getComponent: GetComponent;
-}

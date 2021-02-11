@@ -1,4 +1,4 @@
-import { RecordBaseProps, BlockRenderProps } from '../types'
+import { RecordBaseProps, RenderBlockBlockProps } from '../types'
 
 class RecordBase {
   private _name: string;
@@ -6,7 +6,7 @@ class RecordBase {
   private _children?: Array<RecordBase>
   private _props?: object;
   private _extraProps?: object
-  private _blockProps: BlockRenderProps;
+  private _blockProps: RenderBlockBlockProps;
 
   constructor(recordProps: RecordBaseProps) {
     const {
@@ -50,7 +50,7 @@ class RecordBase {
     return this._extraProps
   }
 
-  getRenderProps(): BlockRenderProps {
+  getRenderProps(): RenderBlockBlockProps {
     return this._blockProps;
   }
 }

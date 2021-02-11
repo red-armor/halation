@@ -40,7 +40,6 @@ class LoadManagerBase {
    * 整个strategy的处理需要是一个同步的
    */
   shouldModuleLoad(): boolean | Promise<boolean> {
-
     return true
   }
 

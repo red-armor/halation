@@ -1,10 +1,11 @@
-import { FC, MutableRefObject } from 'react';
+import { FC } from 'react';
 import Module from '../ModuleBase';
-import { GetComponent } from './module';
+import { ModuleGetter } from './module';
 import LoadManager from '../LoadManagerBase';
 import RecordBase from '../data/RecordBase'
+import { RenderBlockBaseComponentProps } from './blockNode'
 
-export interface HalationBaseProps<HS, RBP> {
+export interface HalationBaseProps<HS, RBP extends RenderBlockBaseComponentProps> {
   name: string;
 
   /**
@@ -26,7 +27,7 @@ export type HalationContextValue = {
   enableLog: boolean;
 };
 
-export type HalationClassProps<HS, RBP> = HalationBaseProps<HS, RBP> & {
+export type HalationClassProps<HS, RBP extends RenderBlockBaseComponentProps> = HalationBaseProps<HS, RBP> & {
   contextValue: HalationContextValue;
 };
 
@@ -34,18 +35,7 @@ export type HalationState = {
   halationState: Array<RecordBase>;
 }
 
-export type RenderBlock<P> = React.FC<P>;
-
-export type PropsAPI = ComponentPropsAPI & {
-  moduleMap: Map<string, Module>;
-  loadManagerMap: Map<string, LoadManager>;
-  addBlockLoadManager: AddBlockLoadManager;
-  reportRef: (key: string, value: any) => void;
-};
-
-export type EventValue = {
-  [key: string]: any;
-};
+export type RenderBlock<RBP extends RenderBlockBaseComponentProps> = React.FC<RBP>;
 
 export type ComponentPropsAPI = {
   getRef: (key: string) => any;
@@ -58,21 +48,24 @@ export type LoadManagerMap = Map<string, LoadManager>;
 export type AddBlockLoadManager = ({
   blockKey,
   moduleName,
-  modelKey,
 }: {
   blockKey: string;
-  modelKey?: string;
   moduleName: string;
 }) => boolean;
 
-export interface Refs {
-  [key: string]: MutableRefObject<FC>;
+export type BlockWrapperProps<RBP extends RenderBlockBaseComponentProps> = ComponentPropsAPI & {
+  moduleMap: ModuleMap,
+  loadManagerMap: LoadManagerMap,
+  reportRef: (key: string, value: any) => void;
+  renderBlock?: RenderBlock<RBP>
+  block: RecordBase,
 }
 
-export interface RegisterResult {
+export type BlockNodeBaseProps<RBP extends RenderBlockBaseComponentProps> = BlockWrapperProps<RBP> & {
+  addBlockLoadManager: AddBlockLoadManager;
+}
+
+export interface RegisterBaseResult {
   name: string;
-  getComponent: GetComponent;
+  getComponent: ModuleGetter;
 }
-
-export type LockCurrentLoadManager = (loadManager: LoadManager) => void;
-export type ReleaseCurrentLoadManager = () => void;

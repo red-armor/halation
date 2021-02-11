@@ -7,7 +7,7 @@ import {
   LoadManagerMap,
   HalationContextValue,
   LogActivityType,
-  RenderBlockBaseProps,
+  RenderBlockBaseComponentProps,
 } from './types';
 import { logActivity, setLoggerContext } from './commons/logger'
 import LoadManager from './LoadManagerBase';
@@ -16,7 +16,7 @@ import { isPresent } from './commons/utils';
 
 abstract class HalationBaseClass<
   HS,
-  RBP extends RenderBlockBaseProps,
+  RBP extends RenderBlockBaseComponentProps,
   S,
   P extends HalationClassProps<HS, RBP> = HalationClassProps<HS, RBP>,
 > extends PureComponent<P, S>
@@ -48,10 +48,10 @@ abstract class HalationBaseClass<
     this.loadManagerMap = new Map();
     this.rootRenderFn = rootRenderFn;
 
-    // invariant(
-    //   !(isPresent(enableLog) && isPresent(contextValue.enableLog)),
-    //   `Nested Halation should not be passing with 'enableLog' props`
-    // );
+    invariant(
+      !(isPresent(enableLog) && isPresent(contextValue.enableLog)),
+      `Nested Halation should not be passing with 'enableLog' props`
+    );
 
     this.enableLog = (isPresent(enableLog) ? enableLog : false) as boolean;
     this.clearLoggerContext = setLoggerContext({ enableLog: this.enableLog });
@@ -98,7 +98,6 @@ abstract class HalationBaseClass<
   }: {
     blockKey: string;
     moduleName: string;
-    modelKey?: string;
   }): boolean {
     if (this.loadManagerMap.get(blockKey)) {
       logActivity('Halation', {

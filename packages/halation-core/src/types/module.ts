@@ -1,17 +1,8 @@
-export enum ModuleName {
-  Model = 'model',
-  Component = 'component',
-}
-
 export type ModuleGetter = () => Promise<Function>
 
-export interface GetComponent {
-  (): Promise<Function>;
-}
-
-export interface ModuleProps {
+export interface ModuleBaseProps {
   name: string;
-  // getComponent: GetComponent;
+  getComponent: ModuleGetter;
 }
 
 export enum ModuleStatus {

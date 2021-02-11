@@ -1,17 +1,23 @@
-import {
-  ModuleProps,
-} from './types';
+import { ModuleBaseProps } from './types';
 import { logActivity } from './commons/logger'
+import Loader from './Loader'
 
 class ModuleBase {
   private _name: string;
+  private componentLoader: Loader;
 
-  constructor(props: ModuleProps) {
-    const { name } = props;
+  constructor(props: ModuleBaseProps) {
+    const { name, getComponent } = props;
     this._name = name;
 
     logActivity('Module', {
       message: `create ${name} Module`,
+    });
+
+    this.componentLoader = new Loader({
+      name: this.getName(),
+      type: 'component',
+      getModule: getComponent,
     });
   }
 
@@ -19,7 +25,9 @@ class ModuleBase {
     return this._name;
   }
 
-  public loadComponent() {}
+  loadComponent() {
+    return this.componentLoader.load();
+  }
 }
 
 export default ModuleBase;

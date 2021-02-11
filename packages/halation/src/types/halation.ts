@@ -1,13 +1,17 @@
-import { FC, MutableRefObject } from 'react';
+import { FC } from 'react';
 import { SyncHook } from 'tapable';
 import Module from '../Module';
 import Record from '../data/Record';
 import { Strategy } from './loadManager';
-import { GetComponent } from './module';
 import LoadManager from '../LoadManager';
 import { IStateTracker } from 'state-tracker';
 import OrderedMap from '../data/OrderedMap';
-import { RenderBlockBaseProps, HalationBaseProps } from '@xhs/halation-core';
+import {
+  RenderBlockBaseComponentProps,
+  HalationBaseProps,
+  ModuleGetter,
+  RegisterBaseResult,
+} from '@xhs/halation-core';
 
 export type HalationEvents = {
   [key: string]: any;
@@ -32,7 +36,7 @@ export type HalationStateItem = {
   parent: null | string;
 };
 
-export type HalationRenderBlockProps = RenderBlockBaseProps & {
+export type HalationRenderBlockProps = RenderBlockBaseComponentProps & {
   modelKey: string;
 };
 
@@ -103,19 +107,11 @@ export type AddBlockLoadManager = ({
   strategies: Array<Strategy>;
 }) => boolean;
 
-export interface Refs {
-  [key: string]: MutableRefObject<FC>;
-}
-
-export type HalationRegister = () => GetComponent;
-export interface RegisterResult {
-  name: string;
-  getComponent: GetComponent;
-  getModel?: Function;
-}
-
-export type LockCurrentLoadManager = (loadManager: LoadManager) => void;
-export type ReleaseCurrentLoadManager = () => void;
+export type HalationRegister = () => RegisterResult;
+export type RegisterResult = RegisterBaseResult & {
+  getModel?: ModuleGetter;
+  strategies?: Array<Strategy>;
+};
 
 export type Store = {
   subscribe: (subscription: Function) => Function;

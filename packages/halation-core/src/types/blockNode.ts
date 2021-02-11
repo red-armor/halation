@@ -1,30 +1,25 @@
 import { FC } from 'react';
-import { PropsAPI, RenderBlock, ComponentPropsAPI } from './halation';
-import { BlockRenderProps } from './block';
+import { BlockNodeBaseProps, RenderBlock, ComponentPropsAPI } from './halation';
 import RecordBase from '../data/RecordBase'
 export interface BlockNodeData {
   [key: string]: any;
 }
+export interface RenderBlockBlockProps {
+  key: string;
+  name: string;
+  type?: string;
+  props?: object;
+}
 
-export type BlockNodePreProps = PropsAPI & {
+export type BlockNodePreProps<RBP extends RenderBlockBaseComponentProps> = BlockNodeBaseProps & {
   block: RecordBase;
-  renderBlock?: RenderBlock;
+  renderBlock?: RenderBlock<RBP>;
 };
 
-export type BlockNodeProps = BlockNodePreProps & {
-  // slot: SlotProps;
-};
+export type BlockWrapperProps<RBP extends RenderBlockBaseComponentProps> = BlockNodePreProps<RBP>
 
-export type RenderBlockNodeProps = ComponentPropsAPI & {
-  blockProps: BlockRenderProps;
-  block: RecordBase;
-  // modelKey: string;
-  renderBlock?: RenderBlock;
-  // slot: SlotProps;
-};
-
-export type RenderBlockBaseProps = {
-  blockProps: BlockRenderProps;
+export type RenderBlockBaseComponentProps = {
+  blockProps: RenderBlockBlockProps;
   block: RecordBase;
 }
 
@@ -36,9 +31,6 @@ export type ForwardBlockComponentProps = BlockComponentProps & {
   forwardRef: any
 }
 
-export interface PluginAPI {}
-
-export interface BlockNodeState {
-  // model?: null | Function;
+export interface BlockWrapperState {
   Component?: null | FC<any>;
 }

@@ -1,37 +1,7 @@
 import { Strategy } from './loadManager';
+import { ModuleGetter, ModuleBaseProps } from '@xhs/halation-core';
 
-export enum ModuleName {
-  Model = 'model',
-  Component = 'component',
-}
-
-export type ModuleGetter = () => Function | undefined;
-
-export interface GetComponent {
-  (): Promise<Function>;
-}
-
-export interface ModuleProps {
-  name: string;
-  getModel?: GetComponent;
-  getComponent: GetComponent;
-  strategies: Array<Strategy>;
-}
-
-export enum ModuleStatus {
-  Idle,
-  Pending,
-  Loaded,
-  Error,
-}
-
-export interface ESModule {
-  ['__esModule']: boolean;
-  default: Function;
-}
-
-export type RawModule = ESModule | Function;
-
-export type ResolvedModule<T extends RawModule> = T extends ESModule
-  ? T['default']
-  : T;
+export type ModuleProps = ModuleBaseProps & {
+  getModel?: ModuleGetter;
+  strategies?: Array<Strategy>;
+};

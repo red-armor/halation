@@ -4,24 +4,28 @@ import {
   HalationClassProps,
   HalationState,
   BlockNodePreProps,
-  RenderBlockBaseProps,
+  RenderBlockBaseComponentProps,
   HalationContextValue,
+  RegisterBaseResult,
+  ModuleBase,
 } from '@xhs/halation-core';
 import context from './context';
 import BlockNode from './BlockNode';
 import {
   HalationLiteClassProps,
   RegisterFunction,
-  HalationLiteRegisterResult,
   HalationLiteStateRawDataProps,
 } from './types';
 import createFromLiteArray from './createFromLiteArray';
-import Module from './Module';
+
 class HalationLiteClass extends HalationBase<
   HalationLiteStateRawDataProps,
-  RenderBlockBaseProps,
+  RenderBlockBaseComponentProps,
   HalationState,
-  HalationClassProps<HalationLiteStateRawDataProps, RenderBlockBaseProps>
+  HalationClassProps<
+    HalationLiteStateRawDataProps,
+    RenderBlockBaseComponentProps
+  >
 > {
   public contextValue: HalationContextValue;
   public registers: Array<RegisterFunction>;
@@ -29,7 +33,7 @@ class HalationLiteClass extends HalationBase<
   constructor(
     props: HalationClassProps<
       HalationLiteStateRawDataProps,
-      RenderBlockBaseProps
+      RenderBlockBaseComponentProps
     >
   ) {
     super(props);
@@ -60,10 +64,10 @@ class HalationLiteClass extends HalationBase<
 
   registerModules() {
     this.registers.forEach(register => {
-      const moduleProps: HalationLiteRegisterResult = register.call(null);
+      const moduleProps: RegisterBaseResult = register.call(null);
       const { name, getComponent } = moduleProps;
       if (!this.moduleMap.get(name)) {
-        const module = new Module({
+        const module = new ModuleBase({
           name,
           getComponent,
         });
