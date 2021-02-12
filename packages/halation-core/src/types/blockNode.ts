@@ -11,12 +11,10 @@ export interface RenderBlockBlockProps {
   props?: object;
 }
 
-export type BlockNodePreProps<RBP extends RenderBlockBaseComponentProps> = BlockNodeBaseProps & {
+export type BlockNodePreProps<RBP extends RenderBlockBaseComponentProps> = BlockNodeBaseProps<RBP> & {
   block: RecordBase;
   renderBlock?: RenderBlock<RBP>;
 };
-
-export type BlockWrapperProps<RBP extends RenderBlockBaseComponentProps> = BlockNodePreProps<RBP>
 
 export type RenderBlockBaseComponentProps = {
   blockProps: RenderBlockBlockProps;

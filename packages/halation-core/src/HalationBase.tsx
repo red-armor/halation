@@ -26,7 +26,7 @@ abstract class HalationBaseClass<
   public moduleMap: ModuleMap;
   public loadManagerMap: LoadManagerMap;
   public refTracker: RefTracker;
-  public enableLog: boolean;
+  public enableLog: boolean | undefined;
   public abstract contextValue: HalationContextValue;
   public rootRenderFn?: FC<any>;
   private clearLoggerContext: Function;

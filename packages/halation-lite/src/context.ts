@@ -1,11 +1,11 @@
 import { createContext } from 'react';
 
 export type HalationLiteContextValue = {
-  enableLog: boolean;
+  enableLog: boolean | undefined;
 };
 
 export const defaultHalationState = {
-  enableLog: false,
+  enableLog: undefined,
 };
 
 export default createContext<HalationLiteContextValue>(defaultHalationState);

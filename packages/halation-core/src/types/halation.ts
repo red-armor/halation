@@ -20,11 +20,11 @@ export interface HalationBaseProps<HS, RBP extends RenderBlockBaseComponentProps
   registers: Array<any>;
 
   /** Display logger message or not. Default value is false */
-  enableLog?: boolean;
+  enableLog: boolean | undefined;
 }
 
 export type HalationContextValue = {
-  enableLog: boolean;
+  enableLog: boolean | undefined;
 };
 
 export type HalationClassProps<HS, RBP extends RenderBlockBaseComponentProps> = HalationBaseProps<HS, RBP> & {

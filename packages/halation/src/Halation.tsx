@@ -35,7 +35,7 @@ import OrderedMap from './data/OrderedMap';
 import context from './context';
 import Module from './Module';
 
-const { isPlainObject, isString, isPresent } = utils;
+const { isPlainObject, isString } = utils;
 class HalationClass extends HalationBase<
   HalationStateRawDataProps,
   HalationRenderBlockProps,
@@ -45,7 +45,6 @@ class HalationClass extends HalationBase<
   public hooks: Hooks;
   public store: Store;
   public proxyEvent: IStateTracker;
-  public enableLog: boolean;
   public contextValue: HalationContextValue;
   public moduleMap: HalationModuleMap;
   public loadManagerMap: HalationLoadManagerMap;
@@ -54,7 +53,7 @@ class HalationClass extends HalationBase<
 
   constructor(props: HalationClassProps) {
     super(props);
-    const { store, events, enableLog, contextValue, registers } = props;
+    const { store, events, contextValue, registers } = props;
 
     this.hooks = {
       register: new SyncHook(['block']),
@@ -74,14 +73,8 @@ class HalationClass extends HalationBase<
       `Nested Halation should not be passing with 'events' props`
     );
 
-    // invariant(
-    //   !(isPresent(enableLog) && isPresent(contextValue.enableLog)),
-    //   `Nested Halation should not be passing with 'enableLog' props`
-    // );
-
     this.store = contextValue.store || store;
     this.proxyEvent = contextValue.proxyEvent || produce(events || {});
-    this.enableLog = (isPresent(enableLog) ? enableLog : false) as boolean;
     this.startListen();
 
     this.registerModules();

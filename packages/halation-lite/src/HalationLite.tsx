@@ -90,7 +90,7 @@ class HalationLiteClass extends HalationBase<
 
   createChildren() {
     return this.state.halationState.map((block, index) =>
-      createElement<BlockNodePreProps>(
+      createElement<BlockNodePreProps<RenderBlockBaseComponentProps>>(
         BlockNode,
         {
           block,

@@ -1,4 +1,5 @@
 import {
+  FC,
   createElement,
   useRef,
   useMemo,
@@ -8,9 +9,12 @@ import {
   BlockWrapper,
   RecordBase,
   BlockNodePreProps,
+  RenderBlockBaseComponentProps,
 } from '@xhs/halation-core';
 
-const BlockNode = (props: any) => {
+const BlockNode: FC<BlockNodePreProps<
+  RenderBlockBaseComponentProps
+>> = props => {
   const { block, addBlockLoadManager, ...rest } = props;
   const recordKey = block.getKey();
   const moduleName = block.getName();
@@ -26,7 +30,7 @@ const BlockNode = (props: any) => {
   }
 
   const children: Array<FunctionComponentElement<
-    BlockNodePreProps
+    BlockNodePreProps<RenderBlockBaseComponentProps>
   > | null> = useMemo(() => {
     return childrenData
       .map((child, index) => {
@@ -34,7 +38,7 @@ const BlockNode = (props: any) => {
           BlockNode,
           {
             block: child,
-            key: index,
+            key: `${index}`,
             ...rest,
             addBlockLoadManager,
           },
@@ -42,7 +46,7 @@ const BlockNode = (props: any) => {
         );
       })
       .filter(v => v);
-  }, [block.getChildren()]);
+  }, [childrenData]); // eslint-disable-line
 
   return createElement(
     BlockWrapper,
