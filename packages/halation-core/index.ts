@@ -10,6 +10,4 @@ export { default as Loader } from './src/Loader'
 export * from './src/types';
 export * from './src/commons/logger';
 
-export {
-  utils
-}
+export { utils }

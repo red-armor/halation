@@ -17,10 +17,7 @@ export interface LoadManagerConstructorProps {
   dispatchEvent: DispatchEvent;
 }
 
-export enum StrategyType {
-  event = 'event',
-  runtime = 'runtime',
-}
+export type StrategyType = 'event' | 'runtime';
 
 export interface Strategy {
   type: StrategyType;

@@ -15,10 +15,11 @@ import RefTracker from './RefTracker';
 import { isPresent } from './commons/utils';
 
 abstract class HalationBaseClass<
+  RegisterFunction,
   HS,
   RBP extends RenderBlockBaseComponentProps,
   S,
-  P extends HalationClassProps<HS, RBP> = HalationClassProps<HS, RBP>,
+  P extends HalationClassProps<RegisterFunction, HS, RBP> = HalationClassProps<RegisterFunction, HS, RBP>,
 > extends PureComponent<P, S>
 {
   public name: string;
@@ -30,12 +31,13 @@ abstract class HalationBaseClass<
   public abstract contextValue: HalationContextValue;
   public rootRenderFn?: FC<any>;
   private clearLoggerContext: Function;
-  public abstract registers: any
+  public registers: Array<RegisterFunction>
 
   constructor(props: P) {
     super(props);
     const {
       name,
+      registers,
       enableLog,
       renderBlock,
       rootRenderFn,
@@ -47,6 +49,7 @@ abstract class HalationBaseClass<
     this.moduleMap = new Map();
     this.loadManagerMap = new Map();
     this.rootRenderFn = rootRenderFn;
+    this.registers = registers
 
     invariant(
       !(isPresent(enableLog) && isPresent(contextValue.enableLog)),

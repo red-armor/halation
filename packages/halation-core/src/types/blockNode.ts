@@ -19,6 +19,16 @@ export type BlockNodePreProps<RBP extends RenderBlockBaseComponentProps> = Block
 export type RenderBlockBaseComponentProps = {
   blockProps: RenderBlockBlockProps;
   block: RecordBase;
+  // children: FC<ForwardBlockComponentProps>;
+
+  // https://stackoverflow.com/a/42261933, children should be marked with ReactElement.
+  // React.cloneElement will report with ts error.
+  // ````
+  //  Argument of type 'ReactNode' is not assignable to parameter of type
+  // 'ReactElement<any, string | ((props: any) => ReactElement<any, any>)
+  // | (new (props: any) => Component<any, any, any>)>'
+
+  children: React.ReactElement,
 }
 
 export type BlockComponentProps = ComponentPropsAPI & {

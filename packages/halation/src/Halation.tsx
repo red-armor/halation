@@ -19,7 +19,6 @@ import {
   HalationModuleMap,
   HalationLoadManagerMap,
   HalationRenderBlockProps,
-  HalationStateRawDataProps,
   RegisterResult,
   HalationRegister,
 } from './types';
@@ -37,7 +36,8 @@ import Module from './Module';
 
 const { isPlainObject, isString } = utils;
 class HalationClass extends HalationBase<
-  HalationStateRawDataProps,
+  HalationRegister,
+  OrderedMap,
   HalationRenderBlockProps,
   HalationState,
   HalationClassProps

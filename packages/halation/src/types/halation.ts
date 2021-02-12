@@ -11,29 +11,11 @@ import {
   HalationBaseProps,
   ModuleGetter,
   RegisterBaseResult,
+  ForwardBlockComponentProps,
 } from '@xhs/halation-core';
 
 export type HalationEvents = {
   [key: string]: any;
-};
-
-export type HalationStateRawDataProps = {
-  key: string;
-  name: string;
-  type: string;
-  strategies?: Array<Strategy>;
-  props?: object;
-  parent: null | string;
-  modelKey?: string;
-};
-
-export type HalationStateItem = {
-  key: string;
-  name: string;
-  type: string;
-  prevSibling: null | string;
-  nextSibling: null | string;
-  parent: null | string;
 };
 
 export type HalationRenderBlockProps = RenderBlockBaseComponentProps & {
@@ -43,7 +25,8 @@ export type HalationRenderBlockProps = RenderBlockBaseComponentProps & {
 export type HalationRenderBlock<P> = FC<P>;
 
 export type HalationProps = HalationBaseProps<
-  HalationStateRawDataProps,
+  HalationRegister,
+  OrderedMap,
   HalationRenderBlockProps
 > & {
   events?: HalationEvents;
@@ -90,6 +73,11 @@ export type ComponentPropsAPI = {
   dispatchEvent: DispatchEvent;
   getRef: (key: string) => any;
   watch: (fn: Function) => void;
+};
+
+export type HalationComponentProps = ForwardBlockComponentProps & {
+  hooks: Hooks;
+  dispatchEvent: DispatchEvent;
 };
 
 export type HalationModuleMap = Map<string, Module>;

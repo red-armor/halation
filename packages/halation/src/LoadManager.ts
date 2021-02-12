@@ -147,7 +147,7 @@ class LoadManager extends LoadManagerBase {
       },
       () => {
         this._resolverValueMap.set(resolver, RESOLVER_TYPE.RESOLVED);
-        this.update(StrategyType.runtime);
+        this.update('runtime');
       }
     );
 
@@ -245,7 +245,7 @@ class LoadManager extends LoadManagerBase {
         continue;
 
       switch (type) {
-        case StrategyType.event:
+        case 'event':
           when(
             this._proxyEvent,
             state => {
@@ -257,13 +257,13 @@ class LoadManager extends LoadManagerBase {
             },
             () => {
               this._resolverValueMap.set(resolver, RESOLVER_TYPE.RESOLVED);
-              this.update(StrategyType.event);
+              this.update('event');
             }
           );
           break;
         // 如果说是runtime的话，首先需要先加载model；运行一次resolver将需要
         // 监听的属性进行绑定。
-        case StrategyType.runtime:
+        case 'runtime':
           return this.startVerifyRuntime(resolver);
       }
 

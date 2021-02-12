@@ -4,13 +4,12 @@ export type Slot = {
   [key: string]: Array<string>;
 };
 
-export interface OrderedMapProps {
+export type OrderedMapProps = {
   key: string;
   name: string;
-  type: string;
+  type?: string;
   strategies?: Array<Strategy>;
   props?: object;
-  slot?: Slot;
-  parent: null | string;
+  parent?: null | string;
   modelKey?: string;
-}
+};

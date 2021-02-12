@@ -10,7 +10,7 @@ class Record extends RecordBase {
   private strategies?: Array<Strategy>;
   private _slot: Slot;
   readonly _map: Map<string, Record>;
-  private parent: string | null;
+  private parent?: string | null;
   private _modelKey: string | undefined;
 
   constructor(props: OrderedMapProps, _map: Map<string, Record>) {
@@ -50,7 +50,7 @@ class Record extends RecordBase {
   }
 
   getParent(): string | null {
-    return this.parent;
+    return this.parent || null;
   }
 
   getType(): string {
@@ -188,7 +188,7 @@ class Record extends RecordBase {
     }
   }
 
-  updateParent(parent: string | null) {
+  updateParent(parent: string | null | undefined) {
     if (typeof parent !== 'undefined') this.parent = parent;
   }
 

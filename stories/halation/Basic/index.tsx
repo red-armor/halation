@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { applyMiddleware, createStore, thunk, Provider, useDispatch, observe } from '@xhs/relinx'
-import { Halation, OrderedMap } from 'halation'
+import { Halation, OrderedMap, OrderedMapProps, RenderBlock } from '../../../packages/halation/src'
 
 import PluginARegister from './plugin-a/register'
 import PluginBRegister from './plugin-b/register'
 
-const halationState = [{
+const halationState: Array<OrderedMapProps> = [{
   name: 'plugin-a',
   key: 'plugin-a-1',
   type: 'block',
@@ -61,17 +61,16 @@ const halationState = [{
   type: 'block',
 }]
 
-const renderBlock = props => {
+const renderBlock: RenderBlock = props => {
   const {
     blockProps: { type },
     children,
-    ...rest
   } = props
 
   if (type === 'block') {
     return (
       <div className="block-render-fn">
-        {React.cloneElement(children, {...rest, location: 'shanghai'})}
+        {React.cloneElement(children, { location: 'shanghai'})}
       </div>
     )
   }
@@ -79,7 +78,9 @@ const renderBlock = props => {
   return null
 }
 
-const store = createStore({
+type Models = {}
+
+const store = createStore<Models>({
   models: {},
 }, applyMiddleware(thunk))
 

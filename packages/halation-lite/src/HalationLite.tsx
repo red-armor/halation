@@ -13,26 +13,28 @@ import context from './context';
 import BlockNode from './BlockNode';
 import {
   HalationLiteClassProps,
-  RegisterFunction,
+  HalationLiteRegister,
   HalationLiteStateRawDataProps,
 } from './types';
 import createFromLiteArray from './createFromLiteArray';
 
 class HalationLiteClass extends HalationBase<
-  HalationLiteStateRawDataProps,
+  HalationLiteRegister,
+  Array<HalationLiteStateRawDataProps>,
   RenderBlockBaseComponentProps,
   HalationState,
   HalationClassProps<
-    HalationLiteStateRawDataProps,
+    HalationLiteRegister,
+    Array<HalationLiteStateRawDataProps>,
     RenderBlockBaseComponentProps
   >
 > {
   public contextValue: HalationContextValue;
-  public registers: Array<RegisterFunction>;
 
   constructor(
     props: HalationClassProps<
-      HalationLiteStateRawDataProps,
+      HalationLiteRegister,
+      Array<HalationLiteStateRawDataProps>,
       RenderBlockBaseComponentProps
     >
   ) {
@@ -40,12 +42,11 @@ class HalationLiteClass extends HalationBase<
     this.state = {
       halationState: [],
     };
-    const { enableLog = false, registers } = props;
+    const { enableLog = false } = props;
 
     this.contextValue = {
       enableLog,
     };
-    this.registers = registers;
     this.registerModules();
   }
 

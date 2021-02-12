@@ -3928,7 +3928,7 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@xhs/relinx@^3.5.6":
+"@xhs/relinx@^3.5.12":
   version "3.5.12"
   resolved "http://npm.devops.xiaohongshu.com:7001/@xhs/relinx/download/@xhs/relinx-3.5.12.tgz#c53fc2ec2008f251d7ca8ccb4008172e381855da"
   integrity sha1-xT/C7CAI8lHXyozLQAgXLjgYVdo=

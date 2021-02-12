@@ -5,7 +5,11 @@ import LoadManager from '../LoadManagerBase';
 import RecordBase from '../data/RecordBase'
 import { RenderBlockBaseComponentProps } from './blockNode'
 
-export interface HalationBaseProps<HS, RBP extends RenderBlockBaseComponentProps> {
+export interface HalationBaseProps<
+  RegisterFunction,
+  HS,
+  RBP extends RenderBlockBaseComponentProps
+> {
   name: string;
 
   /**
@@ -17,7 +21,7 @@ export interface HalationBaseProps<HS, RBP extends RenderBlockBaseComponentProps
 
   halationState: HS,
 
-  registers: Array<any>;
+  registers: Array<RegisterFunction>;
 
   /** Display logger message or not. Default value is false */
   enableLog: boolean | undefined;
@@ -27,7 +31,7 @@ export type HalationContextValue = {
   enableLog: boolean | undefined;
 };
 
-export type HalationClassProps<HS, RBP extends RenderBlockBaseComponentProps> = HalationBaseProps<HS, RBP> & {
+export type HalationClassProps<RegisterFunction, HS, RBP extends RenderBlockBaseComponentProps> = HalationBaseProps<RegisterFunction, HS, RBP> & {
   contextValue: HalationContextValue;
 };
 
