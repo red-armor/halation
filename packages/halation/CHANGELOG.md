@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.2.8...@xhs/halation@1.3.0) (2021-02-12)
+
+
+### Bug Fixes
+
+* enableLog types issue ([d3a71ba](https://code.devops.xiaohongshu.com/fe/halation/commits/d3a71baa3fdd5992e7a2a0af23b30d3e55b65309))
+* ts issues ([f575672](https://code.devops.xiaohongshu.com/fe/halation/commits/f575672f5e8a4640bee8717a37b5a64697b6d997))
+* ts issues ([4a34764](https://code.devops.xiaohongshu.com/fe/halation/commits/4a347640e3120920db2766be5ae5993f11f6d1e6))
+
+
+### Features
+
+* add Loader module ([4afe601](https://code.devops.xiaohongshu.com/fe/halation/commits/4afe60159f33922f92df6674c22bc5bea2c4b96d))
+* attempt to fix types issue ([6d3eeb7](https://code.devops.xiaohongshu.com/fe/halation/commits/6d3eeb7d7c81bf9fd90cdb2b290fceb8f85d3bf1))
+* register fix ([02539fa](https://code.devops.xiaohongshu.com/fe/halation/commits/02539fa135a8cbb5398adf835ba0d7ee903b3c1d))
+* split halation-core and make halation works ([1cc0aee](https://code.devops.xiaohongshu.com/fe/halation/commits/1cc0aee855e30587b594b81f581a1d780840e299))
+
+
+
+
+
 ## [1.2.8](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.2.7...@xhs/halation@1.2.8) (2021-02-09)
 
 **Note:** Version bump only for package @xhs/halation
