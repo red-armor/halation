@@ -257,7 +257,7 @@ class OrderedMap {
           //   currentKey,
           //   nextParentKey: parent,
           // });
-          currentParentKey = parent;
+          currentParentKey = parent || null;
           // currentKey = key;
         }
       } else {

@@ -16,6 +16,7 @@ module.exports = {
     config.resolve.alias = {
       ...config.resolve.alias,
       "halation": path.resolve(__dirname, "../packages/halation/src"),
+      "halation-lite": path.resolve(__dirname, "../packages/halation-lite/src")
     };
     config.resolve.extensions.push(".ts", ".tsx");
     return config;

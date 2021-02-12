@@ -1,8 +1,6 @@
 import React, {
-  FC,
   useContext,
   createElement,
-  PureComponent,
   FunctionComponentElement,
 } from 'react';
 import invariant from 'invariant';
@@ -11,67 +9,59 @@ import produce, { IStateTracker, StateTrackerUtil } from 'state-tracker';
 import {
   Hooks,
   Store,
-  PropsAPI,
   Strategy,
-  ModuleMap,
   HalationProps,
   HalationClassProps,
   HalationState,
-  RenderBlock,
   BlockNodePreProps,
-  RegisterResult,
-  LoadManagerMap,
   EventValue,
   HalationContextValue,
+  HalationModuleMap,
+  HalationLoadManagerMap,
+  HalationRenderBlockProps,
+  RegisterResult,
+  HalationRegister,
 } from './types';
-import Module from './Module';
 import {
+  HalationBase,
   logActivity,
   LogActivityType,
-  setLoggerContext,
+  utils,
 } from '@xhs/halation-core';
 import BlockNode from './BlockNode';
 import LoadManager from './LoadManager';
-import RefTracker from './RefTracker';
-import { isPlainObject, isString, isPresent } from './commons';
 import OrderedMap from './data/OrderedMap';
 import context from './context';
+import Module from './Module';
 
-class HalationClass extends PureComponent<HalationClassProps, HalationState> {
-  public name: string;
-  public renderBlock?: RenderBlock;
-  public moduleMap: ModuleMap;
-  public loadManagerMap: LoadManagerMap;
+const { isPlainObject, isString } = utils;
+class HalationClass extends HalationBase<
+  HalationRegister,
+  OrderedMap,
+  HalationRenderBlockProps,
+  HalationState,
+  HalationClassProps
+> {
   public hooks: Hooks;
   public store: Store;
-  public refTracker: RefTracker;
   public proxyEvent: IStateTracker;
-  public enableLog: boolean;
-  private contextValue: HalationContextValue;
-  private rootRenderFn?: FC<PropsAPI>;
-  private clearLoggerContext: Function;
+  public contextValue: HalationContextValue;
+  public moduleMap: HalationModuleMap;
+  public loadManagerMap: HalationLoadManagerMap;
+  public context: any;
+  public registers: Array<HalationRegister>;
 
   constructor(props: HalationClassProps) {
     super(props);
-    const {
-      name,
-      store,
-      events,
-      enableLog,
-      registers,
-      renderBlock,
-      rootRenderFn,
-      contextValue,
-    } = props;
+    const { store, events, contextValue, registers } = props;
 
-    this.renderBlock = renderBlock;
-    this.name = name;
-    this.moduleMap = new Map();
-    this.loadManagerMap = new Map();
-    this.rootRenderFn = rootRenderFn;
     this.hooks = {
       register: new SyncHook(['block']),
     };
+
+    this.moduleMap = new Map();
+    this.loadManagerMap = new Map();
+    this.registers = registers;
 
     invariant(
       !(store && contextValue.store),
@@ -83,32 +73,12 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
       `Nested Halation should not be passing with 'events' props`
     );
 
-    invariant(
-      !(isPresent(enableLog) && isPresent(contextValue.enableLog)),
-      `Nested Halation should not be passing with 'enableLog' props`
-    );
-
     this.store = contextValue.store || store;
     this.proxyEvent = contextValue.proxyEvent || produce(events || {});
-    this.enableLog = (isPresent(enableLog) ? enableLog : false) as boolean;
     this.startListen();
-    this.clearLoggerContext = setLoggerContext({ enableLog: this.enableLog });
 
-    this.refTracker = new RefTracker();
+    this.registerModules();
 
-    registers.forEach(register => {
-      const moduleProps: RegisterResult = register.call(null);
-      const { name, getModel, getComponent, strategies } = moduleProps;
-      if (!this.moduleMap.get(name)) {
-        const module = new Module({
-          name,
-          getComponent,
-          getModel,
-          strategies: strategies || [],
-        });
-        this.moduleMap.set(name, module);
-      }
-    });
     this.dispatchEvent = this.dispatchEvent.bind(this);
     this.addBlockLoadManager = this.addBlockLoadManager.bind(this);
     this.reportRef = this.reportRef.bind(this);
@@ -127,8 +97,21 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
     };
   }
 
-  componentWillUmount() {
-    this.clearLoggerContext();
+  registerModules() {
+    this.registers.forEach(register => {
+      const moduleProps: RegisterResult = register.call(null);
+      const { name, getModel, getComponent, strategies } = moduleProps;
+      if (!this.moduleMap.get(name)) {
+        const module = new Module({
+          name,
+          getComponent,
+          getModel,
+          strategies: strategies || [],
+        });
+
+        this.moduleMap.set(name, module);
+      }
+    });
   }
 
   startListen() {
@@ -160,11 +143,7 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
     return null;
   }
 
-  getName() {
-    return this.name;
-  }
-
-  public getPropsAPI(): PropsAPI {
+  public getPropsAPI() {
     return {
       hooks: this.hooks,
       nodeMap: this.state.nodeMap,
@@ -176,14 +155,6 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
       getRef: this.getRef,
       watch: this.refTracker.watch,
     };
-  }
-
-  public reportRef(key: string, ref: any) {
-    this.refTracker.setRef(key, ref);
-  }
-
-  public getRef(key: string) {
-    return this.refTracker.getRef(key);
   }
 
   public addBlockLoadManager({
@@ -241,7 +212,7 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
     }
   }
 
-  render() {
+  createChildren() {
     const blocks = this.state.nodeMap.values();
     let block = blocks.next().value;
     const children: Array<FunctionComponentElement<BlockNodePreProps>> = [];
@@ -257,23 +228,17 @@ class HalationClass extends PureComponent<HalationClassProps, HalationState> {
             renderBlock: this.renderBlock,
             ...this.getPropsAPI(),
           },
-          null
+          []
         )
       );
       const blockKey = block.getNextSibling();
       block = this.state.nodeMap.get(blockKey);
     }
+    return children;
+  }
 
-    if (typeof this.rootRenderFn === 'function') {
-      return React.createElement(
-        this.rootRenderFn,
-        {
-          ...this.getPropsAPI(),
-        },
-        children
-      );
-    }
-
+  render() {
+    const children = this.renderCompat();
     return (
       <context.Provider value={this.contextValue}>{children}</context.Provider>
     );

@@ -1,49 +1,32 @@
-import { OrderedMapProps, BlockRenderProps, Strategy, Slot } from '../types';
+import { OrderedMapProps, Strategy, Slot } from '../types';
 import invariant from 'invariant';
+import { RecordBase } from '@xhs/halation-core';
 
-class Record {
-  private name: string;
-  private key: string;
+class Record extends RecordBase {
   private prevSibling: string | null;
   private nextSibling: string | null;
   private type: string;
   private children: Array<string>;
   private strategies?: Array<Strategy>;
-  private props?: object;
   private _slot: Slot;
   readonly _map: Map<string, Record>;
-  private parent: string | null;
+  private parent?: string | null;
   private _modelKey: string | undefined;
-  private _blockProps: BlockRenderProps;
 
   constructor(props: OrderedMapProps, _map: Map<string, Record>) {
-    const {
-      key,
-      type,
-      name,
-      strategies,
-      props: blockProps,
-      parent,
-      modelKey,
-    } = props;
-    this.key = key;
+    super(props);
+
+    const { type, strategies, parent, modelKey } = props;
+
     this._modelKey = modelKey;
     this._slot = {};
-    this.name = name;
     this.prevSibling = null;
     this.nextSibling = null;
     this.type = type || 'block';
     this.children = [];
     this.strategies = strategies || [];
-    this.props = blockProps || {};
     this._map = _map;
     this.parent = parent;
-    this._blockProps = {
-      key: this.key,
-      name: this.name,
-      type: this.type,
-      props: this.props,
-    };
   }
 
   getChildKeys(): Array<string> {
@@ -58,24 +41,16 @@ class Record {
     return this.prevSibling;
   }
 
-  getName(): string {
-    return this.name;
-  }
-
-  getKey(): string {
-    return this.key;
-  }
-
   getModelKey(): string | undefined {
     return this._modelKey;
   }
 
   getDefinitelyModelKey() {
-    return this._modelKey || this.key;
+    return this._modelKey || this.getKey();
   }
 
   getParent(): string | null {
-    return this.parent;
+    return this.parent || null;
   }
 
   getType(): string {
@@ -90,8 +65,13 @@ class Record {
     return this._slot;
   }
 
-  getRenderProps(): BlockRenderProps {
-    return this._blockProps;
+  getRenderProps() {
+    return {
+      key: this.getKey(),
+      name: this.getName(),
+      props: this.getProps(),
+      type: this.type,
+    };
   }
 
   insertChildren(options: {
@@ -208,7 +188,7 @@ class Record {
     }
   }
 
-  updateParent(parent: string | null) {
+  updateParent(parent: string | null | undefined) {
     if (typeof parent !== 'undefined') this.parent = parent;
   }
 
@@ -219,8 +199,7 @@ class Record {
     before: boolean;
   }) {
     const { list, record, targetKey, before } = options;
-
-    const { key } = record;
+    const key = record.getKey();
 
     if (!list.length) {
       list.push(key);
