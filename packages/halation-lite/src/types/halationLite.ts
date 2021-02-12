@@ -3,11 +3,11 @@ import {
   RenderBlockBaseComponentProps,
 } from '@xhs/halation-core';
 import { ForwardBlockComponentProps } from '@xhs/halation-core';
-import { HalationLiteStateRawDataProps } from './createFromLiteArray';
+import { HalationLiteState } from './createFromLiteArray';
 
 export type HalationLiteClassProps = HalationBaseProps<
   HalationLiteRegister,
-  Array<HalationLiteStateRawDataProps>,
+  Array<HalationLiteState>,
   RenderBlockBaseComponentProps
 >;
 

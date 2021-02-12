@@ -1,4 +1,4 @@
-import { OrderedMapProps, Strategy, Slot } from '../types';
+import { OrderedMapProps, Strategy, OrderedMapSlot } from '../types';
 import invariant from 'invariant';
 import { RecordBase } from '@xhs/halation-core';
 
@@ -8,7 +8,7 @@ class Record extends RecordBase {
   private type: string;
   private children: Array<string>;
   private strategies?: Array<Strategy>;
-  private _slot: Slot;
+  private _slot: OrderedMapSlot;
   readonly _map: Map<string, Record>;
   private parent?: string | null;
   private _modelKey: string | undefined;

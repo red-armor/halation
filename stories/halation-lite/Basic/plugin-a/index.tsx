@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { HalationLiteComponentProps } from '../../../../packages/halation-lite/src'
+import { HalationLiteComponentProps } from 'halation-lite'
 
 const PluginA: FC<HalationLiteComponentProps> = (props) => {
   const { children, forwardRef } = props

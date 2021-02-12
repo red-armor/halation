@@ -2,7 +2,7 @@ import { FunctionComponentElement } from 'react';
 import { HalationPropsAPI, RenderBlock } from './halation';
 import Record from '../data/Record';
 
-export interface SlotProps {
+export interface SlotComponents {
   [key: string]: Array<FunctionComponentElement<BlockNodePreProps> | null>;
 }
 

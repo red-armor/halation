@@ -1,17 +1,16 @@
 import React　from 'react';
-import HalationLite from '../../../packages/halation-lite/src'
+import { HalationLiteState, HalationLite } from 'halation-lite'
 
 import PluginARegister from './plugin-a/register'
 import PluginBRegister from './plugin-b/register'
 
-const halationState = [{
+const halationState: Array<HalationLiteState> = [{
   name: 'plugin-a',
 }, {
   name: 'plugin-b',
 }, {
   name: 'plugin-a',
 }]
-
 
 export default () => {
 
@@ -23,7 +22,6 @@ export default () => {
   return (
     <HalationLite
       name='super'
-      enableLog
       halationState={halationState}
       registers={registers}
     />

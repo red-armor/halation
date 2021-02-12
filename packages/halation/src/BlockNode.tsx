@@ -6,7 +6,7 @@ import {
   FunctionComponentElement,
 } from 'react';
 import invariant from 'invariant';
-import { BlockNodePreProps, SlotProps } from './types';
+import { BlockNodePreProps, SlotComponents } from './types';
 import { logActivity, BlockWrapper } from '@xhs/halation-core';
 
 const BlockNode: FC<BlockNodePreProps> = props => {
@@ -55,28 +55,30 @@ const BlockNode: FC<BlockNodePreProps> = props => {
     () =>
       slotKeys.reduce((acc, cur) => {
         const group = ([] as Array<string>).concat(slot[cur]);
-        acc[cur] = group.map(childKey => {
-          const node = nodeMap.get(childKey);
-          if (node) {
-            return createElement(
-              BlockNode,
-              {
-                key: childKey,
-                modelKey: node.getModelKey()!,
-                block: node,
-                nodeMap,
-                renderBlock,
-                addBlockLoadManager,
-                ...rest,
-              },
-              null
-            );
-          }
-          return null;
-        });
+        acc[cur] = group
+          .map(childKey => {
+            const node = nodeMap.get(childKey);
+            if (node) {
+              return createElement(
+                BlockNode,
+                {
+                  key: childKey,
+                  modelKey: node.getModelKey()!,
+                  block: node,
+                  nodeMap,
+                  renderBlock,
+                  addBlockLoadManager,
+                  ...rest,
+                },
+                null
+              );
+            }
+            return null;
+          })
+          .filter(v => v);
 
         return acc;
-      }, {} as SlotProps),
+      }, {} as SlotComponents),
     [slot] // eslint-disable-line
   );
 

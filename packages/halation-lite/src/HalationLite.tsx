@@ -14,18 +14,18 @@ import BlockNode from './BlockNode';
 import {
   HalationLiteClassProps,
   HalationLiteRegister,
-  HalationLiteStateRawDataProps,
+  HalationLiteState,
 } from './types';
 import createFromLiteArray from './createFromLiteArray';
 
 class HalationLiteClass extends HalationBase<
   HalationLiteRegister,
-  Array<HalationLiteStateRawDataProps>,
+  Array<HalationLiteState>,
   RenderBlockBaseComponentProps,
   HalationState,
   HalationClassProps<
     HalationLiteRegister,
-    Array<HalationLiteStateRawDataProps>,
+    Array<HalationLiteState>,
     RenderBlockBaseComponentProps
   >
 > {
@@ -34,7 +34,7 @@ class HalationLiteClass extends HalationBase<
   constructor(
     props: HalationClassProps<
       HalationLiteRegister,
-      Array<HalationLiteStateRawDataProps>,
+      Array<HalationLiteState>,
       RenderBlockBaseComponentProps
     >
   ) {
@@ -51,7 +51,7 @@ class HalationLiteClass extends HalationBase<
   }
 
   static getDerivedStateFromProps(nextProps: {
-    halationState: HalationLiteStateRawDataProps;
+    halationState: HalationLiteState;
   }) {
     const { halationState } = nextProps;
     if (Array.isArray(halationState)) {

@@ -1,4 +1,4 @@
-import { OrderedMapProps } from './block';
+import { Strategy } from './loadManager';
 
 export type Predicate = (
   v: OrderedMapProps,
@@ -11,3 +11,17 @@ export type Iterator = (
   k: string,
   context: Array<OrderedMapProps>
 ) => boolean | void;
+
+export type OrderedMapSlot = {
+  [key: string]: Array<string>;
+};
+
+export type OrderedMapProps = {
+  key: string;
+  name: string;
+  type?: string;
+  strategies?: Array<Strategy>;
+  props?: object;
+  parent?: null | string;
+  modelKey?: string;
+};

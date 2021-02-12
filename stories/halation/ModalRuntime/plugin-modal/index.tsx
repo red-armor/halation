@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, FC } from 'react'
 import ReactDOM from 'react-dom'
 import { useRelinx, observe } from '@xhs/relinx'
+import { HalationComponentProps } from 'halation'
 import './style.css'
 
 const root = document.body
 
-const Modal = props => {
+const Modal: FC<any> = props => {
   const elRef = useRef(document.createElement('div'))
 
   useEffect(() => {
@@ -17,7 +18,7 @@ const Modal = props => {
   )
 }
 
-export default observe(props => {
+export default observe((props: HalationComponentProps) => {
   const [state, dispatch] = useRelinx()
   const { block } = props
   const modelKey = block.getKey()

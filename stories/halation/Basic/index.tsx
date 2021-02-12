@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { applyMiddleware, createStore, thunk, Provider, useDispatch, observe } from '@xhs/relinx'
-import { Halation, OrderedMap, OrderedMapProps, RenderBlock } from '../../../packages/halation/src'
+import { Halation, OrderedMap, OrderedMapProps, RenderBlock } from 'halation'
 
 import PluginARegister from './plugin-a/register'
 import PluginBRegister from './plugin-b/register'
