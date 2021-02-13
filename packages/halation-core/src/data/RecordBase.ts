@@ -4,8 +4,8 @@ class RecordBase {
   private _name: string;
   private _key: string;
   private _children?: Array<RecordBase>
-  private _props?: object;
-  private _extraProps?: object
+  private _props: object;
+  private _extraProps: object
   private _blockProps: RenderBlockBlockProps;
 
   constructor(recordProps: RecordBaseProps) {
@@ -20,8 +20,8 @@ class RecordBase {
     this._name = name
     this._key = key
     this._children = children
-    this._props = props
-    this._extraProps = extraProps
+    this._props = props || {}
+    this._extraProps = extraProps || {}
 
     this._blockProps = {
       key: this._key,

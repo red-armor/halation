@@ -20,4 +20,6 @@ export type HalationLiteRegister = () => {
   getComponent: () => Promise<any>;
 };
 
+export type HalationLiteRenderBlockProps = RenderBlockBaseComponentProps;
+
 export type HalationLiteComponentProps = ForwardBlockComponentProps;

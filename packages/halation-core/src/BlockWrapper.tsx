@@ -165,13 +165,14 @@ const BlockWrapper = <RBP extends RenderBlockBaseComponentProps, P extends Block
       {
         ...restProps,
         key: blockKey,
+        extraProps: block.getExtraProps(),
         blockProps: block.getRenderProps(),
       } as any as RBP,
-      <RefForwardingWrapper {...restProps} ref={setBlockRef} />
+      <RefForwardingWrapper {...restProps} props={block.getProps()} ref={setBlockRef} />
     );
   }
 
-  return <RefForwardingWrapper {...restProps} ref={setBlockRef} />;
+  return <RefForwardingWrapper {...restProps} props={block.getProps()} ref={setBlockRef} />;
 };
 
 export default BlockWrapper
