@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.3.0...@xhs/halation@1.4.0) (2021-02-13)
+
+
+### Features
+
+* add `extraProps` and `props` support ([ba54704](https://code.devops.xiaohongshu.com/fe/halation/commits/ba54704933405eae69654e1b01958b4af6ecc450))
+* make storybook support ts `paths` ([7864e5c](https://code.devops.xiaohongshu.com/fe/halation/commits/7864e5c20860fe785c0d74b090fa8dbe6ef5509f))
+
+
+
+
+
 # [1.3.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.2.8...@xhs/halation@1.3.0) (2021-02-12)
 
 
