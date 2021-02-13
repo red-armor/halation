@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.5.0...@xhs/halation@1.5.1) (2021-02-13)
+
+
+### Bug Fixes
+
+* slot ts issue ([203e567](https://code.devops.xiaohongshu.com/fe/halation/commits/203e567e7fe45065f04bb789143933d00cbb0abd))
+
+
+
+
+
 # [1.5.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.4.0...@xhs/halation@1.5.0) (2021-02-13)
 
 
