@@ -86,7 +86,7 @@ class HalationClass extends HalationBase<
     this.contextValue = {
       store: this.store,
       proxyEvent: this.proxyEvent,
-      enableLog: this.enableLog,
+      enableLog: this.nextEnableLog,
     };
 
     const initialState = new OrderedMap([]);

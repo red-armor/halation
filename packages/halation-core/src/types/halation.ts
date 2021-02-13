@@ -28,7 +28,7 @@ export interface HalationBaseProps<
 }
 
 export type HalationContextValue = {
-  enableLog?: boolean;
+  enableLog: boolean | undefined;
 };
 
 export type HalationClassProps<RegisterFunction, HS, RBP extends RenderBlockBaseComponentProps> = HalationBaseProps<RegisterFunction, HS, RBP> & {

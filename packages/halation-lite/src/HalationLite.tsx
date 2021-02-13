@@ -42,10 +42,9 @@ class HalationLiteClass extends HalationBase<
     this.state = {
       halationState: [],
     };
-    const { enableLog = false } = props;
 
     this.contextValue = {
-      enableLog,
+      enableLog: this.nextEnableLog,
     };
     this.registerModules();
   }
