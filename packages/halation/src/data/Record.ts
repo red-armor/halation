@@ -61,7 +61,7 @@ class Record extends RecordBase {
     return this.strategies;
   }
 
-  getSlot(): Slot {
+  getSlot(): OrderedMapSlot {
     return this._slot;
   }
 
