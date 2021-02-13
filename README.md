@@ -2,18 +2,15 @@
 
 _Halation is integrated with caching, lazy load component features and aims to build high scalable, plugin-able and easy configurable React application._
 
-## Installation
+## How to start
 
 ```bash
-npm i @xhs/halation
+$ yarn bootstrap
+$ yarn storybook
 ```
 
-## Example
+## How to publish
 
-## Usage
-
-### Props
-
-#### enableLog: boolean
-
-Enable whether display logger or not. Default value is false.
+```bash
+$ npm run version
+```

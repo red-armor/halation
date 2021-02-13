@@ -1,9 +1,9 @@
-import { HalationLiteStateRawDataProps } from './types';
+import { HalationLiteState } from './types';
 import { generateRandomKey } from './commons/key';
 import { RecordBase } from '@xhs/halation-core';
 
 const createFromLiteArray = (
-  data: Array<HalationLiteStateRawDataProps>
+  data: Array<HalationLiteState>
 ): Array<RecordBase> => {
   if (Array.isArray(data)) {
     try {

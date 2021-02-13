@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
+import { HalationComponentProps } from 'halation'
 
-const PluginA: FC<any> = (props) => {
+const PluginA: FC<HalationComponentProps> = (props) => {
   const { children, forwardRef, slot } = props
 
   const hasChildren = !!children.length

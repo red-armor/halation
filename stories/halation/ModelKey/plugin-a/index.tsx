@@ -1,7 +1,8 @@
 import React, { useCallback, useRef } from 'react'
 import { observe, useDispatch } from '@xhs/relinx'
+import { HalationComponentProps } from 'halation'
 
-export default observe((props) => {
+export default observe((props: HalationComponentProps) => {
   const { dispatchEvent } = props
   const [dispatch] = useDispatch()
   const count = useRef(1)

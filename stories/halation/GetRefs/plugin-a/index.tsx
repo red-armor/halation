@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
+import { HalationComponentProps } from 'halation'
 
-const PluginA: FC<any> = (props) => {
+const PluginA: FC<HalationComponentProps> = (props) => {
   const { forwardRef, getRef, watch } = props
   const [height, setHeight] = useState(0)
 

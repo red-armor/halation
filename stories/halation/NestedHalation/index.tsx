@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { applyMiddleware, createStore, thunk, Provider, useDispatch, observe } from '@xhs/relinx'
-import { Halation, OrderedMap } from 'halation'
+import { Halation, OrderedMap, OrderedMapProps, RenderBlock } from 'halation'
 
 import PluginARegister from './plugin-a/register'
 import PluginBRegister from './plugin-b/register'
 import NestedRegister from './nested/register'
 
-const halationState = [{
+const halationState: Array<OrderedMapProps> = [{
   name: 'plugin-a',
   key: 'plugin-a-1',
   type: 'block',
@@ -66,7 +66,7 @@ const halationState = [{
   type: 'block',
 }]
 
-const renderBlock = props => {
+const renderBlock: RenderBlock = props => {
   const {
     blockProps: { type },
     children,
@@ -130,7 +130,6 @@ export default () => {
         registers={registers}
         renderBlock={renderBlock}
         store={store}
-
         events={{
           flags: {},
         }}

@@ -1,4 +1,3 @@
-import HalationLite from './HalationLite';
+export { default as HalationLite } from './HalationLite';
 
-export default HalationLite;
 export * from './types';

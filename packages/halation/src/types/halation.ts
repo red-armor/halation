@@ -1,11 +1,5 @@
 import { FC } from 'react';
 import { SyncHook } from 'tapable';
-import Module from '../Module';
-import Record from '../data/Record';
-import { Strategy } from './loadManager';
-import LoadManager from '../LoadManager';
-import { IStateTracker } from 'state-tracker';
-import OrderedMap from '../data/OrderedMap';
 import {
   RenderBlockBaseComponentProps,
   HalationBaseProps,
@@ -13,6 +7,13 @@ import {
   RegisterBaseResult,
   ForwardBlockComponentProps,
 } from '@xhs/halation-core';
+import { SlotComponents } from './blockNode';
+import Module from '../Module';
+import Record from '../data/Record';
+import { Strategy } from './loadManager';
+import LoadManager from '../LoadManager';
+import { IStateTracker } from 'state-tracker';
+import OrderedMap from '../data/OrderedMap';
 
 export type HalationEvents = {
   [key: string]: any;
@@ -36,7 +37,7 @@ export type HalationProps = HalationBaseProps<
 export type HalationContextValue = {
   store: null | Store;
   proxyEvent: null | IStateTracker;
-  enableLog: boolean | undefined;
+  enableLog?: boolean | undefined;
 };
 
 export type HalationClassProps = HalationProps & {
@@ -78,6 +79,7 @@ export type ComponentPropsAPI = {
 export type HalationComponentProps = ForwardBlockComponentProps & {
   hooks: Hooks;
   dispatchEvent: DispatchEvent;
+  slot: SlotComponents;
 };
 
 export type HalationModuleMap = Map<string, Module>;

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { applyMiddleware, createStore, thunk, Provider, useDispatch, observe } from '@xhs/relinx'
-import { Halation, OrderedMap } from 'halation'
+import { Halation, OrderedMap, RenderBlock } from 'halation'
 
 import PluginARegister from './plugin-a/register'
 import PluginBRegister from './plugin-b/register'
 
-const halationStateRaw = JSON.stringify([{
+const rawState = [{
   name: 'plugin-a',
   key: 'plugin-a-1',
   type: 'block',
@@ -62,7 +62,9 @@ const halationStateRaw = JSON.stringify([{
   key: 'plugin-b-5',
   parent: 'plugin-a-3',
   type: 'block',
-}])
+}]
+
+const halationStateRaw = JSON.stringify(rawState)
 
 const halationStateJSON = JSON.parse(halationStateRaw)
 const halationState = halationStateJSON.map(state => {
@@ -83,7 +85,7 @@ const halationState = halationStateJSON.map(state => {
   }
 })
 
-const renderBlock = props => {
+const renderBlock: RenderBlock = props => {
   const {
     blockProps: { type },
     children,

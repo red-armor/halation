@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { applyMiddleware, createStore, thunk, Provider } from '@xhs/relinx'
-import { Halation, OrderedMap } from 'halation'
+import { Halation, OrderedMap, OrderedMapProps, RenderBlock } from 'halation'
 
 import PluginARegister from './plugin-a/register'
 import PluginBRegister from './plugin-b/register'
 
-const halationState = [{
+const halationState: Array<OrderedMapProps> = [{
   name: 'plugin-a',
   key: 'plugin-a-1',
   parent: null,
@@ -35,7 +35,7 @@ const halationState = [{
   }]
 }]
 
-const renderBlock = props => {
+const renderBlock: RenderBlock = props => {
   const {
     blockProps: { type },
     children,

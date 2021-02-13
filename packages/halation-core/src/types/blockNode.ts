@@ -29,10 +29,16 @@ export type RenderBlockBaseComponentProps = {
   // | (new (props: any) => Component<any, any, any>)>'
 
   children: React.ReactElement,
+  extraProps: {
+    [key: string]: any
+  },
 }
 
 export type BlockComponentProps = ComponentPropsAPI & {
   block: RecordBase;
+  props: {
+    [key: string]: any
+  };
 };
 
 export type ForwardBlockComponentProps = BlockComponentProps & {
