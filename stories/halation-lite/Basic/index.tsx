@@ -20,6 +20,7 @@ export default () => {
 
   return (
     <HalationLite
+      enableLog
       name='super'
       halationState={halationState}
       registers={registers}

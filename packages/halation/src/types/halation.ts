@@ -37,7 +37,7 @@ export type HalationProps = HalationBaseProps<
 export type HalationContextValue = {
   store: null | Store;
   proxyEvent: null | IStateTracker;
-  enableLog?: boolean | undefined;
+  enableLog: boolean | undefined;
 };
 
 export type HalationClassProps = HalationProps & {

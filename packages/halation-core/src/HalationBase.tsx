@@ -27,7 +27,8 @@ abstract class HalationBaseClass<
   public moduleMap: ModuleMap;
   public loadManagerMap: LoadManagerMap;
   public refTracker: RefTracker;
-  public enableLog?: boolean;
+  // public enableLog?: boolean;
+  public nextEnableLog: boolean;
   public abstract contextValue: HalationContextValue;
   public rootRenderFn?: FC<any>;
   private clearLoggerContext: Function;
@@ -43,6 +44,7 @@ abstract class HalationBaseClass<
       rootRenderFn,
       contextValue,
     } = props;
+    const { enableLog: contextEnableLog } = contextValue
 
     this.renderBlock = renderBlock;
     this.name = name;
@@ -51,13 +53,14 @@ abstract class HalationBaseClass<
     this.rootRenderFn = rootRenderFn;
     this.registers = registers
 
+
     invariant(
-      !(isPresent(enableLog) && isPresent(contextValue.enableLog)),
+      !(isPresent(enableLog) && isPresent(contextEnableLog)),
       `Nested Halation should not be passing with 'enableLog' props`
     );
 
-    this.enableLog = (isPresent(enableLog) ? enableLog : false) as boolean;
-    this.clearLoggerContext = setLoggerContext({ enableLog: this.enableLog });
+    this.nextEnableLog = isPresent(enableLog) ? !!enableLog : (isPresent(contextEnableLog) ? !!contextEnableLog : false)
+    this.clearLoggerContext = setLoggerContext({ enableLog: this.nextEnableLog });
 
     this.refTracker = new RefTracker();
 

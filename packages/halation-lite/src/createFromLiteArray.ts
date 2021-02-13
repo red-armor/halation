@@ -7,7 +7,7 @@ const createFromLiteArray = (
 ): Array<RecordBase> => {
   if (Array.isArray(data)) {
     try {
-      return data.map(props => {
+      return data.map((props, index) => {
         const key = generateRandomKey();
         const { children } = props;
         let nextChildren = [] as Array<RecordBase>;
@@ -17,7 +17,7 @@ const createFromLiteArray = (
         const item = new RecordBase({
           ...props,
           children: nextChildren || [],
-          key,
+          key: `${props.name}_${index}_${key}`,
         });
         return item;
       });
