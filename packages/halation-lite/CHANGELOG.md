@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-lite@0.2.0...@xhs/halation-lite@0.3.0) (2021-02-13)
+
+
+### Features
+
+* fix enableLog ts issues ([b3b8a3f](https://code.devops.xiaohongshu.com/fe/halation/commits/b3b8a3f7fe41d09bebbb628a64730103d62fc248))
+
+
+
+
+
 # [0.2.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-lite@0.1.0...@xhs/halation-lite@0.2.0) (2021-02-13)
 
 
