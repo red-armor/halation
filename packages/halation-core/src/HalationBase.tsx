@@ -97,6 +97,7 @@ abstract class HalationBaseClass<
     return this.refTracker.getRef(key);
   }
 
+  // Due to lint issue, reconsider this function later on.
   public addBlockLoadManager({
     blockKey,
     moduleName,

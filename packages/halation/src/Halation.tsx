@@ -149,7 +149,7 @@ class HalationClass extends HalationBase<
       nodeMap: this.state.nodeMap,
       moduleMap: this.moduleMap,
       loadManagerMap: this.loadManagerMap,
-      addBlockLoadManager: this.addBlockLoadManager,
+      addBlockLoadManager: this.addBlockLoadManager as any,
       dispatchEvent: this.dispatchEvent,
       reportRef: this.reportRef,
       getRef: this.getRef,
