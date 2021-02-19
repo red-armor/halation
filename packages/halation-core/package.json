@@ -1,6 +1,6 @@
 {
   "name": "@xhs/halation-core",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Core API for React Renderer",
   "main": "index.ts",
   "scripts": {
