@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@0.6.0...@xhs/halation-core@0.6.1) (2021-02-19)
+
+
+### Bug Fixes
+
+* ts issues ([5ef0d0e](https://code.devops.xiaohongshu.com/fe/halation/commits/5ef0d0e32858a8e62b794535dd80a2f1df5faaa2))
+
+
+
+
+
 # [0.6.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@0.5.1...@xhs/halation-core@0.6.0) (2021-02-19)
 
 
