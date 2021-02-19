@@ -4,12 +4,14 @@
   "description": "Core API for React Renderer",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsdx build --tsconfig tsconfig.build.json"
   },
   "keywords": [
     "React",
     "Renderer"
   ],
+  "typings": "dist/index.d.ts",
+  "module": "dist/halation.esm.js",
   "author": "youchao liu",
   "license": "ISC"
 }
