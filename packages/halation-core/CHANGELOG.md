@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@0.6.1...@xhs/halation-core@0.7.0) (2021-02-22)
+
+
+### Features
+
+* add `slot` props support on HalationLiteState ([5c75bcb](https://code.devops.xiaohongshu.com/fe/halation/commits/5c75bcb9990225d224cb4796103b1c30cdbd4a09))
+
+
+
+
+
 ## [0.6.1](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@0.6.0...@xhs/halation-core@0.6.1) (2021-02-19)
 
 
