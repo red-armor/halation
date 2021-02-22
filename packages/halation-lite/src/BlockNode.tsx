@@ -7,10 +7,10 @@ import {
 } from 'react';
 import {
   BlockWrapper,
-  RecordBase,
   BlockNodePreProps,
   RenderBlockBaseComponentProps,
 } from '@xhs/halation-core';
+import HalationLiteRecord from './data/HalationLiteRecord';
 
 const BlockNode: FC<BlockNodePreProps<
   RenderBlockBaseComponentProps
@@ -19,7 +19,7 @@ const BlockNode: FC<BlockNodePreProps<
   const recordKey = block.getKey();
   const moduleName = block.getName();
   const isMountRef = useRef(false);
-  const childrenData = block.getChildren() as Array<RecordBase>;
+  const childrenData = block.getChildren() as Array<HalationLiteRecord>;
 
   if (!isMountRef.current) {
     addBlockLoadManager({
@@ -29,23 +29,41 @@ const BlockNode: FC<BlockNodePreProps<
     isMountRef.current = true;
   }
 
-  const children: Array<FunctionComponentElement<
-    BlockNodePreProps<RenderBlockBaseComponentProps>
-  > | null> = useMemo(() => {
-    return childrenData
-      .map((child, index) => {
-        return createElement(
-          BlockNode,
-          {
-            block: child,
-            key: `${index}`,
-            ...rest,
-            addBlockLoadManager,
-          },
-          null
-        );
-      })
-      .filter(v => v);
+  const values = useMemo(() => {
+    const slotMap = {} as {
+      [key: string]: Array<FunctionComponentElement<
+        BlockNodePreProps<RenderBlockBaseComponentProps>
+      > | null>;
+    };
+    const children = [] as Array<FunctionComponentElement<
+      BlockNodePreProps<RenderBlockBaseComponentProps>
+    > | null>;
+
+    childrenData.forEach((child, index) => {
+      const slot = child.getSlot();
+      const component = createElement(
+        BlockNode,
+        {
+          block: child,
+          key: `${index}`,
+          ...rest,
+          addBlockLoadManager,
+        },
+        null
+      );
+
+      if (slot) {
+        if (!slotMap[slot]) slotMap[slot] = [];
+        slotMap[slot].push(component);
+      } else {
+        children.push(component);
+      }
+    });
+
+    return {
+      children,
+      slotMap,
+    };
   }, [childrenData]); // eslint-disable-line
 
   return createElement(
@@ -53,8 +71,9 @@ const BlockNode: FC<BlockNodePreProps<
     {
       ...rest,
       block,
+      ...values.slotMap,
     },
-    children
+    values.children
   );
 };
 
