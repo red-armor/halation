@@ -2,7 +2,7 @@
   "name": "@xhs/halation-core",
   "version": "0.6.1",
   "description": "Core API for React Renderer",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsdx build --tsconfig tsconfig.build.json"
   },
