@@ -1,4 +1,4 @@
-export type ModuleGetter = () => Promise<Function>
+export type ModuleGetter = () => Promise<Function> | ESModule
 
 export interface ModuleBaseProps {
   name: string;

@@ -44,6 +44,19 @@ class Loader {
       return this.resolvedModules as Function;
     }
 
+    // if a require Module
+    timeStart(`load esmodule ${this.name} ${this.type}`)
+    const module = this.getModule.call(this)
+
+    if (module && (module as ESModule).__esModule) {
+      let loadedModule = this.resolveModule(module as RawModule);
+      this.resolvedModules = loadedModule
+      this.resolvers = []
+      this.status = ModuleStatus.Loaded
+      timeEnd(`load esmodule ${this.name} ${this.type}`)
+      return this.resolvedModules
+    }
+
     return new Promise(resolve => {
       switch (currentStatus) {
         case ModuleStatus.Idle:
@@ -62,7 +75,7 @@ class Loader {
       if (this.getModule) {
         // __webpack_require__ will not return a Promise, so it need to wrapped
         // with Promise.resolve.
-        Promise.resolve(this.getModule.call(this)).then(
+        Promise.resolve(this.getModule.call(this) as Promise<Function>).then(
           rawModule => {
             const module = this.resolveModule(rawModule as RawModule);
             const resolvers = this.resolvers

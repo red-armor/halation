@@ -141,8 +141,10 @@ class LoadManager extends LoadManagerBase {
       proxyState,
       state => {
         const currentModelState = state[this.getKey()];
+        // falsy should be a boolean value or Promise value.
         const falsy = resolver(currentModelState);
-        value = falsy;
+        // if falsy is null, then it should be force covert to `false`
+        value = falsy ? falsy : !!falsy;
         return falsy;
       },
       () => {
