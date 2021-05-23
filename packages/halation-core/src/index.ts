@@ -9,5 +9,6 @@ export { default as Loader } from './Loader'
 
 export * from './types';
 export * from './commons/logger';
+export * from './commons/Timer'
 
 export { utils }

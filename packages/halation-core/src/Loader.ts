@@ -1,5 +1,6 @@
 import { ModuleStatus, RawModule, ESModule, ModuleGetter, LogActivityType } from './types'
 import { logActivity } from './commons/logger'
+import { timeStart, timeEnd } from './commons/Timer'
 
 class Loader {
   public name: string
@@ -47,6 +48,7 @@ class Loader {
       switch (currentStatus) {
         case ModuleStatus.Idle:
           this.resolvers.push(resolve);
+          timeStart(`load module ${this.name} ${this.type}`)
           logActivity('Loader', {
             message: `start load module ${this.name} ${this.type}`,
           });
@@ -69,6 +71,7 @@ class Loader {
             logActivity('Loader', {
               message: `finish load module ${this.name} ${this.type}`,
             });
+            timeEnd(`load module ${this.name} ${this.type}`)
             this.resolvers = []
             this.status = ModuleStatus.Loaded
           },

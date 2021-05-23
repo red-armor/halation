@@ -48,6 +48,7 @@ export const logActivity = (
   if (process && process.env.NODE_ENV !== 'production') {
     const loggerContextLength = loggerContextStack.length;
     const current = loggerContextStack[loggerContextLength - 1];
+
     // warning or error should always be logged
     if (
       type === LogActivityType.ERROR ||

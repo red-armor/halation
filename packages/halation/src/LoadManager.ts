@@ -176,6 +176,7 @@ class LoadManager extends LoadManagerBase {
     if (this._lockPromiseLoad) return false;
 
     let modelInstance = null;
+
     if (isPromise(modelCreator)) {
       this._lockPromiseLoad = true;
 

@@ -7,7 +7,7 @@ import {
 } from 'react';
 import invariant from 'invariant';
 import { BlockNodePreProps, SlotComponents } from './types';
-import { logActivity, BlockWrapper } from '@xhs/halation-core';
+import { logActivity, BlockWrapper, timeElapse } from '@xhs/halation-core';
 
 const BlockNode: FC<BlockNodePreProps> = props => {
   const {
@@ -49,6 +49,8 @@ const BlockNode: FC<BlockNodePreProps> = props => {
     message: 'render block node',
     value: block.getKey(),
   });
+
+  timeElapse(`render ${block.getKey()}`);
 
   const slotKeys = Object.keys(slot);
   const slotComponents = useMemo(
