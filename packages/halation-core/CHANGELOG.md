@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://code.devops.xiaohongshu.com/fe/infra/halation/compare/@xhs/halation-core@0.7.0...@xhs/halation-core@0.8.0) (2021-05-23)
+
+
+### Features
+
+* close [#35](https://code.devops.xiaohongshu.com/fe/infra/halation/issues/35) ([3ac1d92](https://code.devops.xiaohongshu.com/fe/infra/halation/commits/3ac1d9223f69f9c1fbcb0e001210df7d734d8af9))
+
+
+
+
+
 # [0.7.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@0.6.1...@xhs/halation-core@0.7.0) (2021-02-22)
 
 
