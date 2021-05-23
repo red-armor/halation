@@ -12,7 +12,7 @@
     "Renderer"
   ],
   "typings": "dist/index.d.ts",
-  "module": "dist/halation.esm.js",
+  "module": "dist/halation-core.esm.js",
   "author": "youchao liu",
   "license": "ISC"
 }

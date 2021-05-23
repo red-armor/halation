@@ -1,6 +1,6 @@
 import { OrderedMapProps, Strategy, OrderedMapSlot } from '../types';
 import invariant from 'invariant';
-import { RecordBase } from '@xhs/halation-core';
+import { RecordBase, RenderBlockBlockProps } from '@xhs/halation-core';
 
 class Record extends RecordBase {
   private prevSibling: string | null;
@@ -12,6 +12,7 @@ class Record extends RecordBase {
   readonly _map: Map<string, Record>;
   private parent?: string | null;
   private _modelKey: string | undefined;
+  private _recordBlockProps: RenderBlockBlockProps;
 
   constructor(props: OrderedMapProps, _map: Map<string, Record>) {
     super(props);
@@ -27,6 +28,13 @@ class Record extends RecordBase {
     this.strategies = strategies || [];
     this._map = _map;
     this.parent = parent;
+
+    this._recordBlockProps = {
+      key: this.getKey(),
+      name: this.getName(),
+      props: this.getProps(),
+      type: this.type,
+    };
   }
 
   getChildKeys(): Array<string> {
@@ -66,12 +74,7 @@ class Record extends RecordBase {
   }
 
   getRenderProps() {
-    return {
-      key: this.getKey(),
-      name: this.getName(),
-      props: this.getProps(),
-      type: this.type,
-    };
+    return this._recordBlockProps;
   }
 
   insertChildren(options: {

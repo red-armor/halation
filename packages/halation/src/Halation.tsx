@@ -25,7 +25,6 @@ import {
 import {
   HalationBase,
   logActivity,
-  LogActivityType,
   utils,
   initializeTimer,
 } from '@xhs/halation-core';
@@ -172,10 +171,10 @@ class HalationClass extends HalationBase<
     strategies: Array<Strategy>;
   }): boolean {
     if (this.loadManagerMap.get(blockKey)) {
-      logActivity('Halation', {
-        message: `Duplicated module key ${blockKey} is registered in halation application`,
-        type: LogActivityType.WARNING,
-      });
+      // logActivity('Halation', {
+      //   message: `Duplicated module key ${blockKey} is registered in halation application`,
+      //   type: LogActivityType.WARNING,
+      // });
       return false;
     }
 
