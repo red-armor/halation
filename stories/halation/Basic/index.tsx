@@ -121,11 +121,11 @@ export default () => {
       <ObservedHelper />
       <Halation
         name='super'
+        perf
         halationState={state}
         registers={registers}
         renderBlock={renderBlock}
         store={store}
-        enableLog
         events={{
           flags: {},
         }}

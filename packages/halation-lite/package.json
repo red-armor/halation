@@ -11,6 +11,7 @@
     "node": ">=10"
   },
   "scripts": {
+    "watch": "tsdx watch",
     "lint": "tsdx lint --fix",
     "build": "tsdx build --tsconfig tsconfig.build.json"
   },

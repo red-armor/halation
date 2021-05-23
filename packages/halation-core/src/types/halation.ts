@@ -25,6 +25,8 @@ export interface HalationBaseProps<
 
   /** Display logger message or not. Default value is false */
   enableLog?: boolean;
+
+  perf?: boolean;
 }
 
 export type HalationContextValue = {

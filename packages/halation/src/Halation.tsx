@@ -27,6 +27,7 @@ import {
   logActivity,
   LogActivityType,
   utils,
+  initializeTimer,
 } from '@xhs/halation-core';
 import BlockNode from './BlockNode';
 import LoadManager from './LoadManager';
@@ -72,6 +73,8 @@ class HalationClass extends HalationBase<
       !(events && contextValue.proxyEvent),
       `Nested Halation should not be passing with 'events' props`
     );
+
+    initializeTimer(props.perf || false);
 
     this.store = contextValue.store || store;
     this.proxyEvent = contextValue.proxyEvent || produce(events || {});

@@ -8,6 +8,7 @@
     "bootstrap": "lerna bootstrap",
     "version": "lerna version",
     "build": "lerna run build",
+    "watch": "lerna run watch",
     "test": "lerna run test --passWithNoTests",
     "lint": "lerna run lint",
     "size": "size-limit",

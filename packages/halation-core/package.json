@@ -4,6 +4,7 @@
   "description": "Core API for React Renderer",
   "main": "dist/index.js",
   "scripts": {
+    "watch": "tsdx watch",
     "build": "tsdx build --tsconfig tsconfig.build.json"
   },
   "keywords": [
