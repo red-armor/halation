@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.7.0](https://code.devops.xiaohongshu.com/fe/infra/halation/compare/@xhs/halation@1.6.0...@xhs/halation@1.7.0) (2021-05-23)
+
+
+### Features
+
+* resolve module directly if not a promise ([6947444](https://code.devops.xiaohongshu.com/fe/infra/halation/commits/6947444e85a3bed91823cf0e01f068060eac13f4))
+
+
+
+
+
 # [1.6.0](https://code.devops.xiaohongshu.com/fe/infra/halation/compare/@xhs/halation@1.5.5...@xhs/halation@1.6.0) (2021-05-23)
 
 
