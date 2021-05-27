@@ -5,7 +5,13 @@ _Halation is integrated with caching, lazy load component features and aims to b
 ## How to start
 
 ```bash
+# install deps
 $ yarn bootstrap
+
+# build halation-core dist
+$ yarn watch
+
+# start run storybook
 $ yarn storybook
 ```
 
