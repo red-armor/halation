@@ -7,7 +7,7 @@
   "scripts": {
     "bootstrap": "yarn && lerna bootstrap",
     "version": "lerna version",
-    "clean": "rimraf **/dist",
+    "clean": "rimraf dist",
     "build": "npm run clean && lerna run build",
     "watch": "lerna run watch",
     "test": "lerna run test --passWithNoTests",
