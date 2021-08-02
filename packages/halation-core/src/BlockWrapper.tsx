@@ -160,6 +160,8 @@ const BlockWrapper = <RBP extends RenderBlockBaseComponentProps, P extends Block
   isComponentLoadRef.current = true;
 
   if (renderBlock) {
+    // to make return component with useful displayName.
+    renderBlock.displayName = blockKey
     return createElement(
       renderBlock,
       {
