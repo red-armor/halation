@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://code.devops.xiaohongshu.com/fe/infra/halation/compare/@xhs/halation-core@0.9.0...@xhs/halation-core@0.10.0) (2021-08-02)
+
+
+### Features
+
+* component with renderBlock should be set with displayName ([e4eed37](https://code.devops.xiaohongshu.com/fe/infra/halation/commits/e4eed37ca0ccd2714ece979395fe33e8626777cf))
+* update doc ([65df883](https://code.devops.xiaohongshu.com/fe/infra/halation/commits/65df8831288ffddcf80ee6a8daf2dd4ef7a38d01))
+
+
+
+
+
 # [0.9.0](https://code.devops.xiaohongshu.com/fe/infra/halation/compare/@xhs/halation-core@0.8.0...@xhs/halation-core@0.9.0) (2021-05-23)
 
 
