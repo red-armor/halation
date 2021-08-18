@@ -105,16 +105,16 @@ abstract class HalationBaseClass<
     blockKey: string;
     moduleName: string;
   }): boolean {
-    if (this.loadManagerMap.get(blockKey)) {
+    if (this.loadManagerMap.get(moduleName)) {
       logActivity('Halation', {
-        message: `Duplicated module key ${blockKey} is registered in halation application`,
+        message: `Duplicated module key ${moduleName} is registered in halation application`,
         type: LogActivityType.WARNING,
       });
       return false;
     }
 
     this.loadManagerMap.set(
-      blockKey,
+      moduleName,
       new LoadManager({
         blockKey,
         moduleName,

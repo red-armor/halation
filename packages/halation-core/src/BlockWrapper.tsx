@@ -43,7 +43,7 @@ const BlockWrapper = <RBP extends RenderBlockBaseComponentProps, P extends Block
   const isLoadingRef = useRef(false);
   const isMountedRef = useRef(false);
   const isComponentLoadRef = useRef(false);
-  const loadManager = loadManagerMap.get(blockKey)!;
+  const loadManager = loadManagerMap.get(moduleName)!;
 
   // Why isForceUpdateCalledRef needs ?
   // If strategy has a runtime type one. `forceUpdate` will be trigger twice.
