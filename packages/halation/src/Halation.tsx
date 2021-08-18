@@ -170,7 +170,7 @@ class HalationClass extends HalationBase<
     modelKey?: string;
     strategies: Array<Strategy>;
   }): boolean {
-    if (this.loadManagerMap.get(blockKey)) {
+    if (this.loadManagerMap.get(moduleName)) {
       // logActivity('Halation', {
       //   message: `Duplicated module key ${blockKey} is registered in halation application`,
       //   type: LogActivityType.WARNING,
@@ -179,7 +179,7 @@ class HalationClass extends HalationBase<
     }
 
     this.loadManagerMap.set(
-      blockKey,
+      moduleName,
       new LoadManager({
         store: this.store,
         blockKey,
