@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@0.10.0...@xhs/halation-core@0.11.0) (2021-08-18)
+
+
+### Features
+
+* moduleName区分代码加载，moduleName+key作为blockKey ([2ac3c5d](https://code.devops.xiaohongshu.com/fe/halation/commits/2ac3c5da5ba5686e902b7e642c24646958b01ea3))
+
+
+
+
+
 # [0.10.0](https://code.devops.xiaohongshu.com/fe/infra/halation/compare/@xhs/halation-core@0.9.0...@xhs/halation-core@0.10.0) (2021-08-02)
 
 
