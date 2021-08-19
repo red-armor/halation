@@ -225,7 +225,7 @@ class HalationClass extends HalationBase<
           BlockNode,
           {
             block,
-            key: block.getKey(),
+            key: `${block.getKey()}_${block.getName()}`,
             modelKey: block.getModelKey(),
             renderBlock: this.renderBlock,
             ...this.getPropsAPI(),
