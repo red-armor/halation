@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.10.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.9.0...@xhs/halation@1.10.0) (2021-08-19)
+
+
+### Features
+
+* update create children key ([ee00de9](https://code.devops.xiaohongshu.com/fe/halation/commits/ee00de934a9fbde6e2a5e67c5ce26cad4a0ccc8f))
+
+
+
+
+
 # [1.9.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.8.0...@xhs/halation@1.9.0) (2021-08-18)
 
 
