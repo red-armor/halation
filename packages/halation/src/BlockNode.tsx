@@ -1,7 +1,14 @@
 import { FC, useMemo, createElement, FunctionComponentElement } from 'react';
 import invariant from 'invariant';
 import { BlockNodePreProps, SlotComponents } from './types';
-import { logActivity, BlockWrapper, timeElapse } from '@xhs/halation-core';
+import {
+  logActivity,
+  BlockWrapper,
+  timeElapse,
+  utils,
+} from '@xhs/halation-core';
+
+const { generateLoadManagerKey } = utils;
 
 const BlockNode: FC<BlockNodePreProps> = props => {
   const {
@@ -19,17 +26,18 @@ const BlockNode: FC<BlockNodePreProps> = props => {
   const slot = block.getSlot();
   const moduleMap = props.moduleMap;
   const module = moduleMap.get(moduleName)!;
+  const loadManagerKey = generateLoadManagerKey(moduleName, blockKey);
 
   invariant(
     module,
-    `module ${moduleName} is required to register first. Please check whether ` +
-      `module ${moduleName} is defined in 'registers' props`
+    `module ${loadManagerKey} is required to register first. Please check whether ` +
+      `module ${loadManagerKey} is defined in 'registers' props`
   );
 
   // block strategy comes first, then from module...
   const strategies = block.getStrategies() || module.getStrategies() || [];
 
-  if (!loadManagerMap.get(moduleName)) {
+  if (!loadManagerMap.get(loadManagerKey)) {
     addBlockLoadManager({
       blockKey,
       modelKey,

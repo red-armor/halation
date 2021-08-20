@@ -34,7 +34,7 @@ import OrderedMap from './data/OrderedMap';
 import context from './context';
 import Module from './Module';
 
-const { isPlainObject, isString } = utils;
+const { isPlainObject, isString, generateLoadManagerKey } = utils;
 class HalationClass extends HalationBase<
   HalationRegister,
   OrderedMap,
@@ -170,7 +170,9 @@ class HalationClass extends HalationBase<
     modelKey?: string;
     strategies: Array<Strategy>;
   }): boolean {
-    if (this.loadManagerMap.get(moduleName)) {
+    const loadManagerKey = generateLoadManagerKey(moduleName, blockKey);
+
+    if (this.loadManagerMap.get(loadManagerKey)) {
       // logActivity('Halation', {
       //   message: `Duplicated module key ${blockKey} is registered in halation application`,
       //   type: LogActivityType.WARNING,
@@ -179,7 +181,7 @@ class HalationClass extends HalationBase<
     }
 
     this.loadManagerMap.set(
-      moduleName,
+      loadManagerKey,
       new LoadManager({
         store: this.store,
         blockKey,

@@ -18,3 +18,5 @@ export const reflect = (p: Promise<any>) =>
 
 export const settledPromise = (ps: Array<Promise<any>>) =>
   Promise.all(ps.map(p => reflect(p)));
+
+export const generateLoadManagerKey = (moduleName: string, blockKey: string) => `${moduleName}_${blockKey}`

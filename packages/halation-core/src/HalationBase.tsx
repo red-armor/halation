@@ -12,7 +12,7 @@ import {
 import { logActivity, setLoggerContext } from './commons/logger'
 import LoadManager from './LoadManagerBase';
 import RefTracker from './RefTracker';
-import { isPresent } from './commons/utils';
+import { generateLoadManagerKey, isPresent } from './commons/utils';
 
 abstract class HalationBaseClass<
   RegisterFunction,
@@ -105,7 +105,9 @@ abstract class HalationBaseClass<
     blockKey: string;
     moduleName: string;
   }): boolean {
-    if (this.loadManagerMap.get(moduleName)) {
+    const loadManagerKey = generateLoadManagerKey(moduleName, blockKey)
+
+    if (this.loadManagerMap.get(loadManagerKey)) {
       logActivity('Halation', {
         message: `Duplicated module key ${moduleName} is registered in halation application`,
         type: LogActivityType.WARNING,
@@ -114,7 +116,7 @@ abstract class HalationBaseClass<
     }
 
     this.loadManagerMap.set(
-      moduleName,
+      loadManagerKey,
       new LoadManager({
         blockKey,
         moduleName,
