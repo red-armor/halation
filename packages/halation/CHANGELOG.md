@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.11.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.10.0...@xhs/halation@1.11.0) (2021-08-20)
+
+
+### Features
+
+* should use `moduleName` and `blockKey` as loadManagerKey ([dc25c73](https://code.devops.xiaohongshu.com/fe/halation/commits/dc25c73a3b44bbe7783f633ee4efce9fa8734cae))
+
+
+
+
+
 # [1.10.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.9.0...@xhs/halation@1.10.0) (2021-08-19)
 
 
