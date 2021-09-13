@@ -1,8 +1,13 @@
-import { FC, useMemo, createElement, FunctionComponentElement } from 'react';
-import invariant from 'invariant';
+import React, {
+  FC,
+  useMemo,
+  createElement,
+  FunctionComponentElement,
+} from 'react';
 import { BlockNodePreProps, SlotComponents } from './types';
 import {
   logActivity,
+  LogActivityType,
   BlockWrapper,
   timeElapse,
   utils,
@@ -10,7 +15,7 @@ import {
 
 const { generateLoadManagerKey } = utils;
 
-const BlockNode: FC<BlockNodePreProps> = props => {
+const BlockNodeWithoutNull: FC<BlockNodePreProps> = props => {
   const {
     block,
     nodeMap,
@@ -28,14 +33,8 @@ const BlockNode: FC<BlockNodePreProps> = props => {
   const module = moduleMap.get(moduleName)!;
   const loadManagerKey = generateLoadManagerKey(moduleName, blockKey);
 
-  invariant(
-    module,
-    `module ${loadManagerKey} is required to register first. Please check whether ` +
-      `module ${loadManagerKey} is defined in 'registers' props`
-  );
-
   // block strategy comes first, then from module...
-  const strategies = block.getStrategies() || module.getStrategies() || [];
+  const strategies = block.getStrategies() || module?.getStrategies() || [];
 
   if (!loadManagerMap.get(loadManagerKey)) {
     addBlockLoadManager({
@@ -125,6 +124,26 @@ const BlockNode: FC<BlockNodePreProps> = props => {
     },
     children
   );
+};
+
+const BlockNode: FC<BlockNodePreProps> = props => {
+  const { block } = props;
+  const moduleName = block.getName();
+  const moduleMap = props.moduleMap;
+  const module = moduleMap.get(moduleName)!;
+
+  if (!module) {
+    logActivity('BlockNode', {
+      message:
+        `module ${moduleName} is required to register first. Please check whether ` +
+        `module ${moduleName} is defined in 'registers' props`,
+      type: LogActivityType.ERROR,
+    });
+
+    return null;
+  }
+
+  return <BlockNodeWithoutNull {...props} />;
 };
 
 export default BlockNode;

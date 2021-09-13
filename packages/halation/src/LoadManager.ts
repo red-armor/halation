@@ -13,7 +13,6 @@ import {
   LogActivityType,
   utils,
 } from '@xhs/halation-core';
-import invariant from 'invariant';
 import { when, IStateTracker } from 'state-tracker';
 
 const { isFunction, isPromise } = utils;
@@ -162,10 +161,13 @@ class LoadManager extends LoadManagerBase {
   getModelCreator(strict: boolean = false) {
     const modelCreator = this._moduleMap.get(this._moduleName)?.loadModel();
 
-    invariant(
-      strict ? modelCreator : true,
-      `${this._moduleName} model is required to defined if attempt to use runtime load strategy`
-    );
+    if (strict && !modelCreator) {
+      logActivity('LoadManager', {
+        message: `${this._moduleName} model is required to defined if attempt to use runtime load strategy`,
+        type: LogActivityType.ERROR,
+      });
+    }
+
     return modelCreator;
   }
 
