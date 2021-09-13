@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.12.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.11.0...@xhs/halation@1.12.0) (2021-09-13)
+
+
+### Features
+
+* use logActivity to report ([2c0ee10](https://code.devops.xiaohongshu.com/fe/halation/commits/2c0ee100dfa8e034fd0a3948f2c41389507ed564))
+
+
+
+
+
 # [1.11.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@1.10.0...@xhs/halation@1.11.0) (2021-08-20)
 
 
