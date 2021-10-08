@@ -3,10 +3,10 @@ import React, {
   useRef,
   useMemo,
   useState,
-  forwardRef,
   useCallback,
   createElement,
   useEffect,
+  ForwardRefRenderFunction,
 } from 'react';
 import {
   BlockWrapperProps,
@@ -147,13 +147,18 @@ const BlockWrapper = <RBP extends RenderBlockBaseComponentProps, P extends Block
 
   // should memo, or will be a new on update..
   const RefForwardingWrapper = useMemo(
-    () =>
-      forwardRef<any, BlockComponentProps>((props, ref) => {
+    () => {
+      const forwardRef: ForwardRefRenderFunction<any, BlockComponentProps> = (props, ref) => {
         return createElement(wrapper.Component as FC<ForwardBlockComponentProps> , {
           ...props,
           forwardRef: ref,
-        });
-      }),
+        })
+      }
+
+      forwardRef.displayName = blockKey
+
+      return React.forwardRef<any, BlockComponentProps>(forwardRef);
+    },
     [wrapper.Component]
   );
 
