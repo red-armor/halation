@@ -199,26 +199,34 @@ class HalationClass extends HalationBase<
 
   dispatchEvent(event: string | EventValue) {
     if (isString(event)) {
-      StateTrackerUtil.perform(this.proxyEvent, {
-        ...this.proxyEvent,
-        [event as string]: true
-      }, {
-        afterCallback: () => this.proxyEvent[event as string] = true
-      })
+      StateTrackerUtil.perform(
+        this.proxyEvent,
+        {
+          ...this.proxyEvent,
+          [event as string]: true,
+        },
+        {
+          afterCallback: () => (this.proxyEvent[event as string] = true),
+        }
+      );
     }
 
     if (isPlainObject(event)) {
-      StateTrackerUtil.perform(this.proxyEvent, {
-        ...this.proxyEvent,
-        ...(event as EventValue),
-      }, {
-        afterCallback: () => {
-          for (const key in (event as EventValue)) {
-            const value = (event as EventValue)[key]
-            this.proxyEvent[key] = value
-          }
+      StateTrackerUtil.perform(
+        this.proxyEvent,
+        {
+          ...this.proxyEvent,
+          ...(event as EventValue),
+        },
+        {
+          afterCallback: () => {
+            for (const key in event as EventValue) {
+              const value = (event as EventValue)[key];
+              this.proxyEvent[key] = value;
+            }
+          },
         }
-      })
+      );
     }
   }
 
