@@ -5,7 +5,7 @@ import React, {
 } from 'react';
 import invariant from 'invariant';
 import { SyncHook } from 'tapable';
-import produce, { IStateTracker, StateTrackerUtil } from 'state-tracker';
+import { produce, IStateTracker, StateTrackerUtil } from 'state-tracker';
 import {
   Hooks,
   Store,
@@ -199,20 +199,26 @@ class HalationClass extends HalationBase<
 
   dispatchEvent(event: string | EventValue) {
     if (isString(event)) {
-      StateTrackerUtil.relink(this.proxyEvent, [event as string], true);
+      StateTrackerUtil.perform(this.proxyEvent, {
+        ...this.proxyEvent,
+        [event as string]: true
+      }, {
+        afterCallback: () => this.proxyEvent[event as string] = true
+      })
     }
 
     if (isPlainObject(event)) {
-      const keys = Object.keys(event);
-      const len = keys.length;
-      for (let index = 0; index < len; index++) {
-        const key = keys[index];
-        StateTrackerUtil.relink(
-          this.proxyEvent,
-          [key],
-          (event as EventValue)[key]
-        );
-      }
+      StateTrackerUtil.perform(this.proxyEvent, {
+        ...this.proxyEvent,
+        ...(event as EventValue),
+      }, {
+        afterCallback: () => {
+          for (const key in (event as EventValue)) {
+            const value = (event as EventValue)[key]
+            this.proxyEvent[key] = value
+          }
+        }
+      })
     }
   }
 

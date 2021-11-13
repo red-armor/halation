@@ -133,7 +133,7 @@ class LoadManager extends LoadManagerBase {
       this._isModelInjected = true;
     }
 
-    const proxyState = (this._store as any)._application.proxyState;
+    const proxyState = (this._store as any).getState()
     let value = false;
 
     when(
