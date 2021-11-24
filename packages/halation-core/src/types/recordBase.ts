@@ -1,25 +1,25 @@
-import RecordBase from '../data/RecordBase'
+import RecordBase from '../data/RecordBase';
 
 export type RecordBaseProps = {
   name: string;
   key: string;
   props?: object;
   extraProps?: object;
-  children?: Array<RecordBase>
-}
+  children?: Array<RecordBase>;
+};
 
 export type CreateFromLiteArrayProps = {
   name: string;
   key: string;
   props?: object;
   extraProps?: object;
-  children?: Array<CreateFromLiteArrayProps>
-}
+  children?: Array<CreateFromLiteArrayProps>;
+};
 
 export type CreateFromArrayProps = {
   name: string;
   key: string;
   props?: object;
   extraProps?: object;
-  children?: Array<CreateFromArrayProps>
-}
+  children?: Array<CreateFromArrayProps>;
+};

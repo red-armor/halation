@@ -16,17 +16,17 @@ import {
   RenderBlockBaseComponentProps,
 } from './types';
 import { LogActivityType } from './types';
-import { logActivity } from './commons/logger'
+import { logActivity } from './commons/logger';
 import { isPromise, reflect, generateLoadManagerKey } from './commons/utils';
 
-const BlockWrapper = <RBP extends RenderBlockBaseComponentProps, P extends BlockWrapperProps<RBP>>(props: P) => {
-  const {
-    moduleMap,
-    loadManagerMap,
-    renderBlock,
-    reportRef,
-    ...restProps
-  } = props;
+const BlockWrapper = <
+  RBP extends RenderBlockBaseComponentProps,
+  P extends BlockWrapperProps<RBP>
+>(
+  props: P
+) => {
+  const { moduleMap, loadManagerMap, renderBlock, reportRef, ...restProps } =
+    props;
   const { block } = props;
 
   const [wrapper, setWrapper] = useState<BlockWrapperState>({});
@@ -43,7 +43,7 @@ const BlockWrapper = <RBP extends RenderBlockBaseComponentProps, P extends Block
   const isLoadingRef = useRef(false);
   const isMountedRef = useRef(false);
   const isComponentLoadRef = useRef(false);
-  const loadManagerKey = generateLoadManagerKey(moduleName, blockKey)
+  const loadManagerKey = generateLoadManagerKey(moduleName, blockKey);
   const loadManager = loadManagerMap.get(loadManagerKey)!;
 
   // Why isForceUpdateCalledRef needs ?
@@ -75,7 +75,7 @@ const BlockWrapper = <RBP extends RenderBlockBaseComponentProps, P extends Block
     const shouldLoadModule = loadManager?.shouldModuleLoad();
 
     if (isPromise(shouldLoadModule)) {
-      (shouldLoadModule as Promise<boolean>).then(falsy => {
+      (shouldLoadModule as Promise<boolean>).then((falsy) => {
         if (falsy) loadAndForceUpdate();
       });
     } else if (shouldLoadModule) {
@@ -83,11 +83,14 @@ const BlockWrapper = <RBP extends RenderBlockBaseComponentProps, P extends Block
     }
   }, []); // eslint-disable-line
 
-  useEffect(() => () => {
-    isMountedRef.current = false
-  }, [])
+  useEffect(
+    () => () => {
+      isMountedRef.current = false;
+    },
+    []
+  );
 
-  const forceUpdate = useCallback(componentResult => {
+  const forceUpdate = useCallback((componentResult) => {
     const state: BlockWrapperState = {};
 
     if (componentResult.success) {
@@ -95,7 +98,7 @@ const BlockWrapper = <RBP extends RenderBlockBaseComponentProps, P extends Block
     }
 
     if (isMountedRef.current) setWrapper(state);
-  }, []) // eslint-disable-line
+  }, []); // eslint-disable-line
 
   const loadAndForceUpdate = useCallback(() => {
     if (isForceUpdateCalledRef.current) return;
@@ -115,7 +118,7 @@ const BlockWrapper = <RBP extends RenderBlockBaseComponentProps, P extends Block
 
       if (isPromise(component)) {
         const loadComponentTask = Promise.resolve(component);
-        reflect(loadComponentTask).then(result => {
+        reflect(loadComponentTask).then((result) => {
           if (!result.success) throw result.value;
           forceUpdate(result);
         });
@@ -146,28 +149,31 @@ const BlockWrapper = <RBP extends RenderBlockBaseComponentProps, P extends Block
   }
 
   // should memo, or will be a new on update..
-  const RefForwardingWrapper = useMemo(
-    () => {
-      const forwardRef: ForwardRefRenderFunction<any, BlockComponentProps> = (props, ref) => {
-        return createElement(wrapper.Component as FC<ForwardBlockComponentProps> , {
+  const RefForwardingWrapper = useMemo(() => {
+    const forwardRef: ForwardRefRenderFunction<any, BlockComponentProps> = (
+      props,
+      ref
+    ) => {
+      return createElement(
+        wrapper.Component as FC<ForwardBlockComponentProps>,
+        {
           ...props,
           forwardRef: ref,
-        })
-      }
+        }
+      );
+    };
 
-      forwardRef.displayName = blockKey
+    forwardRef.displayName = blockKey;
 
-      return React.forwardRef<any, BlockComponentProps>(forwardRef);
-    },
-    [wrapper.Component]
-  );
+    return React.forwardRef<any, BlockComponentProps>(forwardRef);
+  }, [wrapper.Component]);
 
   if (!wrapper.Component) return null;
   isComponentLoadRef.current = true;
 
   if (renderBlock) {
     // to make return component with useful displayName.
-    renderBlock.displayName = blockKey
+    renderBlock.displayName = blockKey;
     return createElement(
       renderBlock,
       {
@@ -176,11 +182,21 @@ const BlockWrapper = <RBP extends RenderBlockBaseComponentProps, P extends Block
         extraProps: block.getExtraProps(),
         blockProps: block.getRenderProps(),
       } as any as RBP,
-      <RefForwardingWrapper {...restProps} props={block.getProps()} ref={setBlockRef} />
+      <RefForwardingWrapper
+        {...restProps}
+        props={block.getProps()}
+        ref={setBlockRef}
+      />
     );
   }
 
-  return <RefForwardingWrapper {...restProps} props={block.getProps()} ref={setBlockRef} />;
+  return (
+    <RefForwardingWrapper
+      {...restProps}
+      props={block.getProps()}
+      ref={setBlockRef}
+    />
+  );
 };
 
-export default BlockWrapper
+export default BlockWrapper;

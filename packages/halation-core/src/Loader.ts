@@ -1,11 +1,17 @@
-import { ModuleStatus, RawModule, ESModule, ModuleGetter, LogActivityType } from './types'
-import { logActivity } from './commons/logger'
-import { timeStart, timeEnd } from './commons/Timer'
+import {
+  ModuleStatus,
+  RawModule,
+  ESModule,
+  ModuleGetter,
+  LogActivityType,
+} from './types';
+import { logActivity } from './commons/logger';
+import { timeStart, timeEnd } from './commons/Timer';
 
 class Loader {
-  public name: string
-  public type: string
-  public getModule: ModuleGetter
+  public name: string;
+  public type: string;
+  public getModule: ModuleGetter;
   private status: ModuleStatus;
   private resolvers: Array<Function>;
   private resolvedModules: Function | null;
@@ -13,19 +19,19 @@ class Loader {
   constructor({
     type,
     name,
-    getModule
+    getModule,
   }: {
-    name: string
-    type: string
-    getModule: ModuleGetter
+    name: string;
+    type: string;
+    getModule: ModuleGetter;
   }) {
-    this.name = name
-    this.type = type
-    this.getModule = getModule
+    this.name = name;
+    this.type = type;
+    this.getModule = getModule;
 
-    this.status = ModuleStatus.Idle
-    this.resolvers = []
-    this.resolvedModules = null
+    this.status = ModuleStatus.Idle;
+    this.resolvers = [];
+    this.resolvedModules = null;
   }
 
   resolveModule<T extends RawModule>(module: T): Function {
@@ -35,7 +41,7 @@ class Loader {
   }
 
   load(): Promise<Function> | Function {
-    const currentStatus = this.status
+    const currentStatus = this.status;
     // If module has been loaded already, then return directly.
     if (currentStatus === ModuleStatus.Loaded) {
       logActivity('Loader', {
@@ -45,27 +51,27 @@ class Loader {
     }
 
     // if a require Module
-    timeStart(`load esmodule ${this.name} ${this.type}`)
-    const module = this.getModule.call(this)
+    timeStart(`load esmodule ${this.name} ${this.type}`);
+    const module = this.getModule.call(this);
 
     if (module && (module as ESModule).__esModule) {
       let loadedModule = this.resolveModule(module as RawModule);
-      this.resolvedModules = loadedModule
-      this.resolvers = []
-      this.status = ModuleStatus.Loaded
-      timeEnd(`load esmodule ${this.name} ${this.type}`)
-      return this.resolvedModules
+      this.resolvedModules = loadedModule;
+      this.resolvers = [];
+      this.status = ModuleStatus.Loaded;
+      timeEnd(`load esmodule ${this.name} ${this.type}`);
+      return this.resolvedModules;
     }
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       switch (currentStatus) {
         case ModuleStatus.Idle:
           this.resolvers.push(resolve);
-          timeStart(`load module ${this.name} ${this.type}`)
+          timeStart(`load module ${this.name} ${this.type}`);
           logActivity('Loader', {
             message: `start load module ${this.name} ${this.type}`,
           });
-          this.status = ModuleStatus.Pending
+          this.status = ModuleStatus.Pending;
           break;
         case ModuleStatus.Pending:
           this.resolvers.push(resolve);
@@ -76,17 +82,17 @@ class Loader {
         // __webpack_require__ will not return a Promise, so it need to wrapped
         // with Promise.resolve.
         Promise.resolve(this.getModule.call(this) as Promise<Function>).then(
-          rawModule => {
+          (rawModule) => {
             const module = this.resolveModule(rawModule as RawModule);
-            const resolvers = this.resolvers
-            resolvers.forEach(resolver => resolver(module));
-            this.resolvedModules = module
+            const resolvers = this.resolvers;
+            resolvers.forEach((resolver) => resolver(module));
+            this.resolvedModules = module;
             logActivity('Loader', {
               message: `finish load module ${this.name} ${this.type}`,
             });
-            timeEnd(`load module ${this.name} ${this.type}`)
-            this.resolvers = []
-            this.status = ModuleStatus.Loaded
+            timeEnd(`load module ${this.name} ${this.type}`);
+            this.resolvers = [];
+            this.status = ModuleStatus.Loaded;
           },
           () => {
             logActivity('Loader', {
@@ -100,4 +106,4 @@ class Loader {
   }
 }
 
-export default Loader
+export default Loader;

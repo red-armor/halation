@@ -11,11 +11,7 @@ class LoadManagerBase {
   public _loadRoutine: Function | null;
 
   constructor(props: LoadManagerConstructorProps) {
-    const {
-      blockKey,
-      moduleName,
-      moduleMap,
-    } = props;
+    const { blockKey, moduleName, moduleMap } = props;
 
     this._key = blockKey;
     this._moduleName = moduleName;
@@ -40,7 +36,7 @@ class LoadManagerBase {
    * 整个strategy的处理需要是一个同步的
    */
   shouldModuleLoad(): boolean | Promise<boolean> {
-    return true
+    return true;
   }
 
   bindLoadRoutine(loadRoutine: Function): Function {
