@@ -112,7 +112,7 @@ const BlockNodeWithoutNull: FC<BlockNodePreProps> = props => {
         return null;
       })
       .filter(v => v);
-  }, [childKeys]); // eslint-disable-line
+    }, [childKeys]); // eslint-disable-line
 
   return createElement<any>(
     BlockWrapper,

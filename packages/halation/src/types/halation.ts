@@ -104,7 +104,6 @@ export type RegisterResult = RegisterBaseResult & {
 };
 
 export type Store = {
-  subscribe: (subscription: Function) => Function;
   injectModel: (opt: {
     key: string;
     model: any;

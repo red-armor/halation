@@ -9,7 +9,7 @@ import {
   LogActivityType,
   RenderBlockBaseComponentProps,
 } from './types';
-import { logActivity, setLoggerContext } from './commons/logger'
+import { logActivity, setLoggerContext } from './commons/logger';
 import LoadManager from './LoadManagerBase';
 import RefTracker from './RefTracker';
 import { generateLoadManagerKey, isPresent } from './commons/utils';
@@ -19,9 +19,12 @@ abstract class HalationBaseClass<
   HS,
   RBP extends RenderBlockBaseComponentProps,
   S,
-  P extends HalationClassProps<RegisterFunction, HS, RBP> = HalationClassProps<RegisterFunction, HS, RBP>,
-> extends PureComponent<P, S>
-{
+  P extends HalationClassProps<RegisterFunction, HS, RBP> = HalationClassProps<
+    RegisterFunction,
+    HS,
+    RBP
+  >
+> extends PureComponent<P, S> {
   public name: string;
   public renderBlock?: RenderBlock<RBP>;
   public moduleMap: ModuleMap;
@@ -31,7 +34,7 @@ abstract class HalationBaseClass<
   public abstract contextValue: HalationContextValue;
   public rootRenderFn?: FC<any>;
   private clearLoggerContext: Function;
-  public registers: Array<RegisterFunction>
+  public registers: Array<RegisterFunction>;
 
   constructor(props: P) {
     super(props);
@@ -43,23 +46,28 @@ abstract class HalationBaseClass<
       rootRenderFn,
       contextValue,
     } = props;
-    const { enableLog: contextEnableLog } = contextValue
+    const { enableLog: contextEnableLog } = contextValue;
 
     this.renderBlock = renderBlock;
     this.name = name;
     this.moduleMap = new Map();
     this.loadManagerMap = new Map();
     this.rootRenderFn = rootRenderFn;
-    this.registers = registers
-
+    this.registers = registers;
 
     invariant(
       !(isPresent(enableLog) && isPresent(contextEnableLog)),
       `Nested Halation should not be passing with 'enableLog' props`
     );
 
-    this.nextEnableLog = isPresent(enableLog) ? !!enableLog : (isPresent(contextEnableLog) ? !!contextEnableLog : false)
-    this.clearLoggerContext = setLoggerContext({ enableLog: this.nextEnableLog });
+    this.nextEnableLog = isPresent(enableLog)
+      ? !!enableLog
+      : isPresent(contextEnableLog)
+      ? !!contextEnableLog
+      : false;
+    this.clearLoggerContext = setLoggerContext({
+      enableLog: this.nextEnableLog,
+    });
 
     this.refTracker = new RefTracker();
 
@@ -68,7 +76,7 @@ abstract class HalationBaseClass<
     this.getRef = this.getRef.bind(this);
   }
 
-  abstract registerModules(): void
+  abstract registerModules(): void;
 
   componentWillUmount() {
     this.clearLoggerContext();
@@ -105,7 +113,7 @@ abstract class HalationBaseClass<
     blockKey: string;
     moduleName: string;
   }): boolean {
-    const loadManagerKey = generateLoadManagerKey(moduleName, blockKey)
+    const loadManagerKey = generateLoadManagerKey(moduleName, blockKey);
 
     if (this.loadManagerMap.get(loadManagerKey)) {
       logActivity('Halation', {
@@ -127,10 +135,10 @@ abstract class HalationBaseClass<
     return true;
   }
 
-  abstract createChildren(): Array<FunctionComponentElement<any>>
+  abstract createChildren(): Array<FunctionComponentElement<any>>;
 
   renderCompat() {
-    const children = this.createChildren()
+    const children = this.createChildren();
 
     if (typeof this.rootRenderFn === 'function') {
       return React.createElement(
@@ -142,8 +150,8 @@ abstract class HalationBaseClass<
       );
     }
 
-    return children
+    return children;
   }
 }
 
-export default HalationBaseClass
+export default HalationBaseClass;

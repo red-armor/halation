@@ -1,6 +1,6 @@
 import { ModuleBaseProps } from './types';
-import { logActivity } from './commons/logger'
-import Loader from './Loader'
+import { logActivity } from './commons/logger';
+import Loader from './Loader';
 
 class ModuleBase {
   private _name: string;

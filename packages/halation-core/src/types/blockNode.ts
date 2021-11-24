@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { BlockNodeBaseProps, RenderBlock, ComponentPropsAPI } from './halation';
-import RecordBase from '../data/RecordBase'
+import RecordBase from '../data/RecordBase';
 export interface BlockNodeData {
   [key: string]: any;
 }
@@ -11,10 +11,11 @@ export interface RenderBlockBlockProps {
   props?: object;
 }
 
-export type BlockNodePreProps<RBP extends RenderBlockBaseComponentProps> = BlockNodeBaseProps<RBP> & {
-  block: RecordBase;
-  renderBlock?: RenderBlock<RBP>;
-};
+export type BlockNodePreProps<RBP extends RenderBlockBaseComponentProps> =
+  BlockNodeBaseProps<RBP> & {
+    block: RecordBase;
+    renderBlock?: RenderBlock<RBP>;
+  };
 
 export type RenderBlockBaseComponentProps = {
   blockProps: RenderBlockBlockProps;
@@ -28,22 +29,22 @@ export type RenderBlockBaseComponentProps = {
   // 'ReactElement<any, string | ((props: any) => ReactElement<any, any>)
   // | (new (props: any) => Component<any, any, any>)>'
 
-  children: React.ReactElement,
+  children: React.ReactElement;
   extraProps: {
-    [key: string]: any
-  },
-}
+    [key: string]: any;
+  };
+};
 
 export type BlockComponentProps = ComponentPropsAPI & {
   block: RecordBase;
   props: {
-    [key: string]: any
+    [key: string]: any;
   };
 };
 
 export type ForwardBlockComponentProps = BlockComponentProps & {
-  forwardRef: any
-}
+  forwardRef: any;
+};
 
 export interface BlockWrapperState {
   Component?: null | FC<any>;

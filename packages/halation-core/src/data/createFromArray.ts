@@ -1,3 +1,3 @@
-const createFromArray = () => {}
+const createFromArray = () => {};
 
-export default createFromArray
+export default createFromArray;
