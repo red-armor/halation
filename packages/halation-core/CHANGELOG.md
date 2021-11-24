@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@0.13.0...@xhs/halation-core@1.0.0) (2021-11-24)
+
+
+### Features
+
+* bump @xhs/relinx and state-tracker ([cebfe16](https://code.devops.xiaohongshu.com/fe/halation/commits/cebfe162a5443e2a3bcb0314f031e563b5257148))
+
+
+
+
+
 # [0.13.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@0.12.0...@xhs/halation-core@0.13.0) (2021-10-08)
 
 
