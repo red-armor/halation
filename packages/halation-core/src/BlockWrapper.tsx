@@ -146,6 +146,13 @@ const BlockWrapper = <
     isMountedRef.current = true;
     unsubscribeLoadRoutine.current = loadManager.bindLoadRoutine(loadRoutine);
     loadRoutine();
+
+    // TODO, catch inject model error
+    // try {
+    //   loadRoutine()
+    // } catch(err) {
+    //   console.log('err ', err)
+    // }
   }
 
   // should memo, or will be a new on update..
