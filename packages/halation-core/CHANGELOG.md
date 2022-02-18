@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@1.0.0...@xhs/halation-core@1.1.0) (2022-02-18)
+
+
+### Features
+
+* add a loadRoutine TODO ([352778b](https://code.devops.xiaohongshu.com/fe/halation/commits/352778b87ff3b8ceedcc36a2f42193cea7356a74))
+* lint ([172687d](https://code.devops.xiaohongshu.com/fe/halation/commits/172687db20cb6390d4544e4b6bd5d05e6824bf41))
+
+
+
+
+
 # [1.0.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@0.13.0...@xhs/halation-core@1.0.0) (2021-11-24)
 
 
