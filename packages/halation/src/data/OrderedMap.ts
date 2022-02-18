@@ -1,17 +1,19 @@
 import error from '../error';
 import invariant from 'invariant';
-import { OrderedMapProps, Predicate, Iterator } from '../types';
+import { OrderedMapProps, Predicate, Iterator, TreeOrderedMapProps } from '../types';
 import Record from './Record';
 
 class OrderedMap {
   private _map: Map<string, Record>;
-  private _list: Array<OrderedMapProps>;
+  private _list: Array<OrderedMapProps | TreeOrderedMapProps>;
   private _nullParentKeys: Array<string>;
+  private _isTreeArray: boolean
 
-  constructor(list: Array<OrderedMapProps>) {
+  constructor(list: Array<OrderedMapProps | TreeOrderedMapProps>, isTreeArray?: boolean) {
     this._list = list;
     this._map = new Map<string, Record>();
     this._nullParentKeys = [];
+    this._isTreeArray = !!isTreeArray
     this.build();
   }
 
@@ -27,7 +29,6 @@ class OrderedMap {
       const nextKey = nextKeys[index + 1];
       const current = this._map.get(currentKey);
       const next = this._map.get(nextKey);
-
       if (current && next) {
         current.updateSibling({
           nextSibling: next.getKey(),
@@ -43,7 +44,10 @@ class OrderedMap {
 
   build() {
     try {
-      if (this._list.length) this.createFromArray(this._list);
+      if (this._list.length) {
+        if (this._isTreeArray) this.createFromTreeArray(this._list as Array<TreeOrderedMapProps>)
+        else this.createFromArray(this._list as Array<OrderedMapProps>)
+      }
     } catch (err) {
       error(10001, err);
     }
@@ -106,6 +110,34 @@ class OrderedMap {
     }
 
     return true;
+  }
+
+  createFromTree(tree: TreeOrderedMapProps) {
+    const { children = [], id } = tree
+    const currentRecord = new Record(tree, this._map)
+    this._map.set(id, currentRecord)
+
+    children.forEach(child => {
+      const record = this.createFromTree(child)
+      currentRecord.appendChildren({ record })
+    })
+
+    return currentRecord
+  }
+
+  createFromTreeArray(list: Array<TreeOrderedMapProps>) {
+    const len = list.length;
+    const keysWithNullParent = [];
+
+    for (let index = 0; index < len; index++) {
+      const tree = list[index]
+      const { id } = tree
+      this.createFromTree(tree)
+      keysWithNullParent.push(id)
+    }
+
+    this._nullParentKeys = keysWithNullParent.slice();
+    this.updateNullParentLinks(keysWithNullParent);
   }
 
   createFromArray(list: Array<OrderedMapProps>) {
@@ -200,8 +232,10 @@ class OrderedMap {
     const len = this._list.length;
     for (let index = 0; index < len; index++) {
       const value = this._list[index];
+      // @ts-ignore
       const { key } = value;
 
+      // @ts-ignore
       if (fn(value, key, this._list)) return index;
     }
     return -1;
