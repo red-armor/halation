@@ -4261,13 +4261,13 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@xhs/relinx@^4.0.0":
-  version "4.1.4"
-  resolved "http://npm.devops.xiaohongshu.com:7001/@xhs/relinx/download/@xhs/relinx-4.1.4.tgz#8fddcc834179aca29c3a127c4ba8461ab725e6e7"
-  integrity sha1-j93Mg0F5rKKcOhJ8S6hGGrcl5uc=
+"@xhs/relinx@^4.1.5":
+  version "4.1.5"
+  resolved "http://npm.devops.xiaohongshu.com:7001/@xhs/relinx/download/@xhs/relinx-4.1.5.tgz#b7fc2771afc4f2e0f0d2770511a219a99f04c708"
+  integrity sha1-t/wnca/E8uDw0ncFEaIZqZ8Exwg=
   dependencies:
     invariant "^2.2.4"
-    state-tracker "^2.2.0"
+    state-tracker "^2.2.1"
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
@@ -14407,13 +14407,6 @@ state-toggle@^1.0.0:
   version "1.0.3"
   resolved "http://npm.devops.xiaohongshu.com:7001/state-toggle/download/state-toggle-1.0.3.tgz#e123b16a88e143139b09c6852221bc9815917dfe"
   integrity sha1-4SOxaojhQxObCcaFIiG8mBWRff4=
-
-state-tracker@^2.2.0:
-  version "2.2.0"
-  resolved "http://npm.devops.xiaohongshu.com:7001/state-tracker/download/state-tracker-2.2.0.tgz#9cda812b2ccb944554176eb10bf501228e54676f"
-  integrity sha1-nNqBKyzLlEVUF26xC/UBIo5UZ28=
-  dependencies:
-    invariant "^2.2.4"
 
 state-tracker@^2.2.1:
   version "2.2.1"
