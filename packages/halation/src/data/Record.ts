@@ -1,4 +1,4 @@
-import { OrderedMapProps, Strategy, OrderedMapSlot } from '../types';
+import { OrderedMapProps, Strategy, OrderedMapSlot, TreeOrderedMapProps } from '../types';
 import invariant from 'invariant';
 import { RecordBase, RenderBlockBlockProps } from '@xhs/halation-core';
 
@@ -14,7 +14,8 @@ class Record extends RecordBase {
   private _modelKey: string | undefined;
   private _recordBlockProps: RenderBlockBlockProps;
 
-  constructor(props: OrderedMapProps, _map: Map<string, Record>) {
+  constructor(props: OrderedMapProps | TreeOrderedMapProps, _map: Map<string, Record>) {
+    // @ts-ignore
     super(props);
 
     const { type, strategies, parent, modelKey } = props;

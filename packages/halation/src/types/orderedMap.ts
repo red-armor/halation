@@ -16,12 +16,30 @@ export type OrderedMapSlot = {
   [key: string]: Array<string>;
 };
 
+export type DSL = {
+  name: string;
+  props?: object;
+}
+
 export type OrderedMapProps = {
   key: string;
-  name: string;
   type?: string;
   strategies?: Array<Strategy>;
-  props?: object;
   parent?: null | string;
   modelKey?: string;
-};
+} & DSL;
+
+export type TreeOrderedMapProps = DSL & {
+  id: string;
+  slot?: string;
+  modelKey?: string;
+  type?: string;
+  // extraProps?: {
+  //   [key: string]: any
+  // }
+  extraProps?: object
+  children?: Array<TreeOrderedMapProps>
+
+  parent?: null | string
+  strategies?: Array<Strategy>;
+}

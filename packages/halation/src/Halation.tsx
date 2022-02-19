@@ -53,7 +53,7 @@ class HalationClass extends HalationBase<
 
   constructor(props: HalationClassProps) {
     super(props);
-    const { store, events, contextValue, registers } = props;
+    const { store, events, contextValue, registers, halationState } = props;
 
     this.hooks = {
       register: new SyncHook(['block']),
@@ -91,11 +91,11 @@ class HalationClass extends HalationBase<
       enableLog: this.nextEnableLog,
     };
 
-    const initialState = new OrderedMap([]);
+    // const initialState = new OrderedMap([]);
 
     this.state = {
-      halationState: initialState,
-      nodeMap: initialState.getMap(),
+      halationState: halationState,
+      nodeMap: halationState.getMap(),
     };
   }
 
@@ -135,6 +135,7 @@ class HalationClass extends HalationBase<
 
   static getDerivedStateFromProps(nextProps: any) {
     const { halationState } = nextProps;
+
     if (halationState instanceof OrderedMap) {
       return {
         halationState,
@@ -232,6 +233,7 @@ class HalationClass extends HalationBase<
 
   createChildren() {
     const blocks = this.state.nodeMap.values();
+
     let block = blocks.next().value;
     const children: Array<FunctionComponentElement<BlockNodePreProps>> = [];
 

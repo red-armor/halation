@@ -2,7 +2,8 @@ import RecordBase from '../data/RecordBase';
 
 export type RecordBaseProps = {
   name: string;
-  key: string;
+  key?: string;
+  id?: string;
   props?: object;
   extraProps?: object;
   children?: Array<RecordBase>;

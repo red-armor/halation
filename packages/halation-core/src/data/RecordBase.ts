@@ -1,5 +1,6 @@
 import { RecordBaseProps, RenderBlockBlockProps } from '../types';
 
+let count = 0
 class RecordBase {
   private _name: string;
   private _key: string;
@@ -9,10 +10,10 @@ class RecordBase {
   private _blockProps: RenderBlockBlockProps;
 
   constructor(recordProps: RecordBaseProps) {
-    const { name, key, children, props, extraProps } = recordProps;
+    const { name, key, children, props, extraProps, id } = recordProps;
 
     this._name = name;
-    this._key = key;
+    this._key = key || id || `default_key_${count++}`;
     this._children = children;
     this._props = props || {};
     this._extraProps = extraProps || {};
