@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@1.1.0...@xhs/halation-core@1.2.0) (2022-02-19)
+
+
+### Features
+
+* add tree array support ([d447cc3](https://code.devops.xiaohongshu.com/fe/halation/commits/d447cc3e77a4bc3cd66549d1526bb942c22089ba))
+
+
+
+
+
 # [1.1.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-core@1.0.0...@xhs/halation-core@1.1.0) (2022-02-18)
 
 

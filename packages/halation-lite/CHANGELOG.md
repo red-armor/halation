@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-lite@1.0.1...@xhs/halation-lite@1.1.0) (2022-02-19)
+
+**Note:** Version bump only for package @xhs/halation-lite
+
+
+
+
+
 ## [1.0.1](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation-lite@1.0.0...@xhs/halation-lite@1.0.1) (2022-02-18)
 
 **Note:** Version bump only for package @xhs/halation-lite
