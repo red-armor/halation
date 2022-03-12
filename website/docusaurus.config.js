@@ -47,35 +47,34 @@ const config = {
         logo: {
           alt: 'Halation Logo',
           src: 'img/logo.svg',
-          href: '/docs/introduction',
+          href: '/docs/introduction/getting-started',
         },
         items: [
-          {
-            type: 'doc',
-            docId: 'introduction',
-            position: 'left',
-            label: 'Tutorial',
-          },
+          // {
+          //   type: 'doc',
+          //   docId: 'introduction',
+          //   position: 'left',
+          //   label: 'Tutorial',
+          // },
           {
             label: 'docs',
             position: 'right',
-            items: [
-              {
-                label: 'armor',
-                href: 'https://fe-docs.devops.xiaohongshu.com/armor/docs/introduction',
-              }, {
-                label: 'relinx',
-                href: 'https://fe-docs.devops.xiaohongshu.com/relinx/docs/introduction',
-              },
-              // {
-              //   label: 'halation',
-              //   href: 'https://fe-docs.devops.xiaohongshu.com/halation/docs/introduction',
-              // },
-              {
-                label: 'xswr',
-                href: 'https://fe-docs.devops.xiaohongshu.com/xswr/docs/introduction',
-              },
-            ],
+            items: [{
+              label: 'armor',
+              href: 'https://fe-docs.devops.xiaohongshu.com/armor/docs/introduction/getting-started',
+            }, {
+              label: 'relinx',
+              href: 'https://fe-docs.devops.xiaohongshu.com/relinx/docs/introduction/getting-started',
+            }, {
+            //   label: 'halation',
+            //   href: 'https://fe-docs.devops.xiaohongshu.com/halation/docs/introduction/getting-started',
+            // }, {
+              label: 'xswr',
+              href: 'https://fe-docs.devops.xiaohongshu.com/xswr/docs/introduction/getting-started',
+            }, {
+              label: 'state-tracker',
+              href: 'https://fe-docs.devops.xiaohongshu.com/state-tracker/docs/introduction/getting-started',
+            }],
           },
           // { to: '/blog', label: 'Blog', position: 'left' },
           {
@@ -91,9 +90,13 @@ const config = {
           {
             title: 'Docs',
             items: [
+              // {
+              //   label: 'Tutorial',
+              //   to: '/docs/introduction/getting-started',
+              // },
               {
-                label: 'Tutorial',
-                to: '/docs/introduction',
+                label: 'Ecom',
+                to: 'https://fe-docs.devops.xiaohongshu.com/e-com/docs/introduction/getting-started',
               },
             ],
           },
