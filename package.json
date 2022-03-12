@@ -15,7 +15,8 @@
     "size": "size-limit",
     "analyze": "size-limit --why",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "deploy-website": "cd website && yarn build && dockwalloper publish -d ./build -k uvGrSagjOrVNZqBaT8UGeJTLtZi250aj6MYPqWq89hVpeH6u"
   },
   "prettier": {
     "printWidth": 80,

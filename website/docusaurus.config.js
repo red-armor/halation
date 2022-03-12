@@ -6,10 +6,10 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'My Site',
+  title: 'Halation',
   tagline: 'Dinosaurs are cool',
   url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/',
+  baseUrl: '/halation/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
@@ -43,22 +43,44 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'My Site',
+        title: 'Halation',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'Halation Logo',
           src: 'img/logo.svg',
+          href: '/docs/introduction',
         },
         items: [
           {
             type: 'doc',
-            docId: 'intro',
+            docId: 'introduction',
             position: 'left',
             label: 'Tutorial',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
           {
-            href: 'https://github.com/facebook/docusaurus',
-            label: 'GitHub',
+            label: 'docs',
+            position: 'right',
+            items: [
+              {
+                label: 'armor',
+                href: 'https://fe-docs.devops.xiaohongshu.com/armor/docs/introduction',
+              }, {
+                label: 'relinx',
+                href: 'https://fe-docs.devops.xiaohongshu.com/relinx/docs/introduction',
+              },
+              // {
+              //   label: 'halation',
+              //   href: 'https://fe-docs.devops.xiaohongshu.com/halation/docs/introduction',
+              // },
+              {
+                label: 'xswr',
+                href: 'https://fe-docs.devops.xiaohongshu.com/xswr/docs/introduction',
+              },
+            ],
+          },
+          // { to: '/blog', label: 'Blog', position: 'left' },
+          {
+            href: 'https://code.devops.xiaohongshu.com/fe/web/halation',
+            label: 'GitLab',
             position: 'right',
           },
         ],
@@ -71,42 +93,38 @@ const config = {
             items: [
               {
                 label: 'Tutorial',
-                to: '/docs/intro',
+                to: '/docs/introduction',
               },
             ],
           },
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
-              },
-            ],
-          },
+          // {
+          //   title: 'Community',
+          //   items: [
+          //     {
+          //       label: 'Stack Overflow',
+          //       href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+          //     },
+          //     {
+          //       label: 'Discord',
+          //       href: 'https://discordapp.com/invite/docusaurus',
+          //     },
+          //     {
+          //       label: 'Twitter',
+          //       href: 'https://twitter.com/docusaurus',
+          //     },
+          //   ],
+          // },
           {
             title: 'More',
             items: [
               {
-                label: 'Blog',
-                to: '/blog',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                label: 'markdown feature',
+                to: 'https://docusaurus.io/docs/markdown-features',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Halation, Inc. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
