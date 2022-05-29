@@ -1,5 +1,5 @@
 {
-  "version": "2.1.0",
+  "version": "2.2.0",
   "license": "MIT",
   "main": "src/index.ts",
   "typings": "dist/index.d.ts",
@@ -28,6 +28,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@xhs/halation-core": "^1.2.0"
+    "@xhs/halation-core": "^1.3.0"
   }
 }
