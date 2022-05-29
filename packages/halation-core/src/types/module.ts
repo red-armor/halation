@@ -3,6 +3,7 @@ export type ModuleGetter = () => Promise<Function> | ESModule;
 export interface ModuleBaseProps {
   name: string;
   getComponent: ModuleGetter;
+  lazy?: boolean;
 }
 
 export enum ModuleStatus {

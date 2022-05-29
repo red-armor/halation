@@ -102,12 +102,13 @@ class HalationClass extends HalationBase<
   registerModules() {
     this.registers.forEach(register => {
       const moduleProps: RegisterResult = register.call(null);
-      const { name, getModel, getComponent, strategies } = moduleProps;
+      const { name, getModel, getComponent, strategies, lazy } = moduleProps;
       if (!this.moduleMap.get(name)) {
         const module = new Module({
           name,
           getComponent,
           getModel,
+          lazy,
           strategies: strategies || [],
         });
 

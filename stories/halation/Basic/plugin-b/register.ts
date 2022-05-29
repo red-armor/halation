@@ -1,7 +1,11 @@
+import Component from './index'
+import model from './model';
+
 export default function PluginComponent() {
   return {
     name: 'plugin-b',
-    getModel: () => require('./model'),
-    getComponent: () => require('./index'),
+    getModel: model,
+    getComponent: Component,
+    lazy: false,
   };
 }

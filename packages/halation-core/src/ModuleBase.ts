@@ -4,11 +4,13 @@ import Loader from './Loader';
 
 class ModuleBase {
   private _name: string;
+  private _lazy: boolean;
   private componentLoader: Loader;
 
   constructor(props: ModuleBaseProps) {
-    const { name, getComponent } = props;
+    const { name, getComponent, lazy = true } = props;
     this._name = name;
+    this._lazy = lazy
 
     logActivity('Module', {
       message: `create ${name} Module`,
@@ -18,11 +20,16 @@ class ModuleBase {
       name: this.getName(),
       type: 'component',
       getModule: getComponent,
+      lazy: this._lazy,
     });
   }
 
   getName(): string {
     return this._name;
+  }
+
+  isLazy() {
+    return this._lazy
   }
 
   loadComponent() {

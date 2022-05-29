@@ -15,6 +15,7 @@ class Module extends ModuleBase {
       this.modelLoader = new Loader({
         name,
         type: 'model',
+        lazy: this.isLazy(),
         getModule: getModel,
       });
     }

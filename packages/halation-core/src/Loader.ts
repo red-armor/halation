@@ -11,6 +11,7 @@ import { timeStart, timeEnd } from './commons/Timer';
 class Loader {
   public name: string;
   public type: string;
+  public lazy: boolean;
   public getModule: ModuleGetter;
   private status: ModuleStatus;
   private resolvers: Array<Function>;
@@ -20,13 +21,16 @@ class Loader {
     type,
     name,
     getModule,
+    lazy = true,
   }: {
     name: string;
     type: string;
+    lazy?: boolean;
     getModule: ModuleGetter;
   }) {
     this.name = name;
     this.type = type;
+    this.lazy = lazy
     this.getModule = getModule;
 
     this.status = ModuleStatus.Idle;
@@ -52,6 +56,7 @@ class Loader {
 
     // if a require Module
     timeStart(`load esmodule ${this.name} ${this.type}`);
+    if (!this.lazy) return this.getModule
     const module = this.getModule.call(this);
 
     if (module && (module as ESModule).__esModule) {

@@ -81,4 +81,5 @@ export type BlockNodeBaseProps<RBP extends RenderBlockBaseComponentProps> =
 export interface RegisterBaseResult {
   name: string;
   getComponent: ModuleGetter;
+  lazy?: boolean;
 }
