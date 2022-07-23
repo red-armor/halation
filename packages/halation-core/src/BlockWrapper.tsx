@@ -29,7 +29,6 @@ const BlockWrapper = <
     props;
   const { block } = props;
 
-  const [wrapper, setWrapper] = useState<BlockWrapperState>({});
   const blockKey = block.getKey();
   const moduleName = block.getName();
   const blockRef = useRef();
@@ -40,12 +39,24 @@ const BlockWrapper = <
     },
     [blockKey, reportRef]
   );
+
   const isLoadingRef = useRef(false);
   const isMountedRef = useRef(false);
   const isComponentLoadRef = useRef(false);
   const loadManagerKey = generateLoadManagerKey(moduleName, blockKey);
   const loadManager = loadManagerMap.get(loadManagerKey)!;
-
+  const [wrapper, setWrapper] = useState<BlockWrapperState>(() => {
+    const shouldModuleLoad = loadManager?.shouldModuleLoad()
+    if (shouldModuleLoad) {
+      const module = moduleMap.get(moduleName)
+      return {
+        Component: module?.loadComponent() as any
+      }
+    }
+    return {
+      Component: null
+    }
+  });
   // Why isForceUpdateCalledRef needs ?
   // If strategy has a runtime type one. `forceUpdate` will be trigger twice.
   // `update` function in `LoadManager` will call `loadRoutine` function every
@@ -144,14 +155,16 @@ const BlockWrapper = <
     // if `isMountedRef` is putted in `useEffect`, it will never be called and lost into
     // render loop!!!
     isMountedRef.current = true;
-    unsubscribeLoadRoutine.current = loadManager.bindLoadRoutine(loadRoutine);
-    // TODO, catch inject model error
-    // try {
-    //   loadRoutine()
-    // } catch(err) {
-    //   console.log('err ', err)
-    // }
-    loadRoutine();
+    if (!wrapper.Component) {
+      unsubscribeLoadRoutine.current = loadManager.bindLoadRoutine(loadRoutine);
+      // TODO, catch inject model error
+      // try {
+      //   loadRoutine()
+      // } catch(err) {
+      //   console.log('err ', err)
+      // }
+      loadRoutine();
+    }
   }
 
   // should memo, or will be a new on update..

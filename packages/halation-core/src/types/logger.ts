@@ -6,4 +6,5 @@ export enum LogActivityType {
 
 export type LoggerContextStack = {
   enableLog: boolean;
+  startTime: number;
 };

@@ -67,6 +67,7 @@ abstract class HalationBaseClass<
       : false;
     this.clearLoggerContext = setLoggerContext({
       enableLog: this.nextEnableLog,
+      startTime: Date.now(),
     });
 
     this.refTracker = new RefTracker();
