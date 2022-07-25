@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@2.2.0...@xhs/halation@2.2.1) (2022-07-25)
+
+
+### Features
+
+* perf ([ca6a5d5](https://code.devops.xiaohongshu.com/fe/halation/commits/ca6a5d57c4f486a4362cc7356a0045be047d79c5))
+
+
+
+
+
 # [2.2.0](https://code.devops.xiaohongshu.com/fe/infra/halation/compare/@xhs/halation@2.1.0...@xhs/halation@2.2.0) (2022-05-29)
 
 
