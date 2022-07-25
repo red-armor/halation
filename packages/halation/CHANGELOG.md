@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.2](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@2.2.1...@xhs/halation@2.2.2) (2022-07-25)
+
+
+### Features
+
+* remove log ([92964b5](https://code.devops.xiaohongshu.com/fe/halation/commits/92964b5920c9fbfc646e28447c107ec9268c0267))
+
+
+
+
+
 ## [2.2.1](https://code.devops.xiaohongshu.com/fe/halation/compare/@xhs/halation@2.2.0...@xhs/halation@2.2.1) (2022-07-25)
 
 
