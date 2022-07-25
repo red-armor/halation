@@ -15,11 +15,11 @@ import {
 
 const { generateLoadManagerKey } = utils;
 
-// @ts-ignore
-const Marker = props => {
-  const { blockKey } = props
-  return null
-}
+// // @ts-ignore
+// const Marker = props => {
+//   const { blockKey } = props
+//   return null
+// }
 
 const BlockNodeWithoutNull: FC<BlockNodePreProps> = props => {
   const {
@@ -132,7 +132,7 @@ const BlockNodeWithoutNull: FC<BlockNodePreProps> = props => {
       },
       children
     )}
-    <Marker blockKey={blockKey} />
+    {/* <Marker blockKey={blockKey} /> */}
   </>
   )
 };

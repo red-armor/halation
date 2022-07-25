@@ -2,7 +2,7 @@ const errors: {
   [key: number]: Function | string;
 } = {
   10001: (err: Error) => {
-    return `fail to build halation state from array \n\n ${err.message}`;
+    return `Fail to build halation state from array \n\n ${err.message}`;
   },
 };
 
