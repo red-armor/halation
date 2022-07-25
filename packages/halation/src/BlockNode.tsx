@@ -15,6 +15,12 @@ import {
 
 const { generateLoadManagerKey } = utils;
 
+// @ts-ignore
+const Marker = props => {
+  const { blockKey } = props
+  return null
+}
+
 const BlockNodeWithoutNull: FC<BlockNodePreProps> = props => {
   const {
     block,
@@ -114,16 +120,21 @@ const BlockNodeWithoutNull: FC<BlockNodePreProps> = props => {
       .filter(v => v);
     }, [childKeys]); // eslint-disable-line
 
-  return createElement<any>(
-    BlockWrapper,
-    {
-      ...props,
-      modelKey: block.getDefinitelyModelKey(),
-      $_modelKey: block.getDefinitelyModelKey(),
-      slot: slotComponents,
-    },
-    children
-  );
+  return (
+    <>
+    {createElement<any>(
+      BlockWrapper,
+      {
+        ...props,
+        modelKey: block.getDefinitelyModelKey(),
+        $_modelKey: block.getDefinitelyModelKey(),
+        slot: slotComponents,
+      },
+      children
+    )}
+    <Marker blockKey={blockKey} />
+  </>
+  )
 };
 
 const BlockNode: FC<BlockNodePreProps> = props => {

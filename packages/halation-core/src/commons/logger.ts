@@ -12,8 +12,8 @@ const NODE_ENV = process.env.NODE_ENV;
 
 const loggerContextStack = [] as Array<LoggerContextStack>;
 
-export const setLoggerContext = ({ enableLog }: { enableLog: boolean }) => {
-  loggerContextStack.push({ enableLog });
+export const setLoggerContext = ({ enableLog, startTime }: { enableLog: boolean, startTime: number }) => {
+  loggerContextStack.push({ enableLog, startTime });
   return () => loggerContextStack.pop();
 };
 
@@ -48,19 +48,24 @@ export const logActivity = (
   if (process && process.env.NODE_ENV !== 'production') {
     const loggerContextLength = loggerContextStack.length;
     const current = loggerContextStack[loggerContextLength - 1];
+    const enableLog = current?.enableLog
+    const startTime = current?.startTime
 
     // warning or error should always be logged
     if (
       type === LogActivityType.ERROR ||
       type === LogActivityType.WARNING ||
-      (current && current.enableLog)
+      (enableLog)
     ) {
+      const duration = Date.now() - startTime
       console.log.apply(null, [
         '%c' + title + ' %c' + message,
         titleStyle,
         messageStyle,
         value ? value : '',
         Date.now(),
+        'duration',
+        duration
       ]);
     }
   }
